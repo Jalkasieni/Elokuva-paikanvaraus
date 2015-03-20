@@ -2,7 +2,7 @@
 /**
 *
 * @package apexnet
-* @version $Id: BasicAuthController.php 1190 2015-03-20 21:46:17Z crise $
+* @version $Id: BasicAuthController.php 1191 2015-03-20 22:52:19Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -103,21 +103,27 @@ class BasicAuthController extends web_controller
 			'password_confirm'	=> $request->variable('password_confirm', '', web_request::POST),
 		);
 
-		if ($this->user->admin())
-			$form_data['permissions'] = $request->variable('permissions', array('registered'), web_request::POST);
-
 		if ($request->is_set('submit') && !empty($form_data['username']) && !empty($form_data['password']))
 		{
+			if ($this->user->admin())
+			{
+				// iff all open permissions are removed the default value gets used (registered bit is set below)
+				$form_data['permissions'] = $request->variable('permissions', array(), web_request::POST);
+
+				// browsers do not send the value of disabled checkboxes
+				$form_data['permissions'][] = 'registered';
+			}
+
 			$errors = array();
 			if ($this->validate('register', $form_data, $errors) && $this->user->createUser($form_data['username'], $form_data['password'], $form_data))
 				return web_response::redirect($request, '/', 200, 'User account created successfully.');
 
 			$form_data['errors'] = $errors;
-
-			// PHP __call can't deal with references so this is the only serverside option (@see BasicAuthModel::createUser)
-			if (isset($form_data['permissions']))
-				$form_data['permissions'][] = 'registered';
 		}
+
+		// if we don't have any permission data yet, the form is fresh or user doesn't have the rights to change their permissions
+		if (!isset($form_data['permissions']))
+			$form_data['permissions'] = array('registered');
 
 		return web_response::page($request, 'user_editor', $this->user->pack(array(
 			'editor_action'		=> 'register',
@@ -153,11 +159,17 @@ class BasicAuthController extends web_controller
 			'password_confirm'	=> $request->variable('password_confirm', '', web_request::POST),
 		);
 
-		if ($this->user->admin())
-			$form_data['permissions'] = $request->variable('permissions', $current['user_permissions'], web_request::POST);
-
 		if ($request->is_set('submit'))
-		{
+		{ 
+			if ($this->user->admin())
+			{
+				// iff all open permissions are removed the default value gets used (registered bit is set below)
+				$form_data['permissions'] = $request->variable('permissions', array(), web_request::POST);
+
+				// browsers do not send the value of disabled checkboxes
+				$form_data['permissions'][] = 'registered';
+			}
+
 			if (!$this->user->admin() && (empty($form_data['password_old']) || !password_verify($form_data['password_old'], $current['password_hash'])))
 				$form_data['password_old'] = false;
 
@@ -166,11 +178,11 @@ class BasicAuthController extends web_controller
 				return web_response::redirect($request, $redirect, 200, 'User account update successfully.');
 
 			$form_data['errors'] = $errors;
-
-			// PHP __call can't deal with references so this is the only serverside option (@see BasicAuthModel::updateUser)
-			if (isset($form_data['permissions']))
-				$form_data['permissions'][] = 'registered';
 		}
+
+		// if we don't have any permission data yet, the form is fresh or user doesn't have the rights to change their permissions
+		if (!isset($form_data['permissions']))
+			$form_data['permissions'] = $current['user_permissions'];
 
 		return web_response::page($request, 'user_editor', $this->user->pack(array(
 			'editor_action'		=> 'update',
