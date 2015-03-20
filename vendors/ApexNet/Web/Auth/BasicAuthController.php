@@ -2,7 +2,7 @@
 /**
 *
 * @package apexnet
-* @version $Id: BasicAuthController.php 1175 2015-03-20 13:08:44Z crise $
+* @version $Id: BasicAuthController.php 1178 2015-03-20 17:41:15Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -24,6 +24,11 @@ use web_response;
 abstract class BasicAuthController extends web_controller
 {
 	const USERS_LIMIT = 25;
+
+	public function __construct(BasicAuth $user, DBConnection $db, AccessControl $acl)
+	{
+		parent::__construct($user, $db, $acl);
+	}
 
 	public function run(web_request $request, $action = APEXNET_DEFAULT_ACTION)
 	{

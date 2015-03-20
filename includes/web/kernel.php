@@ -2,7 +2,7 @@
 /**
 *
 * @package apexnet
-* @version $Id: kernel.php 1125 2015-02-19 16:22:00Z crise $
+* @version $Id: kernel.php 1178 2015-03-20 17:41:15Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -20,6 +20,7 @@ use ApexNet\Foundation\Config;
 
 use ApexNet\BBCode\BBCParser;
 
+use ApexNet\Web\Auth\BasicAuth;
 use ApexNet\Web\Auth\BasicAuth;
 
 /**
@@ -58,9 +59,18 @@ class web_kernel extends KernelBase
 
 		// check for controller
 		if (!web_controller::check($controller))
-			return web_response::error($request, 404)->send();
+		{
+			if ($controller !== 'auth')
+				return web_response::error($request, 404)->send();
 
-		$response = web_controller::create($controller, $user, $this->database)->run($request, $action);
+			$controller = new BasicAuthController($user, $this->database, new AccessControl($user));
+		}
+		else
+		{
+			$controller = web_controller::create($controller, $user, $this->database);
+		}
+
+		$response = $controller->run($request, $action);
 
 		if (!$response instanceof web_response)
 			throw new Exception('Not all control paths return a response (Missing return statement in controller?).');

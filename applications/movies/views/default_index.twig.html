@@ -1,0 +1,43 @@
+{#
+*
+* @package svntools
+* @version $Id: development_stats.twig.html 912 2014-07-27 17:57:04Z crise $
+* @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+*
+#}
+
+{% extends "bootstrap_base.twig.html" %}
+
+{% block head -%}
+	{{ parent() }}
+{% endblock %}
+
+{% block meta -%}
+	{{ parent() }}
+{% endblock %}
+
+{% block scripts -%}
+	{{ parent() }}
+
+	<script>
+		$(function() {
+			var app = new ApexNet('{{base_url}}');
+		});
+	</script>
+{% endblock %}
+
+{% block title %}{{ parent() }} - {{ util.default_title(request) }}{% endblock %}
+
+{% block header -%}
+		{% set page_subtitle = 'Home' %}
+		{{ parent() }}
+{% endblock %}
+
+{% block content -%}
+		<div class="panel panel-default">
+  			<div class="panel-body text-center">
+  				<h1>Hello World!</h1>
+			</div>
+		</div>
+{% endblock %}
