@@ -2,7 +2,7 @@
 /**
 *
 * @package apexnet
-* @version $Id: template.php 806 2014-05-27 09:00:33Z crise $
+* @version $Id: template.php 1184 2015-03-20 19:22:58Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -28,7 +28,7 @@ class web_response_template extends web_response
 	{
 		parent::__construct($request, $status_code, $charset);
 
-		$this->twig = new Twig_Environment(new Twig_Loader_Filesystem(array(APEXNET_APP_VIEWS, APEXNET_APP_TEMPLATES)), array(
+		$this->twig = new Twig_Environment(new Twig_Loader_Filesystem(array(APEXNET_APP_VIEWS, APEXNET_APP_TEMPLATES, APEXNET_TEMPLATE_PATH)), array(
 			'charset'		=> $this->charset,
 			'debug'			=> defined('DEBUG'),
 			'cache'			=> APEXNET_APP_CACHE . 'templates/',

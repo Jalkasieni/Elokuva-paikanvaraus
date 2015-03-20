@@ -2,7 +2,7 @@
 /**
 *
 * @package apexnet
-* @version $Id: kernel.php 1178 2015-03-20 17:41:15Z crise $
+* @version $Id: kernel.php 1183 2015-03-20 18:51:03Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -21,7 +21,8 @@ use ApexNet\Foundation\Config;
 use ApexNet\BBCode\BBCParser;
 
 use ApexNet\Web\Auth\BasicAuth;
-use ApexNet\Web\Auth\BasicAuth;
+use ApexNet\Web\Auth\BasicAuthController;
+use ApexNet\Web\AccessControl;
 
 /**
  * Kernel implementation for web frontends (HTTP Response)
