@@ -2,7 +2,7 @@
 /**
 *
 * @package apexnet
-* @version $Id: BasicAuthController.php 1187 2015-03-20 20:16:14Z crise $
+* @version $Id: BasicAuthController.php 1190 2015-03-20 21:46:17Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -99,10 +99,12 @@ class BasicAuthController extends web_controller
 
 			'display_name'		=> $request->variable('display_name', '', web_request::POST),
 			'email'				=> $request->variable('email', '', web_request::POST),
-			'permissions'		=> $this->user->admin() ? $request->variable('permissions',  array('registered'), web_request::POST) : array('registered'),
 
 			'password_confirm'	=> $request->variable('password_confirm', '', web_request::POST),
 		);
+
+		if ($this->user->admin())
+			$form_data['permissions'] = $request->variable('permissions', array('registered'), web_request::POST);
 
 		if ($request->is_set('submit') && !empty($form_data['username']) && !empty($form_data['password']))
 		{
@@ -112,7 +114,7 @@ class BasicAuthController extends web_controller
 
 			$form_data['errors'] = $errors;
 
-			// PHP __call can't deal with references so this is the only serverside option
+			// PHP __call can't deal with references so this is the only serverside option (@see BasicAuthModel::createUser)
 			if (isset($form_data['permissions']))
 				$form_data['permissions'][] = 'registered';
 		}
@@ -145,15 +147,14 @@ class BasicAuthController extends web_controller
 
 			'display_name'		=> $request->variable('display_name', $current['display_name'], web_request::POST),
 			'email'				=> $request->variable('email', $current['email'], web_request::POST),
-			'permissions'		=> $request->variable('permissions', $current['user_permissions'], web_request::POST),
 
 			'password_old'		=> $request->variable('password_old', '', web_request::POST),
 			'password'			=> $request->variable('password', '', web_request::POST),
 			'password_confirm'	=> $request->variable('password_confirm', '', web_request::POST),
 		);
 
-		if (!$this->user->admin())
-			unset($form_data['permissions']);
+		if ($this->user->admin())
+			$form_data['permissions'] = $request->variable('permissions', $current['user_permissions'], web_request::POST);
 
 		if ($request->is_set('submit'))
 		{
@@ -166,7 +167,7 @@ class BasicAuthController extends web_controller
 
 			$form_data['errors'] = $errors;
 
-			// PHP __call can't deal with references so this is the only serverside option
+			// PHP __call can't deal with references so this is the only serverside option (@see BasicAuthModel::updateUser)
 			if (isset($form_data['permissions']))
 				$form_data['permissions'][] = 'registered';
 		}

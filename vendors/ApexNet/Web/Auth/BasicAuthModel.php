@@ -2,7 +2,7 @@
 /**
 *
 * @package apexnet
-* @version $Id: BasicAuthModel.php 1171 2015-03-20 12:57:11Z crise $
+* @version $Id: BasicAuthModel.php 1190 2015-03-20 21:46:17Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -79,8 +79,8 @@ class BasicAuthModel extends web_model implements BasicAuthModelInterface
 
 	public function createUser($username, $password, array $meta_data)
 	{
-		if (!isset($meta_data['permissions']) || empty($meta_data['permissions']))
-			$meta_data['permissions'] = array('registered');
+		// just make sure we always have this, browsers not sending disabled checkboxes is a pain
+		$meta_data['permissions'][] = 'registered';
 
 		if (!$this->permissions->validate($meta_data['permissions']))
 			return false;
