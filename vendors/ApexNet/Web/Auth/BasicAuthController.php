@@ -2,7 +2,7 @@
 /**
 *
 * @package apexnet
-* @version $Id: BasicAuthController.php 1183 2015-03-20 18:51:03Z crise $
+* @version $Id: BasicAuthController.php 1187 2015-03-20 20:16:14Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -23,7 +23,7 @@ use web_controller;
 use web_request;
 use web_response;
 
-abstract class BasicAuthController extends web_controller
+class BasicAuthController extends web_controller
 {
 	const USERS_LIMIT = 25;
 

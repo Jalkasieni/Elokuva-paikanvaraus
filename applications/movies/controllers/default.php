@@ -2,7 +2,7 @@
 /**
 *
 * @package svntools
-* @version $Id: default.php 1178 2015-03-20 17:41:15Z crise $
+* @version $Id: default.php 1185 2015-03-20 19:34:19Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -30,6 +30,6 @@ class movies_default_controller extends web_controller
 	public function do_index(web_request $request)
 	{
 		$tpl_vars = array();
-		return web_response::template($request, 'default_index', $this->user->pack($tpl_vars));
+		return web_response::page($request, 'default_index', $this->user->pack($tpl_vars));
 	}
 }

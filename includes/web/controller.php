@@ -2,7 +2,7 @@
 /**
 *
 * @package apexnet
-* @version $Id: controller.php 981 2014-12-15 23:13:12Z crise $
+* @version $Id: controller.php 1186 2015-03-20 20:13:29Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -37,7 +37,16 @@ abstract class web_controller
 		$root = APEXNET_APP_CONTROLLERS;
 
 		if (is_null($current))
+		{
 			$current = $root;
+			$routes['/auth(/<action>(.<type>))'] = array(
+				'defaults' => array(
+					'controller'	=> 'auth',
+					'action'		=> APEXNET_DEFAULT_ACTION,
+					'type'			=> ''
+				)
+			);
+		}
 
 		foreach (new FilesystemIterator($current, FilesystemIterator::SKIP_DOTS | FilesystemIterator::NEW_CURRENT_AND_KEY) as $name => $fi)
 		{
