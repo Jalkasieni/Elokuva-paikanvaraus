@@ -1,0 +1,101 @@
+{#
+*
+* @package apexnet
+* @version $Id: user_admin.twig.html 1174 2015-03-20 13:06:34Z crise $
+* @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+*
+#}
+
+{% extends "bootstrap_base.twig.html" %}
+
+{% block head -%}
+	{{ parent() }}
+{% endblock %}
+
+{% block meta -%}
+	{{ parent() }}
+{% endblock %}
+
+{% block scripts -%}
+	{{ parent() }}
+
+	<script>
+		$('a.remove-link').on('click', function(e) {
+		 	e.preventDefault();
+
+		 	$('#modal-delete-link').attr('href', $(this).attr('href'));
+		 	$('#modal-confirm-delete').modal('toggle');
+		});
+	</script>
+{% endblock %}
+
+{% block title %}{{ parent() }} - {{ util.default_title(request) }}{% endblock %}
+
+{% block header -%}
+		{% set page_subtitle = 'Manage Users' %}
+		{{ parent() }}
+{% endblock %}
+
+{% block content -%}
+
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="pull-right">
+					<a class="add-link btn btn-primary btn-xs" href="{{ append_sid('/auth/register') }}" role="button" rel="nofollow">Register User</a>
+				</div>
+				<h4 class="panel-title">Manage Users</h4>
+			</div>
+
+			<div class="list-group">
+				<div class="list-group-item">
+					<div class="row">
+						<span class="user-name col-md-7 col-sm-6 col-xs-9"> <strong>User Account</strong> </span>
+						<span class="user-created col-md-3 col-sm-4 hidden-xs text-right"> <strong>Creation Date</strong> </span>
+						<span class="user-actions col-md-2 col-sm-2 col-xs-3 text-center"> <strong>Actions</strong> </span>
+					</div>
+				</div>
+{% for user in users %}
+				<div class="user-row list-group-item">
+					<div class="row">
+						<span class="user-name col-md-7 col-sm-6 col-xs-9">
+							<span class="glyphicon glyphicon-user"></span> <a href="{{ append_sid('/auth/update', 'user_id=' ~ user.user_id) }}" rel="nofollow">{{ user.display_name }}</a>
+						</span>
+						<span class="user-created col-md-3 col-sm-4 hidden-xs text-right">{{ user.creation_date | date('Y-m-d H:i:s') }}</span>
+						<span class="user-actions col-md-2 col-sm-2 col-xs-3 text-center">
+							<a class="edit-link" title="Edit" href="{{ append_sid('/auth/update', 'user_id=' ~ user.user_id) }}" rel="nofollow">
+								<span class="glyphicon glyphicon-pencil text-info"></span>
+							</a>
+							<a class="remove-link" title="Remove" href="{{ append_sid('/auth/delete', 'user_id=' ~ user.user_id) }}" rel="nofollow">
+								<span class="glyphicon glyphicon-remove text-danger"></span>
+							</a>
+						</span>
+					</div>
+				</div>
+{% endfor %}
+			</div>
+		</div>
+
+{% if users_pagination is defined %}
+	{{ util.pager(users_pagination) }}
+{% endif %}
+
+		<div class="modal fade" id="modal-confirm-delete" tabindex="-1" role="dialog" aria-labelledby="modal-confirm-delete-label" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title text-center" id="modal-confirm-delete-label">Confirm Account Deletion</h4>
+					</div>
+					<div class="modal-body">
+						<p>Are you sure you wish to completely remove this account from the system? This action can not be reversed.</p>
+					</div>
+					<div class="modal-footer">
+						<a href="#" id="modal-delete-link" class="btn btn-primary" role="button">Continue</a>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					</div>	
+				</div>
+			</div>
+		</div>
+
+{% endblock %}

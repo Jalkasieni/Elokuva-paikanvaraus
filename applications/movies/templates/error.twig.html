@@ -1,0 +1,42 @@
+{#
+*
+* @package svntools
+* @version $Id: error.twig.html 925 2014-07-28 10:26:05Z crise $
+* @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+*
+#}
+
+{% extends "bootstrap_base.twig.html" %}
+
+{% block head -%}
+	{{ parent() }}
+{% endblock %}
+
+{% block meta -%}
+	{{ parent() }}
+{% endblock %}
+
+{% block scripts -%}
+	{{ parent() }}
+{% endblock %}
+
+{% block title %}{{ parent() }} - {{status_code}} • {{status_message}}{% endblock %}
+
+{% block content -%}
+		<div class="panel panel-danger">
+			<div class="panel-heading">
+				<h3 class="panel-title text-center">Error - {{status_message}}</h3>
+			</div>
+			<div class="panel-body">
+				<p>
+				{% if message %}{{ message | raw }}{% else -%}
+				  The server encountered an error while processing your request (HTTP: {{status_code}}).
+				{%- endif %}
+				</p>
+			</div>
+			<div class="panel-footer panel-danger text-center">
+				Return back <a href="{{ append_sid(base_url) }}">Home</a>
+			</div>
+		</div>
+{% endblock %}

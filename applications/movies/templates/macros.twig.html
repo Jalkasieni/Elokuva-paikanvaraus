@@ -1,0 +1,76 @@
+{#
+*
+* @package svntools
+* @version $Id: macros.twig.html 1026 2015-01-28 00:27:31Z crise $
+* @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+*
+#}
+
+{% macro format_bytes(bytes) %}
+{% spaceless %}
+	{% set kilobyte = 1024 %}
+	{% set megabyte = kilobyte * 1024 %}
+	{% set gigabyte = megabyte * 1024 %}
+	{% set terabyte = gigabyte * 1024 %}
+
+	{% if bytes < kilobyte %}
+		{{ bytes ~ ' B' }}
+	{% elseif bytes < megabyte %}
+		{{ (bytes / kilobyte)|number_format(2, '.') ~ ' KiB' }}
+	{% elseif bytes < gigabyte %}
+		{{ (bytes / megabyte)|number_format(2, '.') ~ ' MiB' }}
+	{% elseif bytes < terabyte %}
+		{{ (bytes / gigabyte)|number_format(2, '.') ~ ' GiB' }}
+	{% else %}
+		{{ (bytes / terabyte)|number_format(2, '.') ~ ' TiB' }}
+	{% endif %}
+{% endspaceless %}
+{% endmacro %}
+
+{% macro paginate(pagination) %}
+	<nav>
+		<ul class="pagination pagination-sm">
+			{% if pagination.previous %}<li><a rel="nofollow" href="{{ pagination.previous }}">&laquo;</a></li>{% endif %}
+			{% for page,url in pagination.pages %} 
+				{% if url %}<li><a href="{{ url }}">{{page}}</a></li>{% else %}<li class="active"><span>{{ page }} <span class="sr-only">(current)</span></span></li>{% endif %}
+			{% endfor %}
+			{% if pagination.next %}<li><a rel="nofollow" href="{{ pagination.next }}">&raquo;</a></li>{% endif %}
+		</ul>
+	</nav>
+{% endmacro %}
+
+{% macro pager(pagination) %}
+	<nav>
+		<ul class="pager">
+			{% if pagination.previous -%}
+				<li class="previous"><a href="{{ pagination.previous }}">Previous</a></li>
+			{% else -%}
+				<li class="previous disabled"><a href="#">Previous</a></li>
+			{% endif %}
+			{%- if pagination.next -%}
+				<li class="next"><a href="{{ pagination.next }}">Next</a></li>
+			{% else -%}
+				<li class="next disabled"><a href="#">Next</a></li>
+			{% endif -%}
+		</ul>
+	</nav>
+{% endmacro %}
+
+{% macro default_title(request) %}
+{% spaceless %}
+	{% if request.action == constant('APEXNET_DEFAULT_ACTION') %}
+		{{ request.controller | title }}
+	{% else %}
+		{{ request.controller | title ~ ' • ' ~ request.action | title | replace({'_': ' '}) }}
+	{% endif %}
+{% endspaceless %}
+{% endmacro %}
+
+{% macro date(ts = "now") -%}
+	{{ ts|date("F jS Y - g:ia") }} (UTC)
+{%- endmacro %}
+
+{% macro page_stats() -%}
+	Generated: {{ page_time() }}s {% if constant('DEBUG') %}| Memory: {{ page_memory() }}{% endif %}
+{%- endmacro %}

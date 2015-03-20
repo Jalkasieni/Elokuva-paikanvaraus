@@ -1,0 +1,9 @@
+This folder contains various server side helper and wrapper classes to use with some of the public API's provided
+by Google. Notably the Visualization API, as defined in: https://developers.google.com/chart/interactive/docs/reference
+Where applicable the classes aim to follow the API's and behaviours of their client side counterparts.
+
+The PHP Implementations are Copyright (C) 2014 Markus Willman, markuwil <at> gmail <dot> com and, unless
+otherwise explicitly noted, are provided under the terms of GNU General Public License (version 2).
+
+The code provided is not endorsed or associated with Google in any way whatsoever and is provided AS IS
+in good faith. For the full license terms in effect, please see the included LICENSE file.

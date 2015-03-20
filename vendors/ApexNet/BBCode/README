@@ -1,0 +1,11 @@
+This folder contains a substantially modified early version of jBBCode (1.0.4) creatively dubbed ApexNet BBCLib.
+
+ApexNet BBCLib and its modifications to jBBCode are licensed under the GNU General Public License version 2 while
+jBBCode itself, including any current and future portions within ApexNet BBCLib, is licensed under the MIT License.
+
+For the full license terms and copyrights in effect for ApexNet BBCLib please see the included LICENSE file.
+
+Full list of attributions:
+	jBBCode Copyright (c) 2011 Jackson Owens <http://www.jbbcode.com> - MIT License
+	Some of the modifications have been indirectly inspired by SBBCodeParser Copyright (c) 2011, Sam Clarke <http://www.samclarke.com> - GNU GPL (version 2)
+	The LinkifyVisitor class is based on portions of code from the phpBB project Copyright (c) 2010 phpBB Group <http://www.phpbb.com> - GNU GPL (version 2)

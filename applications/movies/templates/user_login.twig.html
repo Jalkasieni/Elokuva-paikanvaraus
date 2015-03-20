@@ -1,0 +1,53 @@
+{#
+*
+* @package svntools
+* @version $Id: user_login.twig.html 1126 2015-03-19 02:44:34Z crise $
+* @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+*
+#}
+
+{% extends "bootstrap_base.twig.html" %}
+
+{% block head -%}
+	{{ parent() }}
+{% endblock %}
+
+{% block meta -%}
+	{{ parent() }}
+{% endblock %}
+
+{% block scripts -%}
+	{{ parent() }}
+{% endblock %}
+
+{% block title %}{{ parent() }} - Log-In{% endblock %}
+
+{% block content -%}
+		<div class="panel panel-default">
+  			<div class="panel-body">
+				<form class="form-horizontal" id="login" action="{{ append_sid(login_action, false, true) }}" method="post">
+					<fieldset>
+						<legend class="text-center">{{ login_realm | capitalize }} Log-In</legend>
+						<div class="form-group form-group-sm">
+							<label class="col-sm-2 control-label" for="username">Username:</label>
+							<div class="col-sm-10">
+								<input class="form-control" type="text" size="15" name="username" id="username" value="">
+							</div>
+						</div>
+						<div class="form-group form-group-sm">
+							<label class="col-sm-2 control-label" for="password">Password:</label>
+							<div class="col-sm-10">
+								<input class="form-control" type="password" size="15" name="password" id="password" value="">
+							</div>
+						</div>
+						{% if redirect_url is defined -%}
+						<input type="hidden" name="redirect" value="{{redirect_url}}">
+						{% endif -%}
+						<hr>
+						<div class="text-center"><button class="btn btn-primary" type="submit" name="login" value="1">Log-In</button></div>
+					</fieldset>
+				</form>
+			</div>
+		</div>
+{% endblock %}

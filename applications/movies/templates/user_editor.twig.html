@@ -1,0 +1,154 @@
+{#
+*
+* @package svntools
+* @version $Id: user_editor.twig.html 1171 2015-03-20 12:57:11Z crise $
+* @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+*
+#}
+
+{% extends "bootstrap_base.twig.html" %}
+
+{% block head -%}
+	{{ parent() }}
+{% endblock %}
+
+{% block meta -%}
+	{{ parent() }}
+{% endblock %}
+
+{% block scripts -%}
+	{{ parent() }}
+
+	<script>
+		$(function() {
+			$('#username-check').attr('disabled', false);
+
+			var last_request = '';
+			$('#username-check').on('click', function(e) {
+				e.preventDefault();
+				$btn = $('#username-check');
+				$group = $('#username-group');
+
+				if ($btn.attr('disabled') || last_request == $('#username').val())
+					return;
+
+				$btn.removeClass('btn-danger');
+				$group.removeClass('has-error');
+				$btn.attr('disabled', true);
+
+				$.get("{{ append_sid('/auth/check_user.json') | e('js') }}", {username: $("#username").val()})
+					.done(function (response) {
+						$btn.addClass(response.result ? 'btn-success' : 'btn-danger');
+						$group.addClass(response.result ? 'has-success' : 'has-error');
+						
+						$btn.text(response.short_text);
+						$btn.css('text-transform', 'capitalize');
+					})
+					.fail(function (xhr) {
+						$btn.addClass('btn-danger');
+						$group.addClass('has-error');
+
+						$btn.text(xhr.statusText);
+					})
+					.always(function () {
+						last_request = $('#username').val();
+
+						$btn.removeClass('btn-default');
+						$btn.attr('disabled', false);
+					});
+			});
+		});
+	</script>
+{% endblock %}
+
+{% block title %}{{ parent() }} - {{ util.default_title(request) }}{% endblock %}
+
+{% block header -%}
+		{% set page_subtitle = 'Account Management' %}
+		{{ parent() }}
+{% endblock %}
+
+{% block content -%}
+		<div class="panel panel-default">
+  			<div class="panel-body">
+				<form class="form-horizontal" id="{{ editor_action }}" action="{{ append_sid('/auth/' ~ editor_action) }}" method="post">
+					<fieldset>
+						<legend class="text-center">{{ editor_action | capitalize }} User Account</legend>
+						<div id="username-group" class="form-group form-group-sm">
+						{% if editor_action == 'register' -%}
+							<label for="username" class="col-sm-2 control-label">Username:</label>
+							<div class="col-sm-10">
+								<div class="input-group">
+									<input class="form-control" type="text" size="30" name="username" id="username" value="{{ form.username }}" required>
+									<span class="input-group-btn">
+										<button class="btn btn-sm btn-default" type="button" id="username-check" disabled>Check Availability</button>
+									</span>
+								</div>
+							</div>
+						{% else -%}
+							<label class="col-sm-2 control-label">Username:</label>
+							<div class="col-sm-10">
+								<p class="form-control-static">{{ form.username }}</p>
+								<input type="hidden" name="user_id" id = "user_id" value="{{ form.user_id }}">
+								<input type="hidden" name="username" id="username" value="{{ form.username }}">
+							</div>
+						{% endif -%}
+						</div>
+						<div class="form-group form-group-sm">
+							<label for="display_name" class="col-sm-2 control-label">Display Name:</label>
+							<div class="col-sm-10">
+								<input class="form-control" type="text" size="30" name="display_name" id="display_name" placeholder="Publicly visible name (optional)" value="{{form.display_name}}">
+							</div>
+						</div>
+						<div class="form-group form-group-sm">
+							<label for="email" class="col-sm-2 control-label">E-mail address:</label>
+							<div class="col-sm-10">
+								<input class="form-control" type="email" size="30" name="email" id="email" placeholder="Enter a valid email address" value="{{form.email}}" required>
+							</div>
+						</div>
+						{% if editor_action == 'update' and not session.admin -%}
+						<div class="form-group form-group-sm">
+							<label class="col-sm-2 control-label" for="password_old">Old Password:</label>
+							<div class="col-sm-10">
+								<input class="form-control" type="password" size="30" name="password_old" id="password_old" placeholder="You may leave these blank, the password will not be changed" value="">
+							</div>
+						</div>
+						{% endif -%}
+						<div class="form-group form-group-sm">
+							<label class="col-sm-2 control-label" for="password">Password:</label>
+							<div class="col-sm-10">
+								<input class="form-control" type="password" size="30" name="password" id="password" placeholder="Passwords must be 8 characters or longer, choose a strong unique password" value=""
+								{%- if editor_action == 'register' %} required{% endif %}>
+							</div>
+						</div>
+						<div class="form-group form-group-sm">
+							<label class="col-sm-2 control-label" for="password_confirm">Re-enter password:</label>
+							<div class="col-sm-10">
+								<input class="form-control" type="password" size="30" name="password_confirm" id="password_confirm" placeholder="Re-enter the password exactly as above, passwords are case-sensitive" value=""
+								{%- if editor_action == 'register' %} required{% endif %}>
+							</div>
+						</div>
+						{% if user.admin and session.admin -%}
+						<div class="form-group form-group-sm">
+							<label class="col-sm-2 control-label">User Permissions:</label>
+							<div class="col-sm-10">
+								{% for permission in permission_list -%}
+								<label class="checkbox-inline">
+									<input type="checkbox" name="permissions[]" id="{{permission}}" value="{{permission}}" {% if permission == 'registered' %} disabled{% endif %}
+									{%- if permission in form.permissions %} checked{% endif %}> {{ permission | capitalize }}
+								</label>
+								{% endfor -%}
+							</div>
+						</div>
+						{% endif -%}
+						<hr>
+						<div class="text-center">
+							<button class="btn btn-primary" type="submit" name="submit" id="submit" value="1">{{ editor_action | capitalize }}</button>
+							<a class="cancel-link btn btn-default" href="{{ append_sid(base_url) }}" role="button" rel="nofollow">Cancel</a>
+						</div>
+					</fieldset>
+				</form>
+			</div>
+		</div>
+{% endblock %}
