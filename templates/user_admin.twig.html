@@ -1,7 +1,7 @@
 {#
 *
 * @package apexnet
-* @version $Id: user_admin.twig.html 1174 2015-03-20 13:06:34Z crise $
+* @version $Id: user_admin.twig.html 1193 2015-03-22 01:59:47Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -34,6 +34,8 @@
 
 {% block header -%}
 		{% set page_subtitle = 'Manage Users' %}
+		{% set admin_module = true  %}
+
 		{{ parent() }}
 {% endblock %}
 

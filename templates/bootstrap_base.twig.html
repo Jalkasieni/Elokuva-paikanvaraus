@@ -1,7 +1,7 @@
 {#
 *
 * @package svntools
-* @version $Id: bootstrap_base.twig.html 1188 2015-03-20 20:44:04Z crise $
+* @version $Id: bootstrap_base.twig.html 1194 2015-03-22 02:16:27Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -21,7 +21,7 @@
 	<meta name="description" content="">
 	{%- endblock %}
 
-	<title>{% block title %}ApexDC{% endblock %}</title>
+	<title>{% block title %}{{ constant('APEXNET_INSTALLATION_NAME') }}{% endblock %}</title>
 
 	{% if feeds is not empty -%}
 	<!-- Syndication Feeds -->
@@ -65,28 +65,34 @@
 			<div class="navbar-collapse collapse">
 				<div class="navbar-right"> <!-- Twitter Bootstrap Bug --> </div>
 
+				{% if user is defined and (request.controller != 'auth' or (request.action not in ['login', 'logout', 'login_admin'])) -%}
 				<div class="navbar-right">
-					<!-- {{ request.controller }} {{ request.action }} -->
-					{% if user is defined and (request.controller != 'auth' or (request.action not in ['login', 'logout', 'login_admin'])) -%}
+					{% if user.registered -%}
 				 	<p class="navbar-text">
-				 		{% if user.registered -%}
 						Welcome back, <a href="{{ append_sid('/auth/update/') }}">{{user.display_name|raw}}</a> (<em>{{user.group_title}}</em>) 
-						{%- endif %}
 					</p>
+					<a class="btn btn-primary btn-sm navbar-btn" href="{{ append_sid(login_link, 'redirect=' ~ page_url|e('url'), true) }}" rel="nofollow">Log Out</a>
+					{%- else -%}
+					<form  class="navbar-form navbar-right" action="{{ append_sid(login_link, '', true) }}" method="post" role="login">
+						<div class="form-group form-group-sm">
+							<input type="text" class="form-control" name="username" id="username" placeholder="Username" value="" required>
+						</div>
+						<div class="form-group form-group-sm">
+							<input type="password" class="form-control" name="password" id="password" placeholder="Password" value="" required>
+						</div>
+						<input type="hidden" name="redirect" value="{{page_url}}">
+						<button class="btn btn-primary btn-sm" type="submit" name="login" value="1">Log In</button>
 
-					<a class="btn btn-primary btn-sm navbar-btn" href="{{ append_sid(login_link, 'redirect=' ~ page_url|e('url'), true) }}" rel="nofollow">
-						{%- if user.registered %}Log Out{% else %}Log In{% endif -%}
-					</a>
-					{% if not user.registered -%}
-					<a class="btn btn-success btn-sm navbar-btn" href="{{ append_sid('/auth/register') }}" rel="nofollow">Register</a>
-					{%- endif %}
+						<a class="btn btn-success btn-sm" href="{{ append_sid('/auth/register') }}" rel="nofollow">Sign Up</a>
+					</form>
 					{%- endif %}
 				</div>
+				{%- endif %}
 
 				<div class="container">
 					{%- include 'bootstrap_menu_fragment.twig.html' %}
 
-					{% if feeds is not empty -%}
+					{# if feeds is not empty -%}
 					<ul class="nav navbar-nav pull-right hidden-xs hidden-sm">
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -106,7 +112,7 @@
 							</ul>
 						</li>
 					</ul>
-					{% endif -%}
+					{% endif -#}
 				</div>
 			</div>
 		</div>
@@ -137,7 +143,7 @@
 		</div>
 		<div class="row" id="footer">
 			<p class="text-center">
-				Copyright © {{ "now"| date("Y") }} by <a rel="nofollow" href="{{ append_sid(base_url) }}">{{ constant('APEXNET_INSTALLATION_COPYRIGHT') }}</a> | {{ util.page_stats() }}
+				Copyright © {{ "now"| date("Y") }} by <a rel="nofollow" href="{{ append_sid(base_url) }}">{{ constant('APEXNET_INSTALLATION_NAME') }}</a> | {{ util.page_stats() }}
 			</p>
 			<p class="text-center">
 				<span class="button w3c">
