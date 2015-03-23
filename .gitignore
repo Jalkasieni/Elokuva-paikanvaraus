@@ -2,4 +2,5 @@
 /cache/*/
 
 /applications/svntools/*
+/applications/default/*
 /scripts/svntools.php
