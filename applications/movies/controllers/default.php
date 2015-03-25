@@ -2,7 +2,7 @@
 /**
 *
 * @package svntools
-* @version $Id: default.php 1214 2015-03-25 11:00:58Z crise $
+* @version $Id: default.php 1215 2015-03-25 11:06:39Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -28,7 +28,7 @@ class movies_default_controller extends web_controller
 		// Begin session if any
 		$this->user->load($request);
 		$this->model = $this->model('default');
-		$this->movies = $this->model('movies');
+		$this->movie = $this->model('movie');
 	}
 
 	public function do_index(web_request $request)
@@ -36,7 +36,7 @@ class movies_default_controller extends web_controller
 		$response = web_response::create($request);
 	
 		return $response->body('default_index', $this->user->pack(array(
-			'featured'	=> $this->movies->get_movies(array('active', 'featured'), true, self::FEATURED_LIMIT)
+			'featured'	=> $this->movie->get_movies(array('active', 'featured'), true, self::FEATURED_LIMIT)
 		)));
 	}
 }
