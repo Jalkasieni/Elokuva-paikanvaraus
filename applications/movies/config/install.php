@@ -16,5 +16,5 @@ if (!defined('IN_APEXNET')) exit;
 // installation config
 return array(
 	'version'		=> '1.0',
-	'models'		=> array('theater', 'movie')
+	'models'		=> array('theater', 'movie', 'screening', 'reservation')
 );

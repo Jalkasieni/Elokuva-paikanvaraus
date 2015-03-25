@@ -39,33 +39,6 @@ class movies_movie_model extends web_model
 
 			PRIMARY KEY (movie_id)
 		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin");
-
-		$db->update("
-		CREATE TABLE IF NOT EXISTS movie_screenings (
-			screening_id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-			screening_start int(11) unsigned NOT NULL DEFAULT 0,
-			screening_end int(11) unsigned NOT NULL DEFAULT 0,
-
-			movie_id mediumint(8) unsigned NOT NULL,
-			room_id mediumint(8) unsigned NOT NULL,
-
-			PRIMARY KEY (screening_id),
-			KEY (movie_id),
-			KEY (room_id)
-		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin");
-
-		$db->update("
-		CREATE TABLE IF NOT EXISTS movie_reservations (
-			cords_seat tinyint(3) unsigned NOT NULL,
-			cords_row tinyint(3) unsigned NOT NULL,
-			reservation_state tinyint(1) unsigned NOT NULL DEFAULT 0,
-
-			screening_id mediumint(8) unsigned NOT NULL,
-			user_id mediumint(8) unsigned NOT NULL,
-
-			PRIMARY KEY reservation_key (screening_id, cords_seat, cords_row),
-			KEY transaction_key (screening_id, user_id)
-		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin");
 	}
 
 	protected function __construct(DBConnection $db)
