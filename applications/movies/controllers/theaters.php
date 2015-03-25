@@ -2,7 +2,7 @@
 /**
 *
 * @package svntools
-* @version $Id: theaters.php 1222 2015-03-25 16:42:00Z crise $
+* @version $Id: theaters.php 1225 2015-03-25 16:58:18Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -79,7 +79,7 @@ class movies_theaters_controller extends web_controller
 				return web_response::redirect($request, '/theaetrs/admin', 200, 'Theater added successfully.');
 		}
 
-		return web_response::page($request, 'theater_admin_editor', $this->user->pack(array(
+		return web_response::page($request, 'theaters_admin_editor', $this->user->pack(array(
 			'editor_action'	=> 'add',
 			'form'			=> $form_data
 		)));
@@ -92,6 +92,7 @@ class movies_theaters_controller extends web_controller
 		
 		if ($theater_id < 1)
 			return web_response::redirect($request, '/theaters/admin', 302);
+
 		if ($action == 'add')
 		{
 			$form_data = array(
@@ -99,10 +100,10 @@ class movies_theaters_controller extends web_controller
 				'seats'	=> $request->variable('poster_url', '', web_request::POST),
 				'rows'	=> $request->variable('description', '', web_request::POST),
 			);
-			if($this->model->add_room($theater_id, $form_data))
+			if ($this->model->add_room($theater_id, $form_data))
 				return web_response::redirect($request, '/theaters/admin', 200, 'Room added succesfully');
 		}
-		elseif(($action == 'update') && !($room_id < 1))
+		else if(($action == 'update') && !($room_id < 1))
 		{
 			$form_data = array(
 				'name'	=> $request->variable('name', '', web_request::POST),
@@ -110,13 +111,14 @@ class movies_theaters_controller extends web_controller
 				'rows'	=> $request->variable('description', '', web_request::POST),
 			);
 			if($this->model->update_room($room_id,$theater_id, $form_data))
-			return web_response::redirect($request, '/theaters/admin', 200, 'Room updated successfully.');
+				return web_response::redirect($request, '/theaters/admin', 200, 'Room updated successfully.');
 		}
-		elseif(($action == 'remove') && !($room_id < 1))
+		else if (($action == 'remove') && !($room_id < 1))
 		{
-			if($this->model->remove_room($room_id))
-			return web_response::redirect($request, '/theaters/admin', 200, 'Room removed successfully.');
+			if ($this->model->remove_room($room_id))
+				return web_response::redirect($request, '/theaters/admin', 200, 'Room removed successfully.');
 		}
+
 		return web_response::redirect($request, '/theaters/admin', 302);
 	}
 }
