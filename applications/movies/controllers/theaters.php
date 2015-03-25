@@ -84,4 +84,39 @@ class movies_theaters_controller extends web_controller
 			'form'			=> $form_data
 		)));
 	}
+	public function do_manage_rooms(web_request $request)
+	{	
+		$theater_id = $request->variable('theater_id', 0, web_request::REQUEST);
+		$room_id = $request->variable('room_id', 0, web_request::REQUEST);
+		$action = $request->variable('action', '', web_request::REQUEST);
+		
+		if ($theater_id < 1)
+			return web_response::redirect($request, '/theaters/admin', 302);
+		if ($action == 'add')
+		{
+			$form_data = array(
+				'name'	=> $request->variable('name', '', web_request::POST),
+				'seats'	=> $request->variable('poster_url', '', web_request::POST),
+				'rows'	=> $request->variable('description', '', web_request::POST),
+			);
+			if($this->model->add_room($theater_id, $form_data))
+				return web_response::redirect($request, '/theaters/admin', 200, 'Room added succesfully');
+		}
+		elseif(($action == 'update') && !($room_id < 1))
+		{
+			$form_data = array(
+				'name'	=> $request->variable('name', '', web_request::POST),
+				'seats'	=> $request->variable('poster_url', '', web_request::POST),
+				'rows'	=> $request->variable('description', '', web_request::POST),
+			);
+			if($this->model->update_room($room_id,$theater_id, $form_data))
+			return web_response::redirect($request, '/theaters/admin', 200, 'Room updated successfully.');
+		}
+		elseif(($action == 'remove') && !($room_id < 1))
+		{
+			if($this->model->remove_room($room_id))
+			return web_response::redirect($request, '/theaters/admin', 200, 'Room removed successfully.');
+		}
+		return web_response::redirect($request, '/theaters/admin', 302);
+	}
 }
