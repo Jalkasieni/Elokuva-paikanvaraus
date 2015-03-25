@@ -2,7 +2,7 @@
 /**
 *
 * @package svntools
-* @version $Id: theaters.php 1219 2015-03-25 15:50:44Z crise $
+* @version $Id: theaters.php 1222 2015-03-25 16:42:00Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -62,7 +62,7 @@ class movies_theaters_controller extends web_controller
 		$offset = $response->paginate(self::THEATERS_LIMIT, $this->model->count_theaters(), 'theaters');
 
 		return $response->body('theaters_admin', $this->user->pack(array(
-			'theaters'		=> $this->model->get_all_movies(true, self::THEATERS_LIMIT, $offset)
+			'theaters'		=> $this->model->get_theaters(true, self::THEATERS_LIMIT, $offset)
 		)));
 	}
 
