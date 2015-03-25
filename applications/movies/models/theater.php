@@ -3,7 +3,7 @@
 /**
 *
 * @package svntools
-* @version $Id: theater.php 1221 2015-03-25 16:35:42Z crise $
+* @version $Id: theater.php 1229 2015-03-25 17:24:41Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -15,6 +15,7 @@
 if (!defined('IN_APEXNET')) exit;
 
 use ApexNet\Database\DBConnection;
+use ApexNet\BBCode\BBCParser;
 
 /**
  * Theater model
