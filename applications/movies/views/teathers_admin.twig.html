@@ -1,0 +1,101 @@
+{#
+*
+* @package apexnet
+* @version $Id: teathers_admin.twig.html 1220 2015-03-25 16:26:02Z crise $
+* @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+*
+#}
+
+{% extends "bootstrap_base.twig.html" %}
+
+{% block head -%}
+	{{ parent() }}
+{% endblock %}
+
+{% block meta -%}
+	{{ parent() }}
+{% endblock %}
+
+{% block scripts -%}
+	{{ parent() }}
+
+	<script>
+		$('a.remove-link').on('click', function(e) {
+		 	e.preventDefault();
+
+		 	$('#modal-delete-link').attr('href', $(this).attr('href'));
+		 	$('#modal-confirm-delete').modal('toggle');
+		});
+	</script>
+{% endblock %}
+
+{% block title %}{{ parent() }} - {{ util.default_title(request) }}{% endblock %}
+
+{% block header -%}
+		{% set page_subtitle = 'Manage Theaters' %}
+		{% set admin_module = true  %}
+
+		{{ parent() }}
+{% endblock %}
+
+{% block content -%}
+
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="pull-right">
+					<a class="add-link btn btn-primary btn-xs" href="{{ append_sid('/theaters/add_theater') }}" role="button" rel="nofollow">Add Theater</a>
+				</div>
+				<h4 class="panel-title">Manage Theaters</h4>
+			</div>
+
+			<div class="list-group">
+				<div class="list-group-item">
+					<div class="row">
+						<span class="theater-name col-md-8"> <strong>Theater Name</strong> </span>
+						<span class="theater-actions col-md-4 text-center"> <strong>Actions</strong> </span>
+					</div>
+				</div>
+{% for theater in theaters %}
+				<div class="theater-row list-group-item">
+					<div class="row">
+						<span class="theater-name col-md-8">
+							<span class=" glyphicon glyphicon-facetime-video"></span> <a href="{{ append_sid('/movies/update_theater', 'theater_id=' ~ theater.theater_id) }}" rel="nofollow">{{ theater.name }}</a>
+						</span>
+						<span class="theater-actions col-md-4 text-center">
+							<a class="edit-link" title="Edit" href="{{ append_sid('/movies/update_theater', 'theater_id=' ~ theater.theater_id) }}" rel="nofollow">
+								<span class="glyphicon glyphicon-pencil text-info"></span>
+							</a>
+							<a class="remove-link" title="Remove" href="{{ append_sid('/movies/remove_theater', 'theater_id=' ~ theater.theater_id) }}" rel="nofollow">
+								<span class="glyphicon glyphicon-remove text-danger"></span>
+							</a>
+						</span>
+					</div>
+				</div>
+{% endfor %}
+			</div>
+		</div>
+
+{% if movies_pagination is defined %}
+	{{ util.pager(theaters_pagination) }}
+{% endif %}
+
+		<div class="modal fade" id="modal-confirm-delete" tabindex="-1" role="dialog" aria-labelledby="modal-confirm-delete-label" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title text-center" id="modal-confirm-delete-label">Confirm Movie Removal</h4>
+					</div>
+					<div class="modal-body">
+						<p>Are you sure you wish to completely remove this movie from the system? This action can not be reversed.</p>
+					</div>
+					<div class="modal-footer">
+						<a href="#" id="modal-delete-link" class="btn btn-primary" role="button">Continue</a>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					</div>	
+				</div>
+			</div>
+		</div>
+
+{% endblock %}
