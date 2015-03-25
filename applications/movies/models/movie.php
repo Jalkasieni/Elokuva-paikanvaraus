@@ -3,7 +3,7 @@
 /**
 *
 * @package svntools
-* @version $Id: movie.php 1210 2015-03-25 08:52:05Z crise $
+* @version $Id: movie.php 1214 2015-03-25 11:00:58Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -77,8 +77,7 @@ class movies_movie_model extends web_model
 
 	public function add_movie(array $meta_data)
 	{
-		if (!$this->options->validate($meta_data['options']))
-			return false;
+		$this->options->validate($meta_data['options']);
 
 		return ($this->database->update($this->database->build_insert('movie_info', array(
 			'movie_name'			=> $this->database->escape($meta_data['name'], true),
@@ -102,9 +101,7 @@ class movies_movie_model extends web_model
 
 		if (isset($meta_data['options']))
 		{
-			if (!$this->options->validate($meta_data['options']))
-				return false;
-
+			$this->options->validate($meta_data['options']);
 			$update_fields['movie_options'] = (int) $this->options->makeBitmask($meta_data['options']);
 		}
 
@@ -119,7 +116,11 @@ class movies_movie_model extends web_model
 	public function count_movies(array $options = array('active'))
 	{
 		$conds = array();
-		$conds[] = '(mi.movie_options  & '. (int) $this->options->makeBitmask($options) .') <> 0';
+		if (!empty($options))
+		{
+			$options = (int) $this->options->makeBitmask($options);
+			$conds[] = "(mi.movie_options & $options) = $options";
+		}
 
 		$this->database->query('SELECT COUNT(mi.movie_id) AS movies FROM movie_info AS mi ' . $this->database->build_where($conds));
 
@@ -130,12 +131,18 @@ class movies_movie_model extends web_model
 
 	public function get_movies(array $options = array('active'), $parse_bbc = true, $limit = 15, $offset = 0)
 	{
+		$conds = array();
+		if (!empty($options))
+		{
+			$options = (int) $this->options->makeBitmask($options);
+			$conds[] = "(mi.movie_options & $options) = $options";
+		}
+
 		$this->database->limitQuery("
 			SELECT		mi.movie_id, mi.movie_name AS name, mi.movie_poster AS poster_url, mi.movie_description AS description,
 						mi.movie_updated AS modified_date, mi.movie_options AS options
 
-			FROM		movie_info AS mi
-			WHERE		(mi.movie_options  & ". (int) $this->options->makeBitmask($options) .") <> 0 
+			FROM		movie_info AS mi " . $this->database->build_where($conds) . "
 			ORDER BY	mi.movie_id DESC", $limit, $offset);
 
 		$movies = array();
@@ -154,12 +161,12 @@ class movies_movie_model extends web_model
 
 	public function count_all_movies()
 	{
-		return $this->count_movies($this->options->getNames());
+		return $this->count_movies(array());
 	}
 
 	public function get_all_movies($parse_bbc = true, $limit = 15, $offset = 0)
 	{
-		return $this->get_movies($this->options->getNames(), $parse_bbc, $limit, $offset);
+		return $this->get_movies(array(), $parse_bbc, $limit, $offset);
 	}
 
 	public function get_movie($movie_id, $parse_bbc = true)
