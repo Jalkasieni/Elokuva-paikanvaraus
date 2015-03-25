@@ -3,7 +3,7 @@
 /**
 *
 * @package svntools
-* @version $Id: theater.php 1219 2015-03-25 15:50:44Z crise $
+* @version $Id: theater.php 1221 2015-03-25 16:35:42Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -73,7 +73,7 @@ class movies_theater_model extends web_model
 
 	public function count_theaters()
 	{
-		$this->database->query('SELECT COUNT(mt.movie_id) AS theaters FROM movie_theaters AS mt');
+		$this->database->query('SELECT COUNT(mt.theater_id) AS theaters FROM movie_theaters AS mt');
 
 		$row = $this->database->fetchRow();
 		$this->database->freeResult();
