@@ -2,7 +2,7 @@
 /**
 *
 * @package svntools
-* @version $Id: theaters.php 1225 2015-03-25 16:58:18Z crise $
+* @version $Id: theaters.php 1228 2015-03-25 17:19:26Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -76,7 +76,7 @@ class movies_theaters_controller extends web_controller
 		if ($request->is_set('submit') && !empty($form_data['name']))
 		{
 			if ($this->model->add_theater($form_data))
-				return web_response::redirect($request, '/theaetrs/admin', 200, 'Theater added successfully.');
+				return web_response::redirect($request, '/theaters/admin', 200, 'Theater added successfully.');
 		}
 
 		return web_response::page($request, 'theaters_admin_editor', $this->user->pack(array(
