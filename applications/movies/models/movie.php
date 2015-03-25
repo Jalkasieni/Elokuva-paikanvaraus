@@ -3,7 +3,7 @@
 /**
 *
 * @package svntools
-* @version $Id: movie.php 1204 2015-03-25 03:30:55Z crise $
+* @version $Id: movie.php 1210 2015-03-25 08:52:05Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -14,8 +14,9 @@
 */
 if (!defined('IN_APEXNET')) exit;
 
+use ApexNet\Foundation\Config;
+use ApexNet\Foundation\ArrayBitmask;
 use ApexNet\Database\DBConnection;
-
 use ApexNet\BBCode\BBCParser;
 
 /**
@@ -120,7 +121,7 @@ class movies_movie_model extends web_model
 		$conds = array();
 		$conds[] = '(mi.movie_options  & '. (int) $this->options->makeBitmask($options) .') <> 0';
 
-		$this->database->query('SELECT COUNT(vi.movie_id) AS movies FROM movie_info AS mi ' . $this->database->build_where($conds));
+		$this->database->query('SELECT COUNT(mi.movie_id) AS movies FROM movie_info AS mi ' . $this->database->build_where($conds));
 
 		$row = $this->database->fetchRow();
 		$this->database->freeResult();
@@ -130,7 +131,8 @@ class movies_movie_model extends web_model
 	public function get_movies(array $options = array('active'), $parse_bbc = true, $limit = 15, $offset = 0)
 	{
 		$this->database->limitQuery("
-			SELECT		mi.movie_id, mi.movie_name AS name, mi.movie_poster AS poster_url, mi.movie_description AS description, mi.movie_updated AS modified_date
+			SELECT		mi.movie_id, mi.movie_name AS name, mi.movie_poster AS poster_url, mi.movie_description AS description,
+						mi.movie_updated AS modified_date, mi.movie_options AS options
 
 			FROM		movie_info AS mi
 			WHERE		(mi.movie_options  & ". (int) $this->options->makeBitmask($options) .") <> 0 
@@ -142,6 +144,7 @@ class movies_movie_model extends web_model
 			if ($parse_bbc)
 				$row['description'] = BBCParser::parseStoredString($row['description']);
 
+			$row['options'] = $this->options->makeArray($row['options']);
 			$movies[] = $row;
 		}
 
@@ -174,7 +177,7 @@ class movies_movie_model extends web_model
 			if ($parse_bbc)
 				$row['description'] = BBCParser::parseStoredString($row['description']);
 
-			$movie['options'] = $this->movie->makeArray($movie['options']);
+			$movie['options'] = $this->options->makeArray($movie['options']);
 		}
 
 		$this->database->freeResult();
@@ -190,7 +193,8 @@ class movies_movie_model extends web_model
 		$conds[] = 'mi.movie_name LIKE ' . $this->database->escape($query, true, true);
 
 		$this->database->limitQuery("
-			SELECT		mi.movie_id, mi.movie_name AS name, mi.movie_poster AS poster_url, mi.movie_description AS description, mi.movie_updated AS modified_date
+			SELECT		mi.movie_id, mi.movie_name AS name, mi.movie_poster AS poster_url, mi.movie_description AS description,
+						mi.movie_updated AS modified_date, mi.movie_options AS options
 
 			FROM		movie_info AS mi " . $this->database->build_where($conds) . "
 			ORDER BY	mi.movie_id DESC", $limit, $offset);
@@ -201,6 +205,7 @@ class movies_movie_model extends web_model
 			if ($parse_bbc)
 				$row['description'] = BBCParser::parseStoredString($row['description']);
 
+			$row['options'] = $this->options->makeArray($row['options']);
 			$movies[] = $row;
 		}
 
@@ -216,7 +221,7 @@ class movies_movie_model extends web_model
 		$conds[] = '(mi.movie_options  & '. (int) $this->options->makeBitmask(array('active')) .') <> 0';
 		$conds[] = 'mi.movie_name LIKE ' . $this->database->escape($query, true, true);
 
-		$this->database->query('SELECT COUNT(vi.movie_id) AS movies FROM movie_info AS mi ' . $this->database->build_where($conds));
+		$this->database->query('SELECT COUNT(mi.movie_id) AS movies FROM movie_info AS mi ' . $this->database->build_where($conds));
 
 		$row = $this->database->fetchRow();
 		$this->database->freeResult();

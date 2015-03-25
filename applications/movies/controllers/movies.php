@@ -2,7 +2,7 @@
 /**
 *
 * @package svntools
-* @version $Id: movies.php 1205 2015-03-25 07:16:34Z crise $
+* @version $Id: movies.php 1212 2015-03-25 09:05:05Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -12,6 +12,9 @@
 * @ignore
 */
 if (!defined('IN_APEXNET')) exit;
+
+use ApexNet\Foundation\Config;
+use ApexNet\Foundation\ArrayBitmask;
 
 /**
  * Basic movies controller
@@ -62,7 +65,8 @@ class movies_movies_controller extends web_controller
 		$offset = $response->paginate(self::MOVIES_LIMIT, $this->model->count_all_movies(), 'movies');
 
 		return $response->body('movies_admin', $this->user->pack(array(
-			'movies'		=> $this->model->get_all_movies(true, self::MOVIES_LIMIT, $offset)
+			'movies'		=> $this->model->get_all_movies(true, self::MOVIES_LIMIT, $offset),
+			'options_list'	=> Config::load('movie_options')
 		)));
 	}
 
@@ -139,7 +143,7 @@ class movies_movies_controller extends web_controller
 		if ($movie_id < 1)
 			return web_response::redirect($request, '/movies/admin', 302);
 
-		if ($this->model->remove_movie($user_id))
+		if ($this->model->remove_movie($movie_id))
 			return web_response::redirect($request, '/movies/admin', 200, 'Movie removed successfully.');
 
 		return web_response::redirect($request, '/movies/admin', 302);

@@ -1,7 +1,7 @@
 {#
 *
 * @package apexnet
-* @version $Id: movies_admin.twig.html 1205 2015-03-25 07:16:34Z crise $
+* @version $Id: movies_admin.twig.html 1211 2015-03-25 08:58:16Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -56,23 +56,29 @@
 			<div class="list-group">
 				<div class="list-group-item">
 					<div class="row">
-						<span class="movie-name col-md-7 col-sm-6 col-xs-9"> <strong>Movie Name</strong> </span>
-						<span class="movie-modified col-md-3 col-sm-4 hidden-xs text-right"> <strong>Last Modified</strong> </span>
+						<span class="movie-name col-md-5 col-sm-5 col-xs-6"> <strong>Movie Name</strong> </span>
+						<span class="movie-options col-md-2 col-sm-2 col-xs-3"> <strong>Options</strong> </span>
+						<span class="movie-modified col-md-3 col-sm-3 hidden-xs text-right"> <strong>Last Modified</strong> </span>
 						<span class="movie-actions col-md-2 col-sm-2 col-xs-3 text-center"> <strong>Actions</strong> </span>
 					</div>
 				</div>
 {% for movie in movies %}
 				<div class="movie-row list-group-item">
 					<div class="row">
-						<span class="movie-name col-md-7 col-sm-6 col-xs-9">
+						<span class="movie-name col-md-5 col-sm-5 col-xs-6">
 							<span class="glyphicon glyphicon-film"></span> <a href="#" rel="nofollow" data-toggle="modal" data-target="#modal-movie-{{movie.movie_id}}">{{ movie.name }}</a>
 						</span>
-						<span class="movie-created col-md-3 col-sm-4 hidden-xs text-right">{{ movie.modified_date | date('Y-m-d H:i:s') }}</span>
+						<span class="movie-options col-md-2 col-sm-2 col-xs-3">
+							{% for option in options_list -%}
+								<span class="label {% if option in movie.options %}label-primary{% else %}label-default{% endif %}">{{ option | upper }}</span>
+							{% endfor -%}
+						</span>
+						<span class="movie-modified col-md-3 col-sm-3 hidden-xs text-right">{{ movie.modified_date | date('Y-m-d H:i:s') }}</span>
 						<span class="movie-actions col-md-2 col-sm-2 col-xs-3 text-center">
-							<a class="edit-link" title="Edit" href="{{ append_sid('/movie/update_movie', 'movie_id=' ~ movie.movie_id) }}" rel="nofollow">
+							<a class="edit-link" title="Edit" href="{{ append_sid('/movies/update_movie', 'movie_id=' ~ movie.movie_id) }}" rel="nofollow">
 								<span class="glyphicon glyphicon-pencil text-info"></span>
 							</a>
-							<a class="remove-link" title="Remove" href="{{ append_sid('/movie/remove_movie', 'movie_id=' ~ movie.movie_id) }}" rel="nofollow">
+							<a class="remove-link" title="Remove" href="{{ append_sid('/movies/remove_movie', 'movie_id=' ~ movie.movie_id) }}" rel="nofollow">
 								<span class="glyphicon glyphicon-remove text-danger"></span>
 							</a>
 						</span>
