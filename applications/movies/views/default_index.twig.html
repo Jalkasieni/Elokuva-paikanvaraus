@@ -39,31 +39,56 @@
 {% endblock %}
 
 {% block content -%}
-		<h3>Featured Movies</h3>
+		<div class="row">
+			<div class="col-md-8">
+				<h3>Featured Movies</h3>
 
-		<div class="panel-group">
+				<div class="panel-group">
 {% for movie in featured %}
-			<div class="panel panel-default">
-	  			<div class="panel-body">
-					<div class="media">
-						<div class="media-left">
-							{% if movie.poster_url is not empty -%}
-							<img class="media-object poster_img" src="{{movie.poster_url}}" alt="Poster for {{movie.name}}">
-							{%- else -%}
-							<img class="media-object poster_img" src="http://placehold.it/97x146" alt="Placeholder">
-							{%- endif %}
+					<div class="panel panel-default">
+			  			<div class="panel-body">
+							<div class="media">
+								<div class="media-left">
+									{% if movie.poster_url is not empty -%}
+									<img class="media-object img-thumbnail poster_img" src="{{movie.poster_url}}" alt="Poster for {{movie.name}}">
+									{%- else -%}
+									<img class="media-object img-thumbnail poster_img" src="http://placehold.it/97x146" alt="Placeholder">
+									{%- endif %}
+								</div>
+								<div class="media-body">
+									<h4 class="media-heading">{{movie.name}}</h4>
+									{{ movie.description | raw }}
+								</div>
+							</div>
 						</div>
-						<div class="media-body">
-							<h4 class="media-heading">{{movie.name}}</h4>
-							{{ movie.description | raw }}
+						<div class="panel-footer panel-default text-right">
+							<a class="reserve-link btn btn-primary btn-sx" href="#" role="button" rel="nofollow">Reserve</a>
 						</div>
 					</div>
-				</div>
-				<div class="panel-footer panel-default">
-					<a class="reserve-link btn btn-primary btn-sm pull-right" href="#" role="button" rel="nofollow">Reserve</a>
+{% endfor %}
 				</div>
 			</div>
-{% endfor %}
+
+			<div class="col-md-4">
+				<h3>Current Programming</h3>
+
+				<div class="panel-group">
+
+					<div class="panel panel-default">
+						<div class="panel-body">
+							Placeholder 1
+						</div>
+					</div>
+
+					<div class="panel panel-default">
+						<div class="panel-body">
+							Placeholder 2
+						</div>
+					</div>
+
+				</div>
+
+			</div>
 		</div>
 
 {% endblock %}
