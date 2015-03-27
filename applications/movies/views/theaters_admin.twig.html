@@ -1,7 +1,7 @@
 {#
 *
 * @package apexnet
-* @version $Id: theaters_admin.twig.html 1230 2015-03-27 03:14:44Z crise $
+* @version $Id: theaters_admin.twig.html 1235 2015-03-27 14:34:20Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -54,17 +54,17 @@
 			<div class="list-group">
 				<div class="list-group-item">
 					<div class="row">
-						<span class="theater-name col-md-8"> <strong>Theater Name</strong> </span>
-						<span class="theater-actions col-md-4 text-center"> <strong>Actions</strong> </span>
+						<span class="theater-name col-md-8 col-sm-8 col-xs-8"> <strong>Theater Name</strong> </span>
+						<span class="theater-actions col-md-4 col-sm-4 col-xs-4 text-center"> <strong>Actions</strong> </span>
 					</div>
 				</div>
 {% for theater in theaters %}
 				<div class="theater-row list-group-item">
 					<div class="row">
-						<span class="theater-name col-md-8">
+						<span class="theater-name col-md-8 col-sm-8 col-xs-8">
 							<span class=" glyphicon glyphicon-facetime-video"></span> <a href="{{ append_sid('/movies/update_theater', 'theater_id=' ~ theater.theater_id) }}" rel="nofollow">{{ theater.name }}</a>
 						</span>
-						<span class="theater-actions col-md-4 text-center">
+						<span class="theater-actions col-md-4 col-sm-4 col-xs-4 text-center">
 							<a class="edit-link" title="Edit" href="{{ append_sid('/movies/update_theater', 'theater_id=' ~ theater.theater_id) }}" rel="nofollow">
 								<span class="glyphicon glyphicon-pencil text-info"></span>
 							</a>

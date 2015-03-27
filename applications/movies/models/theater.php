@@ -3,7 +3,7 @@
 /**
 *
 * @package svntools
-* @version $Id: theater.php 1230 2015-03-27 03:14:44Z crise $
+* @version $Id: theater.php 1235 2015-03-27 14:34:20Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -100,6 +100,25 @@ class movies_theater_model extends web_model
 
 		$this->database->freeResult();
 		return $theaters;
+	}
+
+	public function get_theater($theater_id, $parse_bbc = true)
+	{
+		$this->database->limitQuery("
+			SELECT		mt.theater_id, mt.theater_name AS name, mt.theater_description AS description
+
+			FROM		movie_theaters AS mt 
+			WHERE		mt.theater_id = ". (int) $theater_id, 1);
+
+		$theater = false;
+		if (($theater = $this->database->fetchRow()) !== false)
+		{
+			if ($parse_bbc)
+				$theater['description'] = BBCParser::parseStoredString($theater['description']);
+		}
+
+		$this->database->freeResult();
+		return $theater;
 	}
 
 	public function add_room($theater_id, array $meta_data)

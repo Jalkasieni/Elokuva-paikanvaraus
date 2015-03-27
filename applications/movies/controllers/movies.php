@@ -2,7 +2,7 @@
 /**
 *
 * @package svntools
-* @version $Id: movies.php 1232 2015-03-27 13:48:15Z crise $
+* @version $Id: movies.php 1235 2015-03-27 14:34:20Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -122,7 +122,7 @@ class movies_movies_controller extends web_controller
 		}
 
 		$form_data = array(
-			'movie_id'		=> $movie_id,
+			'movie_id'		=> (int) $movie_id,
 			'name'			=> $request->variable('name', $current['name'], web_request::POST),
 			'poster_url'	=> $request->variable('poster_url', $current['poster_url'], web_request::POST),
 			'description'	=> $request->variable('description', $current['description'], web_request::POST),

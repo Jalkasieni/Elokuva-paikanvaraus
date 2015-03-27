@@ -2,7 +2,7 @@
 /**
 *
 * @package svntools
-* @version $Id: theaters.php 1230 2015-03-27 03:14:44Z crise $
+* @version $Id: theaters.php 1235 2015-03-27 14:34:20Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -88,6 +88,40 @@ class movies_theaters_controller extends web_controller
 			'form'			=> $form_data
 		)));
 	}
+
+	public function do_update_theater(web_request $request)
+	{
+		$theater_id = $request->variable('theater_id', 0, web_request::REQUEST);
+
+		if ($theater_id < 1)
+			return web_response::redirect($request, '/theaters/admin', 302);
+
+		$current = array('name' => '', 'description' => '');
+		if (!$request->is_set('submit'))
+		{
+			$theater = $this->model->get_theater($theater_id, false);
+			if ($theater !== false)
+				$current = $movie;
+		}
+
+		$form_data = array(
+			'theater_id'	=> (int) $theater_id,
+			'name'			=> $request->variable('name', $current['name'], web_request::POST),
+			'description'	=> $request->variable('description', $current['description'], web_request::POST),
+		);
+
+		if ($request->is_set('submit') && !empty($form_data['name']))
+		{
+			if ($this->model->update_theater($theater_id, $form_data))
+				return web_response::redirect($request, '/theaters/admin', 200, 'Theater updated successfully.');
+		}
+
+		return web_response::page($request, 'theaters_admin_editor', $this->user->pack(array(
+			'editor_action'	=> 'update',
+			'form'			=> $form_data
+		)));
+	}
+
 	public function do_manage_rooms(web_request $request)
 	{	
 		$theater_id = $request->variable('theater_id', 0, web_request::REQUEST);
