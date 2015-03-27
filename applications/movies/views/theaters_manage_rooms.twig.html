@@ -1,7 +1,7 @@
 {#
 *
 * @package apexnet
-* @version $Id: theaters_admin.twig.html 1243 2015-03-27 18:23:40Z crise $
+* @version $Id: theaters_manage_rooms.twig.html 1242 2015-03-27 18:19:34Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -35,7 +35,7 @@
 {% block title %}{{ parent() }} - {{ util.default_title(request) }}{% endblock %}
 
 {% block header -%}
-		{% set page_subtitle = 'Manage Theaters' %}
+		{% set page_subtitle = 'Manage Rooms' %}
 		{% set admin_module = true  %}
 
 		{{ parent() }}
@@ -46,29 +46,30 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<div class="pull-right">
-					<a class="add-link btn btn-primary btn-xs" href="{{ append_sid('/theaters/add_theater') }}" role="button" rel="nofollow">Add Theater</a>
+					<a class="add-link btn btn-primary btn-xs" href="{{ append_sid('/theaters/manage_rooms', 'action=add&theater_id=' ~ theater_id) }}" role="button" rel="nofollow">Add Rooms</a>
 				</div>
-				<h4 class="panel-title">Manage Theaters</h4>
+				<h4 class="panel-title">Manage Rooms</h4>
 			</div>
 
 			<div class="list-group">
 				<div class="list-group-item">
 					<div class="row">
-						<span class="theater-name col-md-8 col-sm-8 col-xs-8"> <strong>Theater Name</strong> </span>
-						<span class="theater-actions col-md-4 col-sm-4 col-xs-4 text-center"> <strong>Actions</strong> </span>
+						<span class="room-name col-md-8 col-sm-8 col-xs-8"> <strong>Room Name</strong> </span>
+						<span class="room-actions col-md-4 col-sm-4 col-xs-4 text-center"> <strong>Actions</strong> </span>
 					</div>
 				</div>
-{% for theater in theaters %}
-				<div class="theater-row list-group-item">
+{% for room in rooms %}
+				<div class="room-row list-group-item">
 					<div class="row">
-						<span class="theater-name col-md-8 col-sm-8 col-xs-8">
-							<span class=" glyphicon glyphicon-facetime-video"></span> <a href="{{ append_sid('/theaters/manage_rooms', 'theater_id=' ~ theater.theater_id) }}" rel="nofollow">{{ theater.name }}</a>
+						<span class="room-name col-md-8 col-sm-8 col-xs-8">
+							<span class="glyphicon glyphicon glyphicon-th"></span>
+							<a href="{{ append_sid('/theaters/manage_rooms', 'action=update&theater_id=' ~ theater_id ~ '&room_id=' ~ room.room_id) }}" rel="nofollow">{{ room.name }}</a>
 						</span>
-						<span class="theater-actions col-md-4 col-sm-4 col-xs-4 text-center">
-							<a class="edit-link" title="Edit" href="{{ append_sid('/theaters/update_theater', 'theater_id=' ~ theater.theater_id) }}" rel="nofollow">
+						<span class="room-actions col-md-4 col-sm-4 col-xs-4 text-center">
+							<a class="edit-link" title="Edit" href="{{ append_sid('/theaters/manage_rooms', 'action=update&theater_id=' ~ theater_id ~ '&room_id=' ~ room.room_id) }}" rel="nofollow">
 								<span class="glyphicon glyphicon-pencil text-info"></span>
 							</a>
-							<a class="remove-link" title="Remove" href="{{ append_sid('/theaters/remove_theater', 'theater_id=' ~ theater.theater_id) }}" rel="nofollow">
+							<a class="remove-link" title="Remove" href="{{ append_sid('/theaters/manage_rooms', 'action=remove&theater_id=' ~ theater_id ~ '&room_id=' ~ room.room_id) }}" rel="nofollow">
 								<span class="glyphicon glyphicon-remove text-danger"></span>
 							</a>
 						</span>
@@ -78,8 +79,8 @@
 			</div>
 		</div>
 
-{% if theaters_pagination is defined %}
-	{{ util.pager(theaters_pagination) }}
+{% if rooms_pagination is defined %}
+	{{ util.pager(rooms_pagination) }}
 {% endif %}
 
 		<div class="modal fade" id="modal-confirm-delete" tabindex="-1" role="dialog" aria-labelledby="modal-confirm-delete-label" aria-hidden="true">
@@ -87,10 +88,10 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4 class="modal-title text-center" id="modal-confirm-delete-label">Confirm Theater Removal</h4>
+						<h4 class="modal-title text-center" id="modal-confirm-delete-label">Confirm Room Removal</h4>
 					</div>
 					<div class="modal-body">
-						<p>Are you sure you wish to completely remove this theater from the system? This action can not be reversed.</p>
+						<p>Are you sure you wish to completely remove this room from the system? This action can not be reversed.</p>
 					</div>
 					<div class="modal-footer">
 						<a href="#" id="modal-delete-link" class="btn btn-primary" role="button">Continue</a>

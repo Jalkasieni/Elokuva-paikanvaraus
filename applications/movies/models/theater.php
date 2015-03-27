@@ -3,7 +3,7 @@
 /**
 *
 * @package svntools
-* @version $Id: theater.php 1240 2015-03-27 16:09:38Z crise $
+* @version $Id: theater.php 1242 2015-03-27 18:19:34Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -184,5 +184,20 @@ class movies_theater_model extends web_model
 
 		$this->database->freeResult();
 		return $rooms;
+	}
+
+	public function get_room($theater_id, $room_id)
+	{
+		$this->database->limitQuery('
+			SELECT		mr.room_id, mr.room_name AS name, mr.room_seats AS seats, mr.room_rows AS rows,
+						EXISTS (SELECT * FROM movie_screenings WHERE room_id = mr.room_id) AS active
+
+			FROM		movie_rooms AS mr 
+			WHERE		mr.room_id = '. (int) $room_id .' AND theater_id = '. (int) $theater_id, 1);
+
+		$room = $this->database->fetchRow();
+
+		$this->database->freeResult();
+		return $room;
 	}
 }
