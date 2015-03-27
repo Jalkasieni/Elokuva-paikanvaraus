@@ -3,7 +3,7 @@
 /**
 *
 * @package svntools
-* @version $Id: movie.php 1233 2015-03-27 14:03:02Z crise $
+* @version $Id: movie.php 1234 2015-03-27 14:07:44Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -166,7 +166,7 @@ class movies_movie_model extends web_model
 
 	public function search_movies($query, $parse_bbc = true, $limit = 15, $offset = 0)
 	{
-		$query = $this->database->any_char . str_replace('*', $db->any_char, $query) . $this->database->any_char;
+		$query = $this->database->any_char . str_replace('*', $this->database->any_char, $query) . $this->database->any_char;
 
 		$conds = array();
 		$conds[] = '(mi.movie_options  & '. (int) $this->options->makeBitmask(array('active')) .') <> 0';
