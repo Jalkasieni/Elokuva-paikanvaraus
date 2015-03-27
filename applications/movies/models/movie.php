@@ -177,7 +177,7 @@ class movies_movie_model extends web_model
 						mi.movie_updated AS modified_date, mi.movie_options AS options
 
 			FROM		movie_info AS mi " . $this->database->build_where($conds) . "
-			COLLATE utf8_ci
+			COLLATE utf8_unicode_ci
 			ORDER BY	mi.movie_id DESC", $limit, $offset);
 
 		$movies = array();
