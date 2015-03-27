@@ -2,7 +2,7 @@
 /**
 *
 * @package svntools
-* @version $Id: theaters.php 1228 2015-03-25 17:19:26Z crise $
+* @version $Id: theaters.php 1230 2015-03-27 03:14:44Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -52,8 +52,12 @@ class movies_theaters_controller extends web_controller
 
 	public function do_index(web_request $request)
 	{
-		$tpl_vars = array();
-		return web_response::page($request, 'theaters_index', $this->user->pack($tpl_vars));
+		$response = web_response::create($request);
+		$offset = $response->paginate(self::THEATERS_LIMIT, $this->model->count_theaters(), 'theaters');
+
+		return $response->body('theaters_index', $this->user->pack(array(
+			'theaters'		=> $this->model->get_theaters(true, self::THEATERS_LIMIT, $offset)
+		)));
 	}
 
 	public function do_admin(web_request $request)
@@ -62,7 +66,7 @@ class movies_theaters_controller extends web_controller
 		$offset = $response->paginate(self::THEATERS_LIMIT, $this->model->count_theaters(), 'theaters');
 
 		return $response->body('theaters_admin', $this->user->pack(array(
-			'theaters'		=> $this->model->get_theaters(true, self::THEATERS_LIMIT, $offset)
+			'theaters'		=> $this->model->get_theaters(false, self::THEATERS_LIMIT, $offset)
 		)));
 	}
 
@@ -97,25 +101,25 @@ class movies_theaters_controller extends web_controller
 		{
 			$form_data = array(
 				'name'	=> $request->variable('name', '', web_request::POST),
-				'seats'	=> $request->variable('poster_url', '', web_request::POST),
-				'rows'	=> $request->variable('description', '', web_request::POST),
+				'seats'	=> $request->variable('seats', 0, web_request::POST),
+				'rows'	=> $request->variable('rows', 0, web_request::POST),
 			);
 			if ($this->model->add_room($theater_id, $form_data))
 				return web_response::redirect($request, '/theaters/admin', 200, 'Room added succesfully');
 		}
-		else if(($action == 'update') && !($room_id < 1))
+		else if (($action == 'update') && !($room_id < 1))
 		{
 			$form_data = array(
 				'name'	=> $request->variable('name', '', web_request::POST),
-				'seats'	=> $request->variable('poster_url', '', web_request::POST),
-				'rows'	=> $request->variable('description', '', web_request::POST),
+				'seats'	=> $request->variable('seats', 0, web_request::POST),
+				'rows'	=> $request->variable('rows', 0, web_request::POST),
 			);
-			if($this->model->update_room($room_id,$theater_id, $form_data))
+			if ($this->model->update_room($theater_id, $room_id, $form_data))
 				return web_response::redirect($request, '/theaters/admin', 200, 'Room updated successfully.');
 		}
 		else if (($action == 'remove') && !($room_id < 1))
 		{
-			if ($this->model->remove_room($room_id))
+			if ($this->model->remove_room($theater_id, $room_id))
 				return web_response::redirect($request, '/theaters/admin', 200, 'Room removed successfully.');
 		}
 

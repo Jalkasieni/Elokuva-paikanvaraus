@@ -1,7 +1,7 @@
 {#
 *
 * @package apexnet
-* @version $Id: theaters_admin.twig.html 1223 2015-03-25 16:44:42Z crise $
+* @version $Id: theaters_admin.twig.html 1230 2015-03-27 03:14:44Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -11,6 +11,8 @@
 
 {% block head -%}
 	{{ parent() }}
+
+	<link rel="stylesheet" href="{{base_url}}/css/movies.css">
 {% endblock %}
 
 {% block meta -%}
@@ -76,7 +78,7 @@
 			</div>
 		</div>
 
-{% if movies_pagination is defined %}
+{% if theaters_pagination is defined %}
 	{{ util.pager(theaters_pagination) }}
 {% endif %}
 

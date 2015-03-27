@@ -1,7 +1,7 @@
 {#
 *
 * @package svntools
-* @version $Id: movies_admin_editor.twig.html 1220 2015-03-25 16:26:02Z crise $
+* @version $Id: movies_admin_editor.twig.html 1230 2015-03-27 03:14:44Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -11,6 +11,8 @@
 
 {% block head -%}
 	{{ parent() }}
+
+	<link rel="stylesheet" href="{{base_url}}/css/movies.css">
 {% endblock %}
 
 {% block meta -%}

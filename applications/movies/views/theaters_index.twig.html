@@ -1,7 +1,7 @@
 {#
 *
 * @package svntools
-* @version $Id: theaters_index.twig.html 1198 2015-03-23 21:29:00Z crise $
+* @version $Id: theaters_index.twig.html 1230 2015-03-27 03:14:44Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -11,6 +11,8 @@
 
 {% block head -%}
 	{{ parent() }}
+
+	<link rel="stylesheet" href="{{base_url}}/css/movies.css">
 {% endblock %}
 
 {% block meta -%}
@@ -35,9 +37,21 @@
 {% endblock %}
 
 {% block content -%}
-		<div class="panel panel-default">
-  			<div class="panel-body text-center">
-  				<h1>Hello, {{request.controller}}!</h1>
+		<h3>Movies Listing</h3>
+
+		<div class="panel-group">
+{% for theater in theaters %}
+			<div class="panel panel-default">
+	  			<div class="panel-body">
+					<h4>{{theater.name}}</h4>
+					{{ theater.description | raw }}
+				</div>
 			</div>
+{% endfor %}
 		</div>
+
+{% if theaters_pagination is defined %}
+	{{ util.pager(theaters_pagination) }}
+{% endif %}
+
 {% endblock %}

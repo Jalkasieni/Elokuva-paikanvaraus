@@ -11,6 +11,8 @@
 
 {% block head -%}
 	{{ parent() }}
+
+	<link rel="stylesheet" href="{{base_url}}/css/movies.css">
 {% endblock %}
 
 {% block meta -%}
@@ -35,9 +37,36 @@
 {% endblock %}
 
 {% block content -%}
-		<div class="panel panel-default">
-  			<div class="panel-body text-center">
-  				<h1>Hello, {{request.controller}}!</h1>
+
+		<h3>Movies Listing</h3>
+
+		<div class="panel-group">
+{% for movie in movies %}
+			<div class="panel panel-default">
+	  			<div class="panel-body">
+					<div class="media">
+						<div class="media-left">
+							{% if movie.poster_url is not empty -%}
+							<img class="media-object img-thumbnail poster_img" src="{{movie.poster_url}}" alt="Poster for {{movie.name}}">
+							{%- else -%}
+							<img class="media-object img-thumbnail poster_img" src="http://placehold.it/97x146" alt="Placeholder">
+							{%- endif %}
+						</div>
+						<div class="media-body">
+							<h4 class="media-heading">{{movie.name}}</h4>
+							{{ movie.description | raw }}
+						</div>
+					</div>
+				</div>
+				<div class="panel-footer panel-default text-right">
+					<a class="reserve-link btn btn-primary btn-sx" href="#" role="button" rel="nofollow">Reserve</a>
+				</div>
 			</div>
+{% endfor %}
 		</div>
+
+{% if movies_pagination is defined %}
+	{{ util.pager(movies_pagination) }}
+{% endif %}
+
 {% endblock %}

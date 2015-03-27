@@ -3,7 +3,7 @@
 /**
 *
 * @package svntools
-* @version $Id: theater.php 1229 2015-03-25 17:24:41Z crise $
+* @version $Id: theater.php 1230 2015-03-27 03:14:44Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -112,9 +112,9 @@ class movies_theater_model extends web_model
 		))) == 1);
 	}
 
-	public function update_room($room_id, $theater_id, array $meta_data)
+	public function update_room($theater_id, $room_id, array $meta_data)
 	{
-		$update_fields = array('theater_id' => (int) $theater_id);
+		$update_fields = array();
 
 		if (isset($meta_data['name']))
 			$update_fields['room_name'] = $this->database->escape($meta_data['name'], true);
@@ -123,29 +123,30 @@ class movies_theater_model extends web_model
 		if (isset($meta_data['rows']))
 			$update_fields['room_rows'] = (int) $meta_data['rows'];
 
-		return ($this->database->update($this->database->build_update('movie_rooms', $update_fields, 'room_id = '. (int) $room_id)) == 1);
+		return ($this->database->update($this->database->build_update('movie_rooms', $update_fields, 'room_id = '. (int) $room_id .' AND theater_id = '. (int) $theater_id)) == 1);
 	}
 
-	public function remove_room($room_id)
+	public function remove_room($theater_id, $room_id)
 	{
-		return ($this->database->update($this->database->build_delete('movie_rooms', 'rooms_id = '. (int) $room_id)) == 1);
+		return ($this->database->update($this->database->build_delete('movie_rooms', 'room_id = '. (int) $room_id .' AND theater_id = '. (int) $theater_id)) == 1);
 	}
 
-	public function count_rooms()
+	public function count_rooms($theater_id)
 	{
-		$this->database->query('SELECT COUNT(mr.room_id) AS rooms FROM movie_room AS mr');
+		$this->database->query('SELECT COUNT(mr.room_id) AS rooms FROM movie_room AS mr WHERE mr.theater_id = ' . (int) $theater_id);
 
 		$row = $this->database->fetchRow();
 		$this->database->freeResult();
 		return $row['theaters'];
 	}
 
-	public function get_rooms($limit = 15, $offset = 0)
+	public function get_rooms($theater_id, $limit = 15, $offset = 0)
 	{
 		$this->database->limitQuery("
 			SELECT		mr.room_id, mr.room_name AS name, mr.room_seats AS seats, mr.room_rows AS rows
 
 			FROM		movie_rooms AS mr 
+			WHERE		mr.theater_id = " . (int) $theater_id . "
 			ORDER BY	mr.room_id DESC", $limit, $offset);
 
 		$rooms = array();
