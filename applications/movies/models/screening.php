@@ -41,7 +41,6 @@ class movies_screening_model extends web_model
 	public function add_screening(array $meta_data)
 	{
 		return ($this->database->update($this->database->build_insert('movie_screenings', array(
-			'screening_id'			=> (int) $meta_data['screening_id'],
 			'screening_start'		=> (int) $meta_data['start'],
 			'screening_end'			=> (int) $meta_data['end'],
 			'movie_id'				=> (int) $meta_data['movie_id'],
@@ -86,12 +85,37 @@ class movies_screening_model extends web_model
 		return $row['screenings'];
 	}
 
+	public function get_screening($screening_id)
+	{
+		$this->database->Query("
+			SELECT		ms.screening_id, ms.screening_start AS start, ms.screening_end AS end, ms.movie_id AS movie_id, ms.room_id AS room_id
+			FROM		movie_screenings AS ms 
+			WHERE		ms.screening_id = ". (int) $screening_id);
+
+		$row = $this->database->fetchRow();
+		$this->database->freeResult();
+		return $row;
+	}
+	
+	public function get_screening_user($screening_id)
+	{
+		$this->database->Query("
+			SELECT		ms.screening_id, ms.screening_start AS start, ms.movie_name AS movie_name, mr.room_name AS room_name
+			FROM		movie_screenings AS ms LEFT JOIN movie_rooms AS mr ON ms.room_id = mr.room_id
+			LEFT JOIN 	movie_info AS mi ON mi.movie_id = ms.movie_id
+			WHERE		ms.screening_id = ". (int) $screening_id);
+
+		$row = $this->database->fetchRow();
+		$this->database->freeResult();
+		return $row;
+	}
+	
 	public function get_screenings($only_upcoming = true, $limit = 15, $offset = 0)
 	{
 		$this->database->limitQuery("
 			SELECT		ms.screening_id, ms.screening_start AS start, ms.screening_end AS end, ms.movie_id AS movie_id, ms.room_id AS room_id
 			FROM		movie_screenings AS ms 
-			WHERE		" .(only_upcoming ? ' HAVING screening_start > ' . time() : '') . "
+			WHERE		" .($only_upcoming ? ' HAVING ms.screening_start > ' . time() : '') . "
 			ORDER BY	ms.screening_start ASC", $limit, $offset);
 
 		$screenings = array();
@@ -108,7 +132,7 @@ class movies_screening_model extends web_model
 			SELECT		ms.screening_id, ms.screening_start AS start, ms.movie_name AS movie_name, mr.room_name AS room_name
 			FROM		movie_screenings AS ms LEFT JOIN movie_rooms AS mr ON ms.room_id = mr.room_id
 			LEFT JOIN 	movie_info AS mi ON mi.movie_id = ms.movie_id
-			WHERE		mr.theater_id = " . $theater_id . (only_upcoming ? 'AND HAVING screening_start > ' . time() : '') . ((movie_id != null) ? 'AND ms.movie_id = ' . $movie_id : ''). "
+			WHERE		mr.theater_id = " .(int) $theater_id . ($only_upcoming ? 'AND HAVING ms.screening_start > ' . time() : '') . (($movie_id != null) ? 'AND ms.movie_id = ' .(int) $movie_id : ''). "
 			ORDER BY	ms.screening_start ASC", $limit, $offset);
 
 		$screenings = array();
@@ -119,12 +143,25 @@ class movies_screening_model extends web_model
 		return $screenigs;
 	}
 	
+	public function count_screenings_user($theater_id, $movie_id = null ,$only_upcoming = true)
+	{
+		$this->database->Query("
+			SELECT		COUNT(ms.screening_id) AS count
+			FROM		movie_screenings AS ms
+			WHERE		mr.theater_id = " . (int) $theater_id . ($only_upcoming ? 'AND HAVING ms.screening_start > ' . time() : '') . (($movie_id != null) ? 'AND ms.movie_id = ' .(int) $movie_id : ''). "
+			ORDER BY	ms.screening_start ASC");
+
+		$row = $this->database->fetchRow();
+		$this->database->freeResult();
+		return $row['count'];
+	}
+	
 	public function count_seats($screening_id)
 	{
 		$this->database->Query("
 			SELECT		mr.room_seats AS seats, mr.room_rows AS rows
 			FROM		movie_rooms AS mr LEFT JOIN movie_screenings AS ms ON mr.room_id = ms.room_id
-			WHERE		ms.screening_id = " .($screening_id));
+			WHERE		ms.screening_id = " .(int) $screening_id);
 			
 		$row = $this->database->fetchRow();
 		$this->database->freeResult();
@@ -136,7 +173,7 @@ class movies_screening_model extends web_model
 		$this->database->Query("
 			SELECT		COUNT(mr.reservation_id) AS freeseats
 			FROM		movie_reservations AS mr 
-			WHERE		mr.screening_id = " .($screening_id));
+			WHERE		mr.screening_id = " .(int) $screening_id);
 			
 		$row = $this->database->fetchRow();
 		$this->database->freeResult();
