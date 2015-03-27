@@ -2,7 +2,7 @@
 /**
 *
 * @package svntools
-* @version $Id: theaters.php 1236 2015-03-27 14:43:27Z crise $
+* @version $Id: theaters.php 1237 2015-03-27 14:51:57Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -101,7 +101,7 @@ class movies_theaters_controller extends web_controller
 		{
 			$theater = $this->model->get_theater($theater_id, false);
 			if ($theater !== false)
-				$current = $movie;
+				$current = $theater;
 		}
 
 		$form_data = array(
