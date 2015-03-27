@@ -1,7 +1,7 @@
 {#
 *
 * @package apexnet
-* @version $Id: theaters_admin.twig.html 1235 2015-03-27 14:34:20Z crise $
+* @version $Id: theaters_admin.twig.html 1236 2015-03-27 14:43:27Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -62,13 +62,13 @@
 				<div class="theater-row list-group-item">
 					<div class="row">
 						<span class="theater-name col-md-8 col-sm-8 col-xs-8">
-							<span class=" glyphicon glyphicon-facetime-video"></span> <a href="{{ append_sid('/movies/update_theater', 'theater_id=' ~ theater.theater_id) }}" rel="nofollow">{{ theater.name }}</a>
+							<span class=" glyphicon glyphicon-facetime-video"></span> <a href="{{ append_sid('/theaters/update_theater', 'theater_id=' ~ theater.theater_id) }}" rel="nofollow">{{ theater.name }}</a>
 						</span>
 						<span class="theater-actions col-md-4 col-sm-4 col-xs-4 text-center">
-							<a class="edit-link" title="Edit" href="{{ append_sid('/movies/update_theater', 'theater_id=' ~ theater.theater_id) }}" rel="nofollow">
+							<a class="edit-link" title="Edit" href="{{ append_sid('/theaters/update_theater', 'theater_id=' ~ theater.theater_id) }}" rel="nofollow">
 								<span class="glyphicon glyphicon-pencil text-info"></span>
 							</a>
-							<a class="remove-link" title="Remove" href="{{ append_sid('/movies/remove_theater', 'theater_id=' ~ theater.theater_id) }}" rel="nofollow">
+							<a class="remove-link" title="Remove" href="{{ append_sid('/theaters/remove_theater', 'theater_id=' ~ theater.theater_id) }}" rel="nofollow">
 								<span class="glyphicon glyphicon-remove text-danger"></span>
 							</a>
 						</span>

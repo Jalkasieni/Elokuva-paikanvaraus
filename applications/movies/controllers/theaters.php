@@ -2,7 +2,7 @@
 /**
 *
 * @package svntools
-* @version $Id: theaters.php 1235 2015-03-27 14:34:20Z crise $
+* @version $Id: theaters.php 1236 2015-03-27 14:43:27Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -34,13 +34,13 @@ class movies_theaters_controller extends web_controller
 			'admin' => array(
 				'permissions'	=> 'admin'
 			),
-			'add_teather' => array(
+			'add_theater' => array(
 				'permissions'	=> 'admin'
 			),
-			'update_teather' => array(
+			'update_theater' => array(
 				'permissions'	=> 'admin'
 			),
-			'remove_teather' => array(
+			'remove_theather' => array(
 				'permissions'	=> 'admin'
 			),
 			'manage_rooms' => array(
@@ -120,6 +120,19 @@ class movies_theaters_controller extends web_controller
 			'editor_action'	=> 'update',
 			'form'			=> $form_data
 		)));
+	}
+
+	public function do_remove_theater(web_request $request)
+	{
+		$theater_id = $request->variable('theater_id', 0, web_request::REQUEST);
+
+		if ($theater_id < 1)
+			return web_response::redirect($request, '/theaters/admin', 302);
+
+		if ($this->model->remove_theater($theater_id))
+			return web_response::redirect($request, '/theaters/admin', 200, 'Theater removed successfully.');
+
+		return web_response::redirect($request, '/theaters/admin', 302);
 	}
 
 	public function do_manage_rooms(web_request $request)
