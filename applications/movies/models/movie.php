@@ -166,18 +166,17 @@ class movies_movie_model extends web_model
 
 	public function search_movies($query, $parse_bbc = true, $limit = 15, $offset = 0)
 	{
-		$query = $this->database->any_char . str_replace('*', $this->database->any_char, $query) . $this->database->any_char;
-
+		$query = $this->database->any_char . str_replace('*', $this->database->any_char, strtolower($query)) . $this->database->any_char;
+		
 		$conds = array();
 		$conds[] = '(mi.movie_options  & '. (int) $this->options->makeBitmask(array('active')) .') <> 0';
-		$conds[] = 'mi.movie_name LIKE ' . $this->database->escape($query, true, true);
+		$conds[] = 'LOWER(mi.movie_name) LIKE ' . $this->database->escape($query, true, true);
 
 		$this->database->limitQuery("
 			SELECT		mi.movie_id, mi.movie_name AS name, mi.movie_poster AS poster_url, mi.movie_description AS description,
 						mi.movie_updated AS modified_date, mi.movie_options AS options
 
 			FROM		movie_info AS mi " . $this->database->build_where($conds) . "
-			COLLATE utf8_unicode_ci
 			ORDER BY	mi.movie_id DESC", $limit, $offset);
 
 		$movies = array();
