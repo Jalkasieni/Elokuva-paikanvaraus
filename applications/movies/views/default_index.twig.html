@@ -37,19 +37,19 @@
 {% endblock %}
 
 {% block content -%}
-		<div class="row">
-			<form class="form-horizontal" id="search-form" action="{{ append_sid('/movies/') }}" method="get">
-				<div class="form-group form-group-lg">
-					<div class="input-group">
-						<label for="query" class="sr-only">Search:</label>
-						<input class="form-control" type="text" size="30" name="q" id="query" value="" placeholder="Search Movies...">
-						<span class="input-group-btn">
-							<button class="btn btn-lg btn-default" type="submit" name="submit" id="submit" value="1">Search</button>
-						</span>
-					</div>
+		<form class="form-horizontal" id="search-form" action="{{ append_sid('/movies/') }}" method="get">
+			<div class="form-group form-group-lg">
+				<div class="input-group">
+					<label for="query" class="sr-only">Search:</label>
+					<input class="form-control" type="text" size="30" name="q" id="query" value="" placeholder="Search Movies...">
+					<span class="input-group-btn">
+						<button class="btn btn-lg btn-default" type="submit" name="submit" id="submit" value="1">Search</button>
+					</span>
 				</div>
-			</form>
+			</div>
+		</form>
 
+		<div class="row">
 			<div class="col-md-8">
 				<h3>Featured Movies</h3>
 

@@ -2,7 +2,7 @@
 /**
 *
 * @package svntools
-* @version $Id: movies.php 1235 2015-03-27 14:34:20Z crise $
+* @version $Id: movies.php 1238 2015-03-27 15:04:48Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -52,8 +52,8 @@ class movies_movies_controller extends web_controller
 	public function do_index(web_request $request)
 	{
 		$response = web_response::create($request);
-		$query = $request->variable('q', '', web_request::GET);
-		$tpl_data = array();
+		$query = $request->variable('q', '', web_request::REQUEST);
+		$tpl_data = array('query' => $query);
 
 		if (empty($query))
 		{
