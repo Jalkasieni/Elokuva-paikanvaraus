@@ -1,0 +1,111 @@
+{#
+*
+* @package apexnet
+* @version $Id: screenings_admin.twig.html 1243 2015-03-27 18:23:40Z crise $
+* @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+*
+#}
+
+{% extends "bootstrap_base.twig.html" %}
+
+{% block head -%}
+	{{ parent() }}
+
+	<link rel="stylesheet" href="{{base_url}}/css/movies.css">
+{% endblock %}
+
+{% block meta -%}
+	{{ parent() }}
+{% endblock %}
+
+{% block scripts -%}
+	{{ parent() }}
+
+	<script>
+		$('a.remove-link').on('click', function(e) {
+		 	e.preventDefault();
+
+		 	$('#modal-delete-link').attr('href', $(this).attr('href'));
+		 	$('#modal-confirm-delete').modal('toggle');
+		});
+	</script>
+{% endblock %}
+
+{% block title %}{{ parent() }} - {{ util.default_title(request) }}{% endblock %}
+
+{% block header -%}
+		{% set page_subtitle = 'Manage screenings' %}
+		{% set admin_module = true  %}
+
+		{{ parent() }}
+{% endblock %}
+
+{% block content -%}
+
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="pull-right">
+					<a class="add-link btn btn-primary btn-xs" href="{{ append_sid('/screenings/add_screening') }}" role="button" rel="nofollow">Add screening</a>
+				</div>
+				<h4 class="panel-title">Manage screenings</h4>
+			</div>
+
+			<div class="list-group">
+				<div class="list-group-item">
+					<div class="row">
+						<span class="screening-start col-md-3 col-sm-3 hidden-xs text-right"> <strong>Start Time</strong> </span>
+						<span class="screening-end col-md-3 col-sm-3 hidden-xs text-right"> <strong>End Time</strong> </span>
+						<span class="screening-movie col-md-8 col-sm-8 col-xs-8"> <strong>Movie</strong> </span>
+						<span class="screening-room col-md-8 col-sm-8 col-xs-8"> <strong>Room</strong> </span>
+						<span class="screening-actions col-md-4 col-sm-4 col-xs-4 text-center"> <strong>Actions</strong> </span>
+					</div>
+				</div>
+{% for screening in screenings %}
+				<div class="screening-row list-group-item">
+					<div class="row">
+						<span class="movie-start col-md-3 col-sm-3 hidden-xs text-right">{{ screening.start | date('Y-m-d H:i:s') }}</span>
+						<span class="movie-end col-md-3 col-sm-3 hidden-xs text-right">{{ screening.end | date('Y-m-d H:i:s') }}</span>
+						<span class="screening-movie col-md-8 col-sm-8 col-xs-8">
+							<span class=" glyphicon glyphicon-facetime-video"></span> <a>{{ screening.movie_name }}</a>
+						</span>
+						<span class="screening-room col-md-8 col-sm-8 col-xs-8">
+							<span class=" glyphicon glyphicon-facetime-video"></span> <a>{{ screening.room_name }}</a>
+						</span>
+						<span class="screening-actions col-md-4 col-sm-4 col-xs-4 text-center">
+							<a class="edit-link" title="Edit" href="{{ append_sid('/screenings/update_screening', 'screening_id=' ~ screening.screening_id) }}" rel="nofollow">
+								<span class="glyphicon glyphicon-pencil text-info"></span>
+							</a>
+							<a class="remove-link" title="Remove" href="{{ append_sid('/screenings/remove_screening', 'screening_id=' ~ screening.screening_id) }}" rel="nofollow">
+								<span class="glyphicon glyphicon-remove text-danger"></span>
+							</a>
+						</span>
+					</div>
+				</div>
+{% endfor %}
+			</div>
+		</div>
+
+{% if screenings_pagination is defined %}
+	{{ util.pager(screenings_pagination) }}
+{% endif %}
+
+		<div class="modal fade" id="modal-confirm-delete" tabindex="-1" role="dialog" aria-labelledby="modal-confirm-delete-label" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title text-center" id="modal-confirm-delete-label">Confirm screening Removal</h4>
+					</div>
+					<div class="modal-body">
+						<p>Are you sure you wish to completely remove this screening from the system? This action can not be reversed.</p>
+					</div>
+					<div class="modal-footer">
+						<a href="#" id="modal-delete-link" class="btn btn-primary" role="button">Continue</a>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					</div>	
+				</div>
+			</div>
+		</div>
+
+{% endblock %}

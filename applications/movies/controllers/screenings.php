@@ -58,15 +58,26 @@ class screenings_screenings_controller extends web_controller
 
 		return $response->body('screenings_index', $this->user->pack($tpl_data));
 	}
+	
+	public function do_frontpage(web_request $request)
+	{
+		$response = web_response::create($request);
+		$theater = $request->variable('theater', 0, web_request::REQUEST);
+
+		$offset = $response->paginate(self::SCREENINGS_LIMIT, $this->model->count_screenings_user($theater, null, true), 'screenings');
+		$tpl_data = $this->model->get_screenings_user($theater, null, true, self::SCREENINGS_LIMIT, $offset);
+
+		return $response->body('screenings_frontpage', $this->user->pack($tpl_data));
+	}
 
 	public function do_admin(web_request $request)
 	{
 		$response = web_response::create($request);
 		$upcoming = $request->variable('upcoming', true , web_request::REQUEST);
-		$offset = $response->paginate(self::SCREENINGS_LIMIT, $this->model->count_screenings($upcoming), 'screenings');
+		$offset = $response->paginate(self::SCREENINGS_LIMIT, $this->model->count_screenings_user($theater, null, $upcoming), 'screenings');
 
 		return $response->body('screenings_admin', $this->user->pack(
-			'screenings'		=> $this->model->get_screenings($upcoming, self::SCREENINGS_LIMIT, $offset)
+			'screenings'		=> $this->model->get_screenings_user($theater, null, $upcoming, self::SCREENINGS_LIMIT, $offset)
 		));
 	}
 
