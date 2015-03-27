@@ -50,7 +50,7 @@
 			</div>
 		</form>
 
-		<h3>{% query is empty %}Movies Listing{% else %}Search Results for "{{query}}"{% endif %}</h3>
+		<h3>{% if query is empty %}Movies Listing{% else %}Search Results for "{{query}}"{% endif %}</h3>
 
 		<div class="panel-group">
 {% for movie in movies %}
