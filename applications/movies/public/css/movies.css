@@ -1,8 +1,8 @@
 /**
 * @package svntools
-* @version $Id: movies.css 1230 2015-03-27 03:14:44Z crise $
+* @version $Id: movies.css 1231 2015-03-27 12:44:15Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 */
 
-.poster_img { min-height: 146px; min-width: 97px; }
+.poster_img { max-height: 146px; max-width: 97px; }

@@ -2,7 +2,7 @@
 /**
 *
 * @package svntools
-* @version $Id: movies.php 1212 2015-03-25 09:05:05Z crise $
+* @version $Id: movies.php 1232 2015-03-27 13:48:15Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -52,11 +52,21 @@ class movies_movies_controller extends web_controller
 	public function do_index(web_request $request)
 	{
 		$response = web_response::create($request);
-		$offset = $response->paginate(self::MOVIES_LIMIT, $this->model->count_movies(array('active')), 'movies');
+		$query = $request->variable('q', '', web_request::GET);
+		$tpl_data = array();
 
-		return $response->body('movies_index', $this->user->pack(array(
-			'movies'		=> $this->model->get_movies(array('active'), true, self::MOVIES_LIMIT, $offset)
-		)));
+		if (empty($query))
+		{
+			$offset = $response->paginate(self::MOVIES_LIMIT, $this->model->count_movies(array('active')), 'movies');
+			$tpl_data['movies'] = $this->model->get_movies(array('active'), true, self::MOVIES_LIMIT, $offset);
+		}
+		else
+		{
+			$offset = $response->paginate(self::MOVIES_LIMIT, $this->model->count_search($query), 'movies');
+			$tpl_data['movies'] = $this->model->search_movies($query, true, self::MOVIES_LIMIT, $offset);
+		}
+
+		return $response->body('movies_index', $this->user->pack($tpl_data));
 	}
 
 	public function do_admin(web_request $request)
@@ -147,19 +157,5 @@ class movies_movies_controller extends web_controller
 			return web_response::redirect($request, '/movies/admin', 200, 'Movie removed successfully.');
 
 		return web_response::redirect($request, '/movies/admin', 302);
-	}
-
-	public function do_search(web_request $request)
-	{
-		$query = $request->variable('q', '', web_request::REQUEST);
-		if (empty($query))
-			return web_response::redirect($request, '/movies', 302);
-
-		$response = web_response::create($request);
-		$offset = $response->paginate(self::MOVIES_LIMIT, $this->model->count_search($query), 'results');
-
-		return $response->body('movies_search', $this->user->pack(array(
-			'results'		=> $this->model->search_movies($query, true, self::MOVIES_LIMIT, $offset)
-		)));
 	}
 }
