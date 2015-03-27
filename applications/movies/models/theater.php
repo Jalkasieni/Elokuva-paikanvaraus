@@ -3,7 +3,7 @@
 /**
 *
 * @package svntools
-* @version $Id: theater.php 1235 2015-03-27 14:34:20Z crise $
+* @version $Id: theater.php 1240 2015-03-27 16:09:38Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -147,25 +147,35 @@ class movies_theater_model extends web_model
 
 	public function remove_room($theater_id, $room_id)
 	{
-		return ($this->database->update($this->database->build_delete('movie_rooms', 'room_id = '. (int) $room_id .' AND theater_id = '. (int) $theater_id)) == 1);
+		$conds = array();
+		$conds[] = 'room_id = '. (int) $room_id;
+		$conds[] = 'theater_id = '. (int) $theater_id;
+		$conds[] = 'NOT EXISTS (SELECT * FROM movie_screenings WHERE room_id = ' . (int) $room_id . ')';
+
+		return ($this->database->update($this->database->build_delete('movie_rooms', $conds)) == 1);
 	}
 
-	public function count_rooms($theater_id)
+	public function count_rooms($theater_id, $only_inactive = true)
 	{
-		$this->database->query('SELECT COUNT(mr.room_id) AS rooms FROM movie_room AS mr WHERE mr.theater_id = ' . (int) $theater_id);
+		$conds = array();
+		$conds[] = 'mr.theater_id = ' . (int) $theater_id;
+		$conds[] = ($only_inactive ? 'NOT EXISTS (SELECT * FROM movie_screenings WHERE room_id = mr.room_id)' : false);
+
+		$this->database->query('SELECT COUNT(mr.room_id) AS rooms FROM movie_room AS mr ' . $this->database->build_where($conds));
 
 		$row = $this->database->fetchRow();
 		$this->database->freeResult();
-		return $row['theaters'];
+		return $row['rooms'];
 	}
 
-	public function get_rooms($theater_id, $limit = 15, $offset = 0)
+	public function get_rooms($theater_id, $only_inactive = true, $limit = 15, $offset = 0)
 	{
 		$this->database->limitQuery("
-			SELECT		mr.room_id, mr.room_name AS name, mr.room_seats AS seats, mr.room_rows AS rows
+			SELECT		mr.room_id, mr.room_name AS name, mr.room_seats AS seats, mr.room_rows AS rows,
+						EXISTS (SELECT * FROM movie_screenings WHERE room_id = mr.room_id) AS active
 
 			FROM		movie_rooms AS mr 
-			WHERE		mr.theater_id = " . (int) $theater_id . "
+			WHERE		mr.theater_id = " . (int) $theater_id . ($only_inactive ? ' HAVING active = 0' : '') . "
 			ORDER BY	mr.room_id DESC", $limit, $offset);
 
 		$rooms = array();
