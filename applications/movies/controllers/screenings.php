@@ -2,7 +2,7 @@
 /**
 *
 * @package svntools
-* @version $Id: screenings.php 1263 2015-03-28 15:56:02Z crise $
+* @version $Id: screenings.php 1265 2015-03-28 16:23:27Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -110,8 +110,8 @@ class movies_screenings_controller extends web_controller
 		$form_data = array(
 			'movie_id'		=> (int) $movie_id,
 			'theater_id'	=> $request->variable('theater_id', 0, web_request::POST),
-			'start'			=> strtotime($request->variable('start', date('Y-m-dTH:i:s', time()), web_request::POST)),
-			'end'			=> strtotime($request->variable('end', date('Y-m-dTH:i:s', time() + 120*60), web_request::POST)),
+			'start'			=> strtotime($request->variable('start', date('Y-m-d\TH:i:s', time()), web_request::POST)),
+			'end'			=> strtotime($request->variable('end', date('Y-m-d\TH:i:s', time() + 120*60), web_request::POST)),
 			'room_id'		=> $request->variable('room_id', 0, web_request::POST),
 		);
 
@@ -153,8 +153,8 @@ class movies_screenings_controller extends web_controller
 			'movie_id'			=> (int) $movie_id,
 			'screening_id'		=> (int) $screening_id,
 			'theater_id'		=> $request->variable('theater_id', $current['theater_id'], web_request::POST),
-			'start'				=> strtotime($request->variable('start', date('Y-m-dTH:i:s', $current['start']), web_request::POST)),
-			'end'				=> strtotime($request->variable('end', date('Y-m-dTH:i:s', $current['end']), web_request::POST)),
+			'start'				=> strtotime($request->variable('start', date('Y-m-d\TH:i:s', $current['start']), web_request::POST)),
+			'end'				=> strtotime($request->variable('end', date('Y-m-d\TH:i:s', $current['end']), web_request::POST)),
 			'room_id'			=> $request->variable('room_id', $current['room_id'], web_request::POST),
 		);
 
