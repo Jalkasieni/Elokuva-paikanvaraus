@@ -2,7 +2,7 @@
 /**
 *
 * @package svntools
-* @version $Id: screenings.php 1246 2015-03-28 06:49:59Z crise $
+* @version $Id: screenings.php 1253 2015-03-28 10:39:28Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -22,12 +22,14 @@ class screenings_screenings_controller extends web_controller
 	const SCREENINGS_LIMIT = 15;
 
 	protected $model;
+	protected $movie;
 
 	public function prepare(web_request $request)
 	{
 		// Begin session if any
 		$this->user->load($request);
-		$this->model = $this->model('screenings');
+		$this->model = $this->model('screening');
+		$this->movie = $this->model('movie');
 
 		// access restrictions
 		$this->acl->assign(array(
@@ -50,50 +52,70 @@ class screenings_screenings_controller extends web_controller
 	public function do_index(web_request $request)
 	{
 		$response = web_response::create($request);
-		$theater = $request->variable('theater', 0, web_request::REQUEST);
-		$tpl_data = array('theater' => $theater);
+		$theater_id = $request->variable('theater_id', 0, web_request::REQUEST);
+		$movie_id = $request->variable('movie_id', 0, web_request::REQUEST);
 
-		$offset = $response->paginate(self::SCREENINGS_LIMIT, $this->model->count_screenings_user($theater, null, true), 'screenings');
-		$tpl_data['screenings'] = $this->model->get_screenings_user($theater, null, true, self::SCREENINGS_LIMIT, $offset);
+		if ($theater_id < 1)
+			return web_response::redirect($request, '/theaters', 302);
 
-		return $response->body('screenings_index', $this->user->pack($tpl_data));
+		$offset = $response->paginate(self::SCREENINGS_LIMIT, $this->model->count_screenings_user($theater_id, $movie_id, true), 'screenings');
+
+		return $response->body('screenings_index', $this->user->pack(array(
+			'screenings'	=> $this->model->get_screenings_user($theater_id, $movie_id, true, self::SCREENINGS_LIMIT, $offset)
+		)));
 	}
-	
-	public function do_frontpage(web_request $request)
+
+	public function do_movie(web_request $request)
 	{
 		$response = web_response::create($request);
-		$theater = $request->variable('theater', 0, web_request::REQUEST);
+		$movie_id = $request->variable('movie_id', 0 , web_request::REQUEST);
+		$upcoming = $request->variable('upcoming', true , web_request::REQUEST);
 
-		$offset = $response->paginate(self::SCREENINGS_LIMIT, $this->model->count_screenings_user($theater, null, true), 'screenings');
-		$tpl_data = $this->model->get_screenings_user($theater, null, true, self::SCREENINGS_LIMIT, $offset);
+		if ($movie_id < 1)
+			return web_response::redirect($request, '/movies', 302);
 
-		return $response->body('screenings_frontpage', $this->user->pack($tpl_data));
+		$offset = $response->paginate(self::SCREENINGS_LIMIT, $this->model->count_screenings($movie_id, $upcoming), 'screenings');
+
+		return $response->body('screenings_movie', $this->user->pack(array(
+			'movie'				=> $this->movie->get_movie($movie_id, true),
+			'screenings'		=> $this->model->get_screenings($movie_id, $upcoming, self::SCREENINGS_LIMIT, $offset)
+		)));
 	}
 
 	public function do_admin(web_request $request)
 	{
 		$response = web_response::create($request);
+		$movie_id = $request->variable('movie_id', 0 , web_request::REQUEST);
 		$upcoming = $request->variable('upcoming', true , web_request::REQUEST);
-		$offset = $response->paginate(self::SCREENINGS_LIMIT, $this->model->count_screenings_user($theater, null, $upcoming), 'screenings');
+
+		if ($movie_id < 1)
+			return web_response::redirect($request, '/movies/admin', 302);
+
+		$offset = $response->paginate(self::SCREENINGS_LIMIT, $this->model->count_screenings($movie_id, $upcoming), 'screenings');
 
 		return $response->body('screenings_admin', $this->user->pack(array(
-			'screenings'		=> $this->model->get_screenings_user($theater, null, $upcoming, self::SCREENINGS_LIMIT, $offset)
+			'movie'				=> $this->movie->get_movie($movie_id, true),
+			'screenings'		=> $this->model->get_screenings($movie_id, $upcoming, self::SCREENINGS_LIMIT, $offset)
 		)));
 	}
 
 	public function do_add_screening(web_request $request)
 	{
+		$movie_id = $request->variable('movie_id', 0, web_request::REQUEST);
+		if ($movie_id < 1)
+			return web_response::redirect($request, '/movies/admin', 302);
+
 		$form_data = array(
+			'movie_id'		=> (int) $movie_id,
 			'start'			=> $request->variable('start', '', web_request::POST),
 			'end'			=> $request->variable('end', '', web_request::POST),
-			'movie_id'		=> $request->variable('movie_id', '', web_request::POST),
 			'room_id'		=> $request->variable('room_id', '', web_request::POST),
 		);
 
 		if ($request->is_set('submit') && !empty($form_data['start']) && !empty($form_data['end']))
 		{
 			if ($this->model->add_screening($form_data))
-				return web_response::redirect($request, '/screenings/admin', 200, 'Screening added successfully.');
+				return web_response::redirect($request,  "/screenings/admin?movie_id=$movie_id", 200, 'Screening added successfully.');
 		}
 
 		return web_response::page($request, 'screenings_admin_editor', $this->user->pack(array(
@@ -104,10 +126,11 @@ class screenings_screenings_controller extends web_controller
 
 	public function do_update_screening(web_request $request)
 	{
+		$movie_id = $request->variable('movie_id', 0, web_request::REQUEST);
 		$screening_id = $request->variable('screening_id', 0, web_request::REQUEST);
 
 		if ($screening_id < 1)
-			return web_response::redirect($request, '/screenings/admin', 302);
+			return web_response::redirect($request, "/screenings/admin?movie_id=$movie_id", 302);
 
 		$current = array('start' => '', 'end' => '', 'movie_id' => '', 'room_id' => '');
 		if (!$request->is_set('submit'))
@@ -118,17 +141,17 @@ class screenings_screenings_controller extends web_controller
 		}
 
 		$form_data = array(
+			'movie_id'			=> (int) $movie_id,
 			'screening_id'		=> (int) $screening_id,
 			'start'				=> $request->variable('start', $current['start'], web_request::POST),
 			'end'				=> $request->variable('end', $current['end'], web_request::POST),
-			'movie_id'			=> $request->variable('movie_id', $current['movie_id'], web_request::POST),
 			'room_id'			=> $request->variable('room_id', $current['room_id'], web_request::POST),
 		);
 
 		if ($request->is_set('submit') && !empty($form_data['start']) && !empty($form_data['end']))
 		{
 			if ($this->model->update_screening($screening_id, $form_data))
-				return web_response::redirect($request, '/screenings/admin', 200, 'Screening updated successfully.');
+				return web_response::redirect($request,  "/screenings/admin?movie_id=$movie_id", 200, 'Screening updated successfully.');
 		}
 
 		return web_response::page($request, 'screenings_admin_editor', $this->user->pack(array(
@@ -139,14 +162,15 @@ class screenings_screenings_controller extends web_controller
 
 	public function do_remove_screening(web_request $request)
 	{
+		$movie_id = $request->variable('movie_id', 0, web_request::REQUEST);
 		$screening_id = $request->variable('screening_id', 0, web_request::REQUEST);
 
 		if ($screening_id < 1)
-			return web_response::redirect($request, '/screenings/admin', 302);
+			return web_response::redirect($request,  "/screenings/admin?movie_id=$movie_id", 302);
 
 		if ($this->model->remove_screening($screening_id))
-			return web_response::redirect($request, '/screenings/admin', 200, 'Screening removed successfully.');
+			return web_response::redirect($request, "/screenings/admin?movie_id=$movie_id", 200, 'Screening removed successfully.');
 
-		return web_response::redirect($request, '/screenings/admin', 302);
+		return web_response::redirect($request, "/screenings/admin?movie_id=$movie_id", 302);
 	}
 }

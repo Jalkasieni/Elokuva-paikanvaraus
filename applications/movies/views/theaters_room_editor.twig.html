@@ -41,22 +41,20 @@
 						<div class="form-group form-group-sm">
 							<label for="name" class="col-sm-2 control-label">Room Name:</label>
 							<div class="col-sm-10">
-								<input class="form-control" type="text" size="30" name="name" id="name" placeholder="Room Name" value="{{form.name}}">
+								<input class="form-control" type="text" size="30" name="name" id="name" placeholder="Room Name" value="{{form.name}}" required>
 							</div>
 						</div>
 						<div class="form-group form-group-sm">
-							<label for="dimensions" class="col-sm-2 control-label">Room Size</label>
-							<div id="dimensions" class="col-sm-10">
+							<div class="col-sm-offset-2 col-sm-10">
 								<div class="form-group form-group-sm row">
-									<label for="seats" class="col-sm-2 control-label">Seats:</label>
+									<label for="seats" class="col-sm-1 control-label">Seats:</label>
 									<div class="col-sm-2">
 										<input class="form-control" type="number" size="4" name="seats" id="seats" placeholder="Seats" value="{{form.seats}}">
 									</div>
-									<label for="rows" class="col-sm-2 control-label">Rows:</label>
+									<label for="rows" class="col-sm-1 control-label">Rows:</label>
 									<div class="col-sm-2">
 										<input class="form-control" type="number" size="4" name="rows" id="rows" placeholder="Rows" value="{{form.rows}}">
 									</div>
-
 								</div>
 							</div>
 						</div>
