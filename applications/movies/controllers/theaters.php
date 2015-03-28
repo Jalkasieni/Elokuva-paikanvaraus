@@ -2,7 +2,7 @@
 /**
 *
 * @package svntools
-* @version $Id: theaters.php 1251 2015-03-28 08:45:37Z crise $
+* @version $Id: theaters.php 1255 2015-03-28 10:56:06Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -158,7 +158,7 @@ class movies_theaters_controller extends web_controller
 			if ($request->is_set('submit') && !empty($form_data['name']))
 			{
 				if ($this->model->add_room($theater_id, $form_data))
-					return web_response::redirect($request, '/theaters/admin', 200, 'Room added succesfully');
+					return web_response::redirect($request, "/theaters/manage_rooms?theater_id=$theater_id", 200, 'Room added succesfully');
 			}
 
 			return $response->body('theaters_room_editor', $this->user->pack(array(
@@ -187,10 +187,10 @@ class movies_theaters_controller extends web_controller
 			if ($request->is_set('submit') && !empty($form_data['name']))
 			{
 				if ($this->model->update_room($theater_id, $room_id, $form_data))
-					return web_response::redirect($request, '/theaters/admin', 200, 'Room updated successfully.');
+					return web_response::redirect($request, "/theaters/manage_rooms?theater_id=$theater_id", 200, 'Room updated successfully.');
 			}
 
-			return $response->body($request, 'theaters_room_editor', $this->user->pack(array(
+			return $response->body('theaters_room_editor', $this->user->pack(array(
 				'editor_action'	=> 'update',
 				'form'			=> $form_data
 			)));
@@ -198,7 +198,7 @@ class movies_theaters_controller extends web_controller
 		else if ($action == 'remove' && $room_id > 1)
 		{
 			if ($this->model->remove_room($theater_id, $room_id))
-				return web_response::redirect($request, '/theaters/admin', 200, 'Room removed successfully.');
+				return web_response::redirect($request, "/theaters/manage_rooms?theater_id=$theater_id", 200, 'Room removed successfully.');
 		}
 
 		$offset = $response->paginate(self::THEATERS_LIMIT, $this->model->count_rooms(false), 'rooms');
