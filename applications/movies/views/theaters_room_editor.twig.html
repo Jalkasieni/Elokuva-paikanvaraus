@@ -44,6 +44,14 @@
 								<input class="form-control" type="text" size="30" name="name" id="name" placeholder="Room Name" value="{{form.name}}">
 							</div>
 						</div>
+						<div class="form-group form-group-sm">
+							<div class="col-sm-offset-2 form-inline">
+								<label for="seats" class="control-label">Seats:</label>
+								<input class="form-control" type="number" size="4" name="seats" id="seats" placeholder="Seats" value="{{form.seats}}">
+								<label for="rows" class="control-label">Rows:</label>
+								<input class="form-control" type="number" size="4" name="rows" id="rows" placeholder="Rows" value="{{form.rows}}">
+							</div>
+						</div>
 						<div class="form-group">
 						</div>
 						<input type="hidden" name="room_id" id="room_id" value="{{ form.room_id }}">
