@@ -1,7 +1,7 @@
 {#
 *
 * @package svntools
-* @version $Id: screenings_admin_editor.twig.html 1265 2015-03-28 16:23:27Z crise $
+* @version $Id: screenings_admin_editor.twig.html 1266 2015-03-28 16:38:01Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -78,14 +78,14 @@
 						<div class="form-group form-group-sm">
 							<label for="start" class="col-sm-2 control-label">Start Time:</label>
 							<div class="col-sm-10">
-								<input class="form-control" type="datetime-local" size="30" name="start" id="start" placeholder="yyyy-mm-ddTHH:MM" value="{{ form.start | date('Y-m-d\TH:i') }}"
+								<input class="form-control" type="datetime-local" size="30" name="start" id="start" placeholder="yyyy-mm-ddTHH:MM" value="{{ form.start | date('Y-m-d\\TH:i') }}"
 								 pattern="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}" title="Enter HTML5 datetime as follows: yyyy-mm-ddTHH:MM" required>
 							</div>
 						</div>
 						<div class="form-group form-group-sm">
 							<label for="end" class="col-sm-2 control-label">End Time:</label>
 							<div class="col-sm-10">
-								<input class="form-control" type="datetime-local" size="30" name="end" id="end" placeholder="yyyy-mm-ddTHH:MM" value="{{ form.end | date('Y-m-d\TH:i') }}"
+								<input class="form-control" type="datetime-local" size="30" name="end" id="end" placeholder="yyyy-mm-ddTHH:MM" value="{{ form.end | date('Y-m-d\\TH:i') }}"
 								pattern="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}" title="Enter HTML5 datetime as follows: yyyy-mm-ddTHH:MM" required>
 							</div>
 						</div>
