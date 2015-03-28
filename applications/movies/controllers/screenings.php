@@ -2,7 +2,7 @@
 /**
 *
 * @package svntools
-* @version $Id: screenings.php 1267 2015-03-28 16:49:47Z crise $
+* @version $Id: screenings.php 1268 2015-03-28 17:15:39Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -127,7 +127,7 @@ class movies_screenings_controller extends web_controller
 			'theater_list'		=> $this->theater->get_theater_list()
 		);
 
-		if ($request->is_set('submit') && $form_data['theater_id'] > 0)
+		if ($form_data['theater_id'] > 0)
 			$tpl_data['room_list'] = $this->theater->get_room_list($form_data['theater_id']);
 
 		return web_response::page($request, 'screenings_admin_editor', $this->user->pack($tpl_data));
@@ -170,7 +170,7 @@ class movies_screenings_controller extends web_controller
 			'theater_list'		=> $this->theater->get_theater_list()
 		);
 
-		if ($request->is_set('submit') && $form_data['theater_id'] > 0)
+		if ($form_data['theater_id'] > 0)
 			$tpl_data['room_list'] = $this->theater->get_room_list($form_data['theater_id']);
 
 		return web_response::page($request, 'screenings_admin_editor', $this->user->pack($tpl_data));
@@ -190,7 +190,7 @@ class movies_screenings_controller extends web_controller
 		return web_response::redirect($request, "/screenings/admin?movie_id=$movie_id", 302);
 	}
 
-	public function do_load_rooms(web_request $request)
+	public function ajax_load_rooms(web_request $request)
 	{
 		$theater_id = $request->variable('theater_id', 0, web_request::REQUEST);
 		if ($theater_id < 1)
