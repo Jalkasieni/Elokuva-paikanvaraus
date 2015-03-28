@@ -2,7 +2,7 @@
 /**
 *
 * @package svntools
-* @version $Id: screenings.php 1242 2015-03-27 18:19:34Z crise $
+* @version $Id: screenings.php 1246 2015-03-28 06:49:59Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -76,9 +76,9 @@ class screenings_screenings_controller extends web_controller
 		$upcoming = $request->variable('upcoming', true , web_request::REQUEST);
 		$offset = $response->paginate(self::SCREENINGS_LIMIT, $this->model->count_screenings_user($theater, null, $upcoming), 'screenings');
 
-		return $response->body('screenings_admin', $this->user->pack(
+		return $response->body('screenings_admin', $this->user->pack(array(
 			'screenings'		=> $this->model->get_screenings_user($theater, null, $upcoming, self::SCREENINGS_LIMIT, $offset)
-		));
+		)));
 	}
 
 	public function do_add_screening(web_request $request)
@@ -119,10 +119,10 @@ class screenings_screenings_controller extends web_controller
 
 		$form_data = array(
 			'screening_id'		=> (int) $screening_id,
-			'start'			=> $request->variable('start', $current['start'], web_request::POST),
-			'end'			=> $request->variable('end', $current['end'], web_request::POST),
-			'movie_id'		=> $request->variable('movie_id', $current['movie_id'] web_request::POST),
-			'room_id'		=> $request->variable('room_id', $current['room_id'], web_request::POST),
+			'start'				=> $request->variable('start', $current['start'], web_request::POST),
+			'end'				=> $request->variable('end', $current['end'], web_request::POST),
+			'movie_id'			=> $request->variable('movie_id', $current['movie_id'], web_request::POST),
+			'room_id'			=> $request->variable('room_id', $current['room_id'], web_request::POST),
 		);
 
 		if ($request->is_set('submit') && !empty($form_data['start']) && !empty($form_data['end']))

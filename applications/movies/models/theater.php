@@ -3,7 +3,7 @@
 /**
 *
 * @package svntools
-* @version $Id: theater.php 1242 2015-03-27 18:19:34Z crise $
+* @version $Id: theater.php 1247 2015-03-28 06:53:15Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -161,7 +161,7 @@ class movies_theater_model extends web_model
 		$conds[] = 'mr.theater_id = ' . (int) $theater_id;
 		$conds[] = ($only_inactive ? 'NOT EXISTS (SELECT * FROM movie_screenings WHERE room_id = mr.room_id)' : false);
 
-		$this->database->query('SELECT COUNT(mr.room_id) AS rooms FROM movie_room AS mr ' . $this->database->build_where($conds));
+		$this->database->query('SELECT COUNT(mr.room_id) AS rooms FROM movie_rooms AS mr ' . $this->database->build_where($conds));
 
 		$row = $this->database->fetchRow();
 		$this->database->freeResult();
