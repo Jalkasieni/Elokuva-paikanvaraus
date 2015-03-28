@@ -2,7 +2,7 @@
 /**
 *
 * @package svntools
-* @version $Id: screenings.php 1268 2015-03-28 17:15:39Z crise $
+* @version $Id: screenings.php 1269 2015-03-28 21:12:10Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -55,15 +55,16 @@ class movies_screenings_controller extends web_controller
 		$response = web_response::create($request);
 		$theater_id = $request->variable('theater_id', 0, web_request::REQUEST);
 		$movie_id = $request->variable('movie_id', 0, web_request::REQUEST);
+		$upcoming = $request->variable('upcoming', true , web_request::REQUEST);
 
 		if ($theater_id < 1)
 			return web_response::redirect($request, '/theaters', 302);
 
-		$offset = $response->paginate(self::SCREENINGS_LIMIT, $this->model->count_screenings_user($theater_id, $movie_id, true), 'screenings');
+		$offset = $response->paginate(self::SCREENINGS_LIMIT, $this->model->count_screenings_theater($theater_id, $movie_id, $upcoming), 'screenings');
 
 		return $response->body('screenings_index', $this->user->pack(array(
 			'theater'		=> $this->theater->get_theater($theater_id, true),
-			'screenings'	=> $this->model->get_screenings_user($theater_id, $movie_id, true, self::SCREENINGS_LIMIT, $offset)
+			'screenings'	=> $this->model->get_screenings_theater($theater_id, $movie_id, $upcoming, self::SCREENINGS_LIMIT, $offset)
 		)));
 	}
 

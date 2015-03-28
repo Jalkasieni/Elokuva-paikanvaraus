@@ -1,7 +1,7 @@
 {#
 *
 * @package svntools
-* @version $Id: screenings_index.twig.html 1261 2015-03-28 13:13:13Z crise $
+* @version $Id: screenings_index.twig.html 1269 2015-03-28 21:12:10Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -63,10 +63,18 @@
 						<span class="movie-end col-md-2 col-sm-2 hidden-xs">{{ screening.end | date('Y-m-d H:i') }}</span>
 						<span class="screening-room col-md-3 col-sm-3 col-xs-4">{{ screening.room_name }}</span>
 						<span class="screening-reserve col-md-2 col-sm-2 col-xs-1 text-center">
+							{% if not screening.upcoming -%}
+							<a class="reserve-link btn btn-primary btn-disabled btn-xs" href="#" role="button" rel="nofollow">Reserve</a>
+							{%- else -%}
 							<a class="reserve-link btn btn-primary btn-xs" href="#" role="button" rel="nofollow">Reserve</a>
+							{% endif -%}
 						</span>
 					</div>
 				</div>
+{% else %}
+			<div class="screening-row list-group-item">
+				<h4 class="text-center">No upcoming screenings, <a href="{{ append_sid('/screenings', 'theater_id=' ~ theater.theater_id ~ '&upcoming=0') }}" rel="nofollow">show past screenings</a>.</h4>
+			</div>	
 {% endfor %}
 			</div>
 		</div>

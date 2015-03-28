@@ -1,7 +1,7 @@
 {#
 *
 * @package apexnet
-* @version $Id: screenings_admin.twig.html 1259 2015-03-28 12:04:01Z crise $
+* @version $Id: screenings_admin.twig.html 1269 2015-03-28 21:12:10Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -69,15 +69,23 @@
 						<span class="movie-start col-md-3 col-sm-3 col-xs-3">{{ screening.start | date('Y-m-d H:i') }}</span>
 						<span class="movie-end col-md-3 col-sm-3 col-xs-3">{{ screening.end | date('Y-m-d H:i') }}</span>
 						<span class="screening-actions col-md-2 col-sm-2 col-xs-2 text-center">
+							{% if not screening.upcoming -%}
+							<span class="glyphicon glyphicon-pencil text-muted"></span> <span class="glyphicon glyphicon-remove text-muted"></span>
+							{%- else -%}
 							<a class="edit-link" title="Edit" href="{{ append_sid('/screenings/update_screening', 'movie_id=' ~ movie.movie_id ~ '&screening_id=' ~ screening.screening_id) }}" rel="nofollow">
 								<span class="glyphicon glyphicon-pencil text-info"></span>
 							</a>
 							<a class="remove-link" title="Remove" href="{{ append_sid('/screenings/remove_screening', 'movie_id=' ~ movie.movie_id ~ '&screening_id=' ~ screening.screening_id) }}" rel="nofollow">
 								<span class="glyphicon glyphicon-remove text-danger"></span>
 							</a>
+							{% endif -%}
 						</span>
 					</div>
 				</div>
+{% else %}
+				<div class="screening-row list-group-item">
+					<h4 class="text-center">No upcoming screenings, <a href="{{ append_sid('/screenings/admin', 'movie_id=' ~ movie.movie_id ~ '&upcoming=0') }}" rel="nofollow">show past screenings</a>.</h4>
+				</div>	
 {% endfor %}
 			</div>
 		</div>
