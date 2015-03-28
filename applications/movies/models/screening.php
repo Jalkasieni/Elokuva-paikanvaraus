@@ -3,7 +3,7 @@
 /**
 *
 * @package svntools
-* @version $Id: screening.php 1253 2015-03-28 10:39:28Z crise $
+* @version $Id: screening.php 1256 2015-03-28 11:02:35Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -118,7 +118,7 @@ class movies_screening_model extends web_model
 		$this->database->Query("
 			SELECT		COUNT(ms.screening_id) AS count
 			FROM		movie_screenings AS ms
-			WHERE		mr.theater_id = " . (int) $theater_id . ($only_upcoming ? ' AND HAVING ms.screening_start > ' . time() : '') . (($movie_id != 0) ? ' AND ms.movie_id = ' . (int) $movie_id : ''). "
+			WHERE		mr.theater_id = " . (int) $theater_id . ($only_upcoming ? ' AND ms.screening_start > ' . time() : '') . (($movie_id != 0) ? ' AND ms.movie_id = ' . (int) $movie_id : ''). "
 			ORDER BY	ms.screening_start ASC");
 
 		$row = $this->database->fetchRow();
