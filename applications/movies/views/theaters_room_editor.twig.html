@@ -63,7 +63,7 @@
 						<hr>
 						<div class="text-center">
 							<button class="btn btn-primary" type="submit" name="submit" id="submit" value="1">{{ editor_action | capitalize }}</button>
-							<a class="cancel-link btn btn-default" href="{{ append_sid('/theaters/admin') }}" role="button" rel="nofollow">Cancel</a>
+							<a class="cancel-link btn btn-default" href="{{ append_sid('/theaters/manage_rooms', 'theater_id=' ~ form.theater_id) }}" role="button" rel="nofollow">Cancel</a>
 						</div>
 					</fieldset>
 				</form>

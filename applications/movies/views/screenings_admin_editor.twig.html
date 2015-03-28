@@ -1,0 +1,99 @@
+{#
+*
+* @package svntools
+* @version $Id: screenings_admin_editor.twig.html 1263 2015-03-28 15:56:02Z crise $
+* @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+*
+#}
+
+{% extends "bootstrap_base.twig.html" %}
+
+{% block head -%}
+	{{ parent() }}
+
+	<link rel="stylesheet" href="{{base_url}}/css/movies.css">
+{% endblock %}
+
+{% block meta -%}
+	{{ parent() }}
+{% endblock %}
+
+{% block scripts -%}
+	{{ parent() }}
+
+	<script>
+		$(function() {
+			$('#theater_id').on('change', function () {
+				$.get("{{ append_sid('/screenings/load_rooms.json') | e('js') }}", {theater_id: $(this).val()})
+					.done(function (response) {
+						$rooms = $('#room_id');
+						$rooms.html('<option value="0">Select Room</option>');
+						$.each(response, function(id, name) {
+							cards.append('<option value="' + id + '">' + name + '</option>');
+						});
+					});
+			});
+		});
+	</script>
+{% endblock %}
+
+{% block title %}{{ parent() }} - {{ util.default_title(request) }}{% endblock %}
+
+{% block header -%}
+		{% set page_subtitle = 'Manage screenings' %}
+		{% set admin_module = true  %}
+
+		{{ parent() }}
+{% endblock %}
+
+{% block content -%}
+		<div class="panel panel-default">
+  			<div class="panel-body">
+				<form class="form-horizontal" id="{{ editor_action }}" action="{{ append_sid('/screenings/'~ editor_action ~ '_screening') }}" method="post">
+					<fieldset>
+						<legend class="text-center">{{ editor_action | capitalize }} Room</legend>
+						<div class="form-group form-group-sm">
+							<label for="theater_id" class="col-sm-2 control-label">Theater:</label>
+							<select class="form-control" name="theater_id" id="theater_id">
+								<option value="0">Select Theater</option>
+								{% for id, name in theater_list -%}
+								<option value="{{id}}"{% if form.theater_id == id %} selected="selected"{% endif %}>{{name}}</option>
+								{% endfor -%}
+							</select>
+						</div>
+						<div class="form-group form-group-sm">
+							<label for="room_id" class="col-sm-2 control-label">Room:</label>
+							<select class="form-control" name="room_id" id="room_id">
+								<option value="0">Select Room</option>
+								{% for id, name in room_list -%}
+								<option value="{{id}}"{% if form.room_id == id %} selected="selected"{% endif %}>{{name}}</option>
+								{% endfor -%}
+							</select>
+						</div>
+						<div class="form-group form-group-sm">
+							<label for="start" class="col-sm-2 control-label">Start Time:</label>
+							<div class="col-sm-10">
+								<input class="form-control" type="datetime-local" size="30" name="start" id="start" placeholder="yyyy-mm-ddTHH:MM" value="{{form.start}}"
+								 pattern="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}" title="Enter HTML5 datetime as follows: yyyy-mm-ddTHH:MM" required>
+							</div>
+						</div>
+						<div class="form-group form-group-sm">
+							<label for="end" class="col-sm-2 control-label">End Time:</label>
+							<div class="col-sm-10">
+								<input class="form-control" type="datetime-local" size="30" name="end" id="end" placeholder="yyyy-mm-ddTHH:MM" value="{{form.end}}"
+								pattern="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}" title="Enter HTML5 datetime as follows: yyyy-mm-ddTHH:MM" required>
+							</div>
+						</div>
+						<input type="hidden" name="screening_id" id="screening_id" value="{{ form.screening_id }}">
+						<input type="hidden" name="movie_id" id="movie_id" value="{{ form.movie_id }}">
+						<hr>
+						<div class="text-center">
+							<button class="btn btn-primary" type="submit" name="submit" id="submit" value="1">{{ editor_action | capitalize }}</button>
+							<a class="cancel-link btn btn-default" href="{{ append_sid('/screenings/admin', 'movie_id=' ~ form.movie_id) }}" role="button" rel="nofollow">Cancel</a>
+						</div>
+					</fieldset>
+				</form>
+			</div>
+		</div>
+{% endblock %}

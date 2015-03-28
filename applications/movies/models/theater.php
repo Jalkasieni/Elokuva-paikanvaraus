@@ -3,7 +3,7 @@
 /**
 *
 * @package svntools
-* @version $Id: theater.php 1247 2015-03-28 06:53:15Z crise $
+* @version $Id: theater.php 1262 2015-03-28 15:31:37Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -121,6 +121,22 @@ class movies_theater_model extends web_model
 		return $theater;
 	}
 
+	public function get_theater_list()
+	{
+		$this->database->query("
+			SELECT		mt.theater_id, mt.theater_name
+
+			FROM		movie_theaters AS mt 
+			ORDER BY	mt.theater_id DESC");
+
+		$theaters = array();
+		while (($row = $this->database->fetchRow()) !== false)
+			$theaters[(int)$row['theater_id']] = $row['theater_name'];
+
+		$this->database->freeResult();
+		return $theaters;
+	}
+
 	public function add_room($theater_id, array $meta_data)
 	{
 		return ($this->database->update($this->database->build_insert('movie_rooms', array(
@@ -199,5 +215,22 @@ class movies_theater_model extends web_model
 
 		$this->database->freeResult();
 		return $room;
+	}
+
+	public function get_room_list($theater_id)
+	{
+		$this->database->query("
+			SELECT		mr.room_id, mr.room_name
+
+			FROM		movie_rooms AS mr 
+			WHERE		mr.theater_id = " . (int) $theater_id . "
+			ORDER BY	mr.room_id DESC");
+
+		$rooms = array();
+		while (($row = $this->database->fetchRow()) !== false)
+			$rooms[(int)$row['room_id']] = $row['room_name'];
+
+		$this->database->freeResult();
+		return $rooms;
 	}
 }
