@@ -2,7 +2,7 @@
 /**
 *
 * @package svntools
-* @version $Id: screenings.php 1253 2015-03-28 10:39:28Z crise $
+* @version $Id: screenings.php 1254 2015-03-28 10:45:21Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -16,7 +16,7 @@ if (!defined('IN_APEXNET')) exit;
 /**
  * Basic screening controller
  */
-class screenings_screenings_controller extends web_controller
+class movies_screenings_controller extends web_controller
 {
 	// How many entries per page
 	const SCREENINGS_LIMIT = 15;
