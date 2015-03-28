@@ -1,7 +1,7 @@
 {#
 *
 * @package svntools
-* @version $Id: screenings_index.twig.html 1261 2015-03-28 13:13:13Z crise $
+* @version $Id: screenings_movie.twig.html 1261 2015-03-28 13:13:13Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -39,14 +39,25 @@
 {% block content -%}
 
 		<div class="panel panel-default">
-			<div class="panel-body">
-				<h4>{{theater.name}}</h4>
-				{{theater.description | raw}}
+  			<div class="panel-body">
+				<div class="media">
+					<div class="media-left">
+						{% if movie.poster_url is not empty -%}
+						<img class="media-object img-thumbnail poster_img" src="{{movie.poster_url}}" alt="Poster for {{movie.name}}">
+						{%- else -%}
+						<img class="media-object img-thumbnail poster_img" src="http://placehold.it/97x146" alt="Placeholder">
+						{%- endif %}
+					</div>
+					<div class="media-body">
+						<h4 class="media-heading">{{movie.name}}</h4>
+						{{ movie.description | raw }}
+					</div>
+				</div>
 			</div>
 			<div class="list-group">
 				<div class="list-group-item">
 					<div class="row">
-						<span class="screening-movie col-md-3 col-sm-3 col-xs-4"> <strong>Movie</strong> </span>
+						<span class="screening-theater col-md-3 col-sm-3 col-xs-4"> <strong>Theater</strong> </span>
 						<span class="screening-start col-md-2 col-sm-2 col-xs-3"> <strong>Start Time</strong> </span>
 						<span class="screening-end col-md-2 col-sm-2 hidden-xs"> <strong>End Time</strong> </span>
 						<span class="screening-room col-md-3 col-sm-3 col-xs-4"> <strong>Room</strong> </span>
@@ -56,8 +67,8 @@
 {% for screening in screenings %}
 				<div class="screening-row list-group-item">
 					<div class="row">
-						<span class="screening-movie col-md-3 col-sm-3 col-xs-4">
-							<span class=" glyphicon glyphicon-facetime-video"></span> <a>{{ screening.movie_name }}</a>
+						<span class="screening-theater col-md-3 col-sm-3 col-xs-4">
+							<span class=" glyphicon glyphicon-facetime-video"></span> <a>{{ screening.theater_name }}</a>
 						</span>
 						<span class="movie-start col-md-2 col-sm-2 col-xs-3">{{ screening.start | date('Y-m-d H:i') }}</span>
 						<span class="movie-end col-md-2 col-sm-2 hidden-xs">{{ screening.end | date('Y-m-d H:i') }}</span>

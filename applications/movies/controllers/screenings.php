@@ -2,7 +2,7 @@
 /**
 *
 * @package svntools
-* @version $Id: screenings.php 1259 2015-03-28 12:04:01Z crise $
+* @version $Id: screenings.php 1261 2015-03-28 13:13:13Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -30,6 +30,7 @@ class movies_screenings_controller extends web_controller
 		$this->user->load($request);
 		$this->model = $this->model('screening');
 		$this->movie = $this->model('movie');
+		$this->theater = $this->model('theater');
 
 		// access restrictions
 		$this->acl->assign(array(
@@ -61,6 +62,7 @@ class movies_screenings_controller extends web_controller
 		$offset = $response->paginate(self::SCREENINGS_LIMIT, $this->model->count_screenings_user($theater_id, $movie_id, true), 'screenings');
 
 		return $response->body('screenings_index', $this->user->pack(array(
+			'theater'		=> $this->theater->get_theater($theater_id, true),
 			'screenings'	=> $this->model->get_screenings_user($theater_id, $movie_id, true, self::SCREENINGS_LIMIT, $offset)
 		)));
 	}
@@ -94,7 +96,7 @@ class movies_screenings_controller extends web_controller
 		$offset = $response->paginate(self::SCREENINGS_LIMIT, $this->model->count_screenings($movie_id, $upcoming), 'screenings');
 
 		return $response->body('screenings_admin', $this->user->pack(array(
-			'movie'				=> $this->movie->get_movie($movie_id, true),
+			'movie'				=> $this->movie->get_movie($movie_id, false),
 			'screenings'		=> $this->model->get_screenings($movie_id, $upcoming, self::SCREENINGS_LIMIT, $offset)
 		)));
 	}
