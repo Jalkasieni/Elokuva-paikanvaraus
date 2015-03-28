@@ -1,7 +1,7 @@
 {#
 *
 * @package apexnet
-* @version $Id: screenings_admin.twig.html 1253 2015-03-28 10:39:28Z crise $
+* @version $Id: screenings_admin.twig.html 1259 2015-03-28 12:04:01Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -46,7 +46,7 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<div class="pull-right">
-					<a class="add-link btn btn-primary btn-xs" href="{{ append_sid('/screenings/add_screening') }}" role="button" rel="nofollow">Add screening</a>
+					<a class="add-link btn btn-primary btn-xs" href="{{ append_sid('/screenings/add_screening', 'movie_id=' ~ movie.movie_id) }}" role="button" rel="nofollow">Add Screening</a>
 				</div>
 				<h4 class="panel-title">Screenings for "{{ movie.name }}"</h4>
 			</div>
@@ -55,8 +55,8 @@
 				<div class="list-group-item">
 					<div class="row">
 						<span class="screening-room col-md-4 col-sm-4 col-xs-4"> <strong>Room</strong> </span>
-						<span class="screening-start col-md-2 col-sm-2 col-xs-3"> <strong>Start Time</strong> </span>
-						<span class="screening-end col-md-2 col-sm-2 col-xs-3"> <strong>End Time</strong> </span>
+						<span class="screening-start col-md-3 col-sm-3 col-xs-3"> <strong>Start Time</strong> </span>
+						<span class="screening-end col-md-3 col-sm-3 col-xs-3"> <strong>End Time</strong> </span>
 						<span class="screening-actions col-md-2 col-sm-2 col-xs-2 text-center"> <strong>Actions</strong> </span>
 					</div>
 				</div>
@@ -64,15 +64,15 @@
 				<div class="screening-row list-group-item">
 					<div class="row">
 						<span class="screening-room col-md-4 col-sm-4 col-xs-4">
-							<a href="{{ append_sid('/screenings/update_screening', 'screening_id=' ~ screening.screening_id) }}" rel="nofollow">{{ screening.room_name }}</a>
+							<a href="{{ append_sid('/screenings/update_screening', 'movie_id=' ~ movie.movie_id ~ '&screening_id=' ~ screening.screening_id) }}" rel="nofollow">{{ screening.room_name }}</a>
 						</span>
-						<span class="movie-start col-md-2 col-sm-2 col-xs-3">{{ screening.start | date('Y-m-d H:i') }}</span>
-						<span class="movie-end col-md-2 col-sm-2 col-xs-3">{{ screening.end | date('Y-m-d H:i') }}</span>
+						<span class="movie-start col-md-3 col-sm-3 col-xs-3">{{ screening.start | date('Y-m-d H:i') }}</span>
+						<span class="movie-end col-md-3 col-sm-3 col-xs-3">{{ screening.end | date('Y-m-d H:i') }}</span>
 						<span class="screening-actions col-md-2 col-sm-2 col-xs-2 text-center">
-							<a class="edit-link" title="Edit" href="{{ append_sid('/screenings/update_screening', 'screening_id=' ~ screening.screening_id) }}" rel="nofollow">
+							<a class="edit-link" title="Edit" href="{{ append_sid('/screenings/update_screening', 'movie_id=' ~ movie.movie_id ~ '&screening_id=' ~ screening.screening_id) }}" rel="nofollow">
 								<span class="glyphicon glyphicon-pencil text-info"></span>
 							</a>
-							<a class="remove-link" title="Remove" href="{{ append_sid('/screenings/remove_screening', 'screening_id=' ~ screening.screening_id) }}" rel="nofollow">
+							<a class="remove-link" title="Remove" href="{{ append_sid('/screenings/remove_screening', 'movie_id=' ~ movie.movie_id ~ '&screening_id=' ~ screening.screening_id) }}" rel="nofollow">
 								<span class="glyphicon glyphicon-remove text-danger"></span>
 							</a>
 						</span>

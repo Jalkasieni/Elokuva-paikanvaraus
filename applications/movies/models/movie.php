@@ -3,7 +3,7 @@
 /**
 *
 * @package svntools
-* @version $Id: movie.php 1241 2015-03-27 16:21:10Z crise $
+* @version $Id: movie.php 1258 2015-03-28 11:24:46Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -155,7 +155,7 @@ class movies_movie_model extends web_model
 		if ($movie !== false)
 		{
 			if ($parse_bbc)
-				$row['description'] = BBCParser::parseStoredString($row['description']);
+				$movie['description'] = BBCParser::parseStoredString($movie['description']);
 
 			$movie['options'] = $this->options->makeArray($movie['options']);
 		}

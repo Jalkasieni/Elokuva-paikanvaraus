@@ -1,7 +1,7 @@
 {#
 *
 * @package apexnet
-* @version $Id: movies_admin.twig.html 1230 2015-03-27 03:14:44Z crise $
+* @version $Id: movies_admin.twig.html 1259 2015-03-28 12:04:01Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -115,6 +115,8 @@
 					</div>
 					<div class="modal-footer">
 						<p class="pull-left"><small class="text-muted">Last Update: {{ movie.modified_date | date('Y-m-d H:i:s') }}</small></p>
+						<a class="add-screening-link btn btn-default" href="{{ append_sid('/screenings/add_screening', 'movie_id=' ~ movie.movie_id) }}" role="button" rel="nofollow">Add Screening</a>
+						<a class="screenings-link btn btn-default" href="{{ append_sid('/screenings/admin', 'movie_id=' ~ movie.movie_id) }}" role="button" rel="nofollow">Manage Screenings</a>
 						<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
 					</div>	
 				</div>

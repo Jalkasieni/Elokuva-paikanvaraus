@@ -2,7 +2,7 @@
 /**
 *
 * @package svntools
-* @version $Id: screenings.php 1254 2015-03-28 10:45:21Z crise $
+* @version $Id: screenings.php 1259 2015-03-28 12:04:01Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -114,7 +114,7 @@ class movies_screenings_controller extends web_controller
 
 		if ($request->is_set('submit') && !empty($form_data['start']) && !empty($form_data['end']))
 		{
-			if ($this->model->add_screening($form_data))
+			if ($this->model->add_screening($movie_id, $form_data))
 				return web_response::redirect($request,  "/screenings/admin?movie_id=$movie_id", 200, 'Screening added successfully.');
 		}
 
@@ -150,7 +150,7 @@ class movies_screenings_controller extends web_controller
 
 		if ($request->is_set('submit') && !empty($form_data['start']) && !empty($form_data['end']))
 		{
-			if ($this->model->update_screening($screening_id, $form_data))
+			if ($this->model->update_screening($movie_id, $screening_id, $form_data))
 				return web_response::redirect($request,  "/screenings/admin?movie_id=$movie_id", 200, 'Screening updated successfully.');
 		}
 
@@ -168,7 +168,7 @@ class movies_screenings_controller extends web_controller
 		if ($screening_id < 1)
 			return web_response::redirect($request,  "/screenings/admin?movie_id=$movie_id", 302);
 
-		if ($this->model->remove_screening($screening_id))
+		if ($this->model->remove_screening($movie_id, $screening_id))
 			return web_response::redirect($request, "/screenings/admin?movie_id=$movie_id", 200, 'Screening removed successfully.');
 
 		return web_response::redirect($request, "/screenings/admin?movie_id=$movie_id", 302);

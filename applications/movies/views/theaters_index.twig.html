@@ -1,7 +1,7 @@
 {#
 *
 * @package svntools
-* @version $Id: theaters_index.twig.html 1231 2015-03-27 12:44:15Z crise $
+* @version $Id: theaters_index.twig.html 1259 2015-03-28 12:04:01Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -45,6 +45,9 @@
 	  			<div class="panel-body">
 					<h4>{{theater.name}}</h4>
 					{{ theater.description | raw }}
+				</div>
+				<div class="panel-footer panel-default text-right">
+					<a class="programming-link btn btn-success" href="{{ append_sid('/screenings/', 'theater_id=' ~ theater.theater_id) }}" role="button" rel="nofollow">View Movies</a>
 				</div>
 			</div>
 {% endfor %}

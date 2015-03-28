@@ -3,7 +3,7 @@
 /**
 *
 * @package svntools
-* @version $Id: screening.php 1257 2015-03-28 11:15:51Z crise $
+* @version $Id: screening.php 1258 2015-03-28 11:24:46Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -98,7 +98,7 @@ class movies_screening_model extends web_model
 			$screenings[] = $row;
 
 		$this->database->freeResult();
-		return $screenigs;
+		return $screenings;
 	}
 
 	public function get_screening($screening_id)
@@ -142,7 +142,7 @@ class movies_screening_model extends web_model
 			$screenings[] = $row;
 
 		$this->database->freeResult();
-		return $screenigs;
+		return $screenings;
 	}
 
 	public function get_screening_user($screening_id)
