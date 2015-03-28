@@ -2,7 +2,7 @@
 /**
 *
 * @package svntools
-* @version $Id: theaters.php 1249 2015-03-28 08:00:14Z crise $
+* @version $Id: theaters.php 1251 2015-03-28 08:45:37Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -201,11 +201,11 @@ class movies_theaters_controller extends web_controller
 				return web_response::redirect($request, '/theaters/admin', 200, 'Room removed successfully.');
 		}
 
-		$offset = $response->paginate(self::THEATERS_LIMIT, $this->model->count_rooms(true), 'rooms');
+		$offset = $response->paginate(self::THEATERS_LIMIT, $this->model->count_rooms(false), 'rooms');
 
 		return $response->body('theaters_manage_rooms', $this->user->pack(array(
 			'theater_id'	=> (int) $theater_id,
-			'rooms'			=> $this->model->get_rooms($theater_id, true, self::THEATERS_LIMIT, $offset)
+			'rooms'			=> $this->model->get_rooms($theater_id, false, self::THEATERS_LIMIT, $offset)
 		)));
 	}
 }
