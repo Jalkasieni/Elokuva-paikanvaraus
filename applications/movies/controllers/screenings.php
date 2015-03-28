@@ -2,7 +2,7 @@
 /**
 *
 * @package svntools
-* @version $Id: screenings.php 1265 2015-03-28 16:23:27Z crise $
+* @version $Id: screenings.php 1267 2015-03-28 16:49:47Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -110,8 +110,8 @@ class movies_screenings_controller extends web_controller
 		$form_data = array(
 			'movie_id'		=> (int) $movie_id,
 			'theater_id'	=> $request->variable('theater_id', 0, web_request::POST),
-			'start'			=> strtotime($request->variable('start', date('Y-m-d\TH:i:s', time()), web_request::POST)),
-			'end'			=> strtotime($request->variable('end', date('Y-m-d\TH:i:s', time() + 120*60), web_request::POST)),
+			'start'			=> strtotime($request->variable('start', date('Y-m-d\TH:i:s', time() + 60*60), web_request::POST)),
+			'end'			=> strtotime($request->variable('end', date('Y-m-d\TH:i:s', time() + 180*60), web_request::POST)),
 			'room_id'		=> $request->variable('room_id', 0, web_request::POST),
 		);
 
@@ -141,7 +141,7 @@ class movies_screenings_controller extends web_controller
 		if ($screening_id < 1)
 			return web_response::redirect($request, "/screenings/admin?movie_id=$movie_id", 302);
 
-		$current = array('start' => time(), 'end' => time() + 120*60, 'movie_id' => 0, 'theater_id' => 0, 'room_id' => 0);
+		$current = array('start' => time() + 60 * 60, 'end' => time() + 180*60, 'movie_id' => 0, 'theater_id' => 0, 'room_id' => 0);
 		if (!$request->is_set('submit'))
 		{
 			$screening = $this->model->get_screening($screening_id);
@@ -173,7 +173,7 @@ class movies_screenings_controller extends web_controller
 		if ($request->is_set('submit') && $form_data['theater_id'] > 0)
 			$tpl_data['room_list'] = $this->theater->get_room_list($form_data['theater_id']);
 
-		return web_response::page($request, 'screenings_admin_editor', $this->user->pack());
+		return web_response::page($request, 'screenings_admin_editor', $this->user->pack($tpl_data));
 	}
 
 	public function do_remove_screening(web_request $request)
