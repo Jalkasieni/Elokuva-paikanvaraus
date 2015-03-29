@@ -3,7 +3,7 @@
 /**
 *
 * @package svntools
-* @version $Id: movie.php 1258 2015-03-28 11:24:46Z crise $
+* @version $Id: movie.php 1272 2015-03-28 22:14:37Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -83,7 +83,11 @@ class movies_movie_model extends web_model
 
 	public function remove_movie($movie_id)
 	{
-		return ($this->database->update($this->database->build_delete('movie_info', 'movie_id = '. (int) $movie_id)) == 1);
+		$conds = array();
+		$conds[] = 'movie_id = '. (int) $movie_id;
+		$conds[] = 'NOT EXISTS (SELECT * FROM movie_screenings WHERE movie_id = ' . (int) $movie_id . ')';
+
+		return ($this->database->update($this->database->build_delete('movie_info', $conds)) == 1);
 	}
 
 	public function count_movies(array $options = array('active'))

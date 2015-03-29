@@ -3,7 +3,7 @@
 /**
 *
 * @package svntools
-* @version $Id: theater.php 1262 2015-03-28 15:31:37Z crise $
+* @version $Id: theater.php 1272 2015-03-28 22:14:37Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -69,7 +69,11 @@ class movies_theater_model extends web_model
 
 	public function remove_theater($theater_id)
 	{
-		return ($this->database->update($this->database->build_delete('movie_theaters', 'theater_id = '. (int) $theater_id)) == 1);
+		$conds = array();
+		$conds[] = 'theater_id = '. (int) $theater_id;
+		$conds[] = 'NOT EXISTS (SELECT * FROM movie_rooms WHERE theater_id = ' . (int) $theater_id . ')';
+
+		return ($this->database->update($this->database->build_delete('movie_theaters', $conds)) == 1);
 	}
 
 	public function count_theaters()

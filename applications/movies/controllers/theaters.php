@@ -2,7 +2,7 @@
 /**
 *
 * @package svntools
-* @version $Id: theaters.php 1255 2015-03-28 10:56:06Z crise $
+* @version $Id: theaters.php 1272 2015-03-28 22:14:37Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -166,7 +166,7 @@ class movies_theaters_controller extends web_controller
 				'form'			=> $form_data
 			)));
 		}
-		else if ($action == 'update' && $room_id > 1)
+		else if ($action == 'update' && $room_id >= 1)
 		{
 			$current = array('name' => '', 'seats' => 0, 'rows' => 0);
 			if (!$request->is_set('submit'))
@@ -195,7 +195,7 @@ class movies_theaters_controller extends web_controller
 				'form'			=> $form_data
 			)));
 		}
-		else if ($action == 'remove' && $room_id > 1)
+		else if ($action == 'remove' && $room_id >= 1)
 		{
 			if ($this->model->remove_room($theater_id, $room_id))
 				return web_response::redirect($request, "/theaters/manage_rooms?theater_id=$theater_id", 200, 'Room removed successfully.');

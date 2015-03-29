@@ -1,7 +1,7 @@
 {#
 *
 * @package svntools
-* @version $Id: screenings_index.twig.html 1270 2015-03-28 21:18:18Z crise $
+* @version $Id: screenings_index.twig.html 1271 2015-03-28 21:42:43Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -64,7 +64,7 @@
 						<span class="screening-room col-md-3 col-sm-3 col-xs-4">{{ screening.room_name }}</span>
 						<span class="screening-reserve col-md-2 col-sm-2 col-xs-1 text-center">
 							{% if not screening.upcoming -%}
-							<a class="reserve-link btn btn-primary btn-xs disabled" href="#" role="button" rel="nofollow">Reserve</a>
+							<a class="reserve-link btn btn-default btn-xs disabled" href="#" role="button" rel="nofollow">Reserve</a>
 							{%- else -%}
 							<a class="reserve-link btn btn-primary btn-xs" href="#" role="button" rel="nofollow">Reserve</a>
 							{% endif -%}
