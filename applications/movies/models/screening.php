@@ -3,7 +3,7 @@
 /**
 *
 * @package svntools
-* @version $Id: screening.php 1284 2015-03-31 22:19:56Z crise $
+* @version $Id: screening.php 1285 2015-03-31 22:35:41Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -99,7 +99,7 @@ class movies_screening_model extends web_model
 			FROM			movie_screenings AS ms 
 				LEFT JOIN		movie_rooms AS mr ON (ms.room_id = mr.room_id)
 				LEFT JOIN		movie_theaters AS mt ON (mr.theater_id = mt.theater_id)
-				LEFT JOIN		(SELECT COUNT(mre.reservation_id) AS reservations FROM movie_reservations AS mre WHERE mre.screening_id = ms.screening_id) AS cr
+				LEFT JOIN		(SELECT mre.screening_id, COUNT(mre.reservation_id) AS reservations FROM movie_reservations AS mre GROUP BY mre.screening_id) AS cr ON (cr.screening_id = ms.screening_id)
 			WHERE			ms.movie_id = " . (int) $movie_id . ($only_upcoming ? " AND ms.screening_start > $time" : '') . (($theater_id != 0) ? ' AND mr.theater_id = ' . (int) $theater_id : '') . "
 			ORDER BY		ms.screening_start ASC", $limit, $offset);
 
@@ -120,7 +120,7 @@ class movies_screening_model extends web_model
 			FROM			movie_screenings AS ms 
 				LEFT JOIN		movie_rooms AS mr ON (ms.room_id = mr.room_id)
 				LEFT JOIN		movie_theaters AS mt ON (mr.theater_id = mt.theater_id)
-				LEFT JOIN		(SELECT COUNT(mre.reservation_id) AS reservations FROM movie_reservations AS mre WHERE mre.screening_id = ms.screening_id) AS cr
+				LEFT JOIN		(SELECT mre.screening_id, COUNT(mre.reservation_id) AS reservations FROM movie_reservations AS mre GROUP BY mre.screening_id) AS cr ON (cr.screening_id = ms.screening_id)
 			WHERE			ms.screening_id = " . (int) $screening_id);
 
 		$row = $this->database->fetchRow();
@@ -155,7 +155,7 @@ class movies_screening_model extends web_model
 			FROM			movie_screenings AS ms 
 				LEFT JOIN		movie_rooms AS mr ON (ms.room_id = mr.room_id)
 				LEFT JOIN 		movie_info AS mi ON (ms.movie_id = mi.movie_id)
-				LEFT JOIN		(SELECT COUNT(mre.reservation_id) AS reservations FROM movie_reservations AS mre WHERE mre.screening_id = ms.screening_id) AS cr
+				LEFT JOIN		(SELECT mre.screening_id, COUNT(mre.reservation_id) AS reservations FROM movie_reservations AS mre GROUP BY mre.screening_id) AS cr ON (cr.screening_id = ms.screening_id)
 			WHERE			mr.theater_id = " . (int) $theater_id . ($only_upcoming ? " AND ms.screening_start > $time" : '') . (($movie_id != 0) ? ' AND ms.movie_id = ' . (int) $movie_id : ''). "
 			ORDER BY		ms.screening_start ASC", $limit, $offset);
 
@@ -176,7 +176,7 @@ class movies_screening_model extends web_model
 			FROM			movie_screenings AS ms
 				LEFT JOIN		movie_rooms AS mr ON (ms.room_id = mr.room_id)
 				LEFT JOIN 		movie_info AS mi ON (ms.movie_id = mi.movie_id)
-				LEFT JOIN		(SELECT COUNT(mre.reservation_id) AS reservations FROM movie_reservations AS mre WHERE mre.screening_id = ms.screening_id) AS cr
+				LEFT JOIN		(SELECT mre.screening_id, COUNT(mre.reservation_id) AS reservations FROM movie_reservations AS mre GROUP BY mre.screening_id) AS cr ON (cr.screening_id = ms.screening_id)
 			WHERE			ms.screening_id = " . (int) $screening_id);
 
 		$row = $this->database->fetchRow();
