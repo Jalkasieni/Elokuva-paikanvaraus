@@ -3,7 +3,7 @@
 /**
 *
 * @package svntools
-* @version $Id: reservation.php 1278 2015-03-31 16:41:30Z crise $
+* @version $Id: reservation.php 1279 2015-03-31 16:53:28Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -154,19 +154,22 @@ class movies_reservation_model extends web_model
 
 	function get_user_reservations($user_id, $only_upcoming = true, $limit = 15, $offset = 0)
 	{
+		$time = (int) time();
+
 		$conds = array();
 		$conds[] = 'mr.user_id = ' .  (int) $user_id;
-		$conds[] = ($only_upcoming ? 'ms.screening_start < ' . (int) time() : false);
+		$conds[] = ($only_upcoming ? "ms.screening_start < $time" : false);
 
-		$this->database->query('
+		$this->database->query("
 			SELECT		mi.movie_name, mro.room_name, mt.theater_name, ms.screening_start, mr.cords_seat AS seat, mr.cords_row AS row, reservation_state AS state, mr.user_id,
-						(ms.screening_start >  $time) AS upcoming
+						(ms.screening_start > $time) AS upcoming
+
 			FROM		movie_reservations AS mr
 				LEFT JOIN 		movie_screenings AS ms ON (mr.screening_id = ms.screening_id)
 				LEFT JOIN 		movie_info AS mi ON (ms.movie_id = mi.movie_id)
 				LEFT JOIN		movie_rooms AS mro ON (ms.room_id = mro.room_id)
 				LEFT JOIN 		movie_theaters AS mt ON (mt.theater_id = mro.theater_id)
-			' . $this->database->build_where($conds));
+			" . $this->database->build_where($conds));
 
 		$reservations = array();
 		while (($row = $this->database->fetchRow()) !== false)
