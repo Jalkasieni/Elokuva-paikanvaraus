@@ -1,0 +1,80 @@
+{#
+*
+* @package svntools
+* @version $Id: reservations_movie.twig.html 1271 2015-03-28 21:42:43Z crise $
+* @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+*
+#}
+
+{% extends "bootstrap_base.twig.html" %}
+
+{% block head -%}
+	{{ parent() }}
+
+	<link rel="stylesheet" href="{{base_url}}/css/movies.css">
+{% endblock %}
+
+{% block meta -%}
+	{{ parent() }}
+{% endblock %}
+
+{% block scripts -%}
+	{{ parent() }}
+
+	<script>
+		$(function() {
+			var app = new ApexNet('{{base_url}}');
+		});
+	</script>
+{% endblock %}
+
+{% block title %}{{ parent() }} - {{ util.default_title(request) }}{% endblock %}
+
+{% block header -%}
+		{% set page_subtitle = 'My Reservations' %}
+		{{ parent() }}
+{% endblock %}
+
+{% block content -%}
+
+		<div class="panel panel-default">
+			<div class="list-group">
+				<div class="list-group-item">
+					<div class="row">
+						<span class="movie-start col-md-2 col-sm-2 col-xs-3"> <strong>Start Time</strong> </span>
+						<span class="movie-name col-md-3 col-sm-3 col-xs-3"> <strong>Movie Name</strong> </span>
+						<span class="theater-name col-md-3 col-sm-3 col-xs-3"> <strong>Theater / Room</strong> </span>
+						<span class="reservation-seat col-md-2 col-sm-2 col-xs-2"> <strong>Seat</strong> </span>
+						<span class="reservation-cancel col-md-2 col-sm-2 col-xs-1 text-center"> <strong>Cancel</strong> </span>
+					</div>
+				</div>
+{% for reservation in reservations %}
+				<div class="reservation-row list-group-item">
+					<div class="row">
+						<span class="movie-start col-md-2 col-sm-2 col-xs-3"><span class=" glyphicon glyphicon-facetime-video"></span> {{ reservation.screening_start | date('Y-m-d H:i') }}</span>
+						<span class="movie-name col-md-3 col-sm-3 col-xs-3">{{ reservation.movie_name }}</span>
+						<span class="theater-name col-md-3 col-sm-3 col-xs-3">{{ reservation.theater_name }} / {{ reservation.room_name }}</span>
+						<span class="reservation-seat col-md-2 col-sm-2 col-xs-2">{{ reservation.row }}, {{ reservation.seat }}</span>
+						<span class="reservation-cancel col-md-2 col-sm-2 col-xs-1 text-center">
+							{% if not reservation.upcoming -%}
+							<a class="cancel-link btn btn-default btn-xs disabled" href="#" role="button" rel="nofollow">Cancel</a>
+							{%- else -%}
+							<a class="cancel-link btn btn-danger btn-xs" href="#" role="button" rel="nofollow">Cancel</a>
+							{% endif -%}
+						</span>
+					</div>
+				</div>
+{% else %}
+			<div class="reservation-row list-group-item">
+				<h4 class="text-center">No upcoming reservations, <a href="{{ append_sid('/reservations/', 'upcoming=0') }}" rel="nofollow">show past reservations</a>.</h4>
+			</div>	
+{% endfor %}
+			</div>
+		</div>
+
+{% if reservations_pagination is defined %}
+	{{ util.pager(reservations_pagination) }}
+{% endif %}
+
+{% endblock %}

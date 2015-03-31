@@ -3,7 +3,7 @@
 /**
 *
 * @package svntools
-* @version $Id: reservation.php 1277 2015-03-31 15:49:33Z crise $
+* @version $Id: reservation.php 1278 2015-03-31 16:41:30Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -159,7 +159,8 @@ class movies_reservation_model extends web_model
 		$conds[] = ($only_upcoming ? 'ms.screening_start < ' . (int) time() : false);
 
 		$this->database->query('
-			SELECT		mi.movie_name, mro.room_name, mt.theater_name, ms.screening_start, mr.cords_seat AS seat, mr.cords_row AS row, reservation_state AS state, mr.user_id
+			SELECT		mi.movie_name, mro.room_name, mt.theater_name, ms.screening_start, mr.cords_seat AS seat, mr.cords_row AS row, reservation_state AS state, mr.user_id,
+						(ms.screening_start >  $time) AS upcoming
 			FROM		movie_reservations AS mr
 				LEFT JOIN 		movie_screenings AS ms ON (mr.screening_id = ms.screening_id)
 				LEFT JOIN 		movie_info AS mi ON (ms.movie_id = mi.movie_id)
