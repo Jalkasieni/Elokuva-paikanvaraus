@@ -73,15 +73,16 @@ class movies_screenings_controller extends web_controller
 		$response = web_response::create($request);
 		$movie_id = $request->variable('movie_id', 0 , web_request::REQUEST);
 		$upcoming = $request->variable('upcoming', true , web_request::REQUEST);
+		$theater_id = $request->variable('theater_id', 0, web_request::REQUEST);
 
 		if ($movie_id < 1)
 			return web_response::redirect($request, '/movies', 302);
 
-		$offset = $response->paginate(self::SCREENINGS_LIMIT, $this->model->count_screenings($movie_id, $upcoming), 'screenings');
+		$offset = $response->paginate(self::SCREENINGS_LIMIT, $this->model->count_screenings($movie_id, $theater_id, $upcoming), 'screenings');
 
 		return $response->body('screenings_movie', $this->user->pack(array(
 			'movie'				=> $this->movie->get_movie($movie_id, true),
-			'screenings'		=> $this->model->get_screenings($movie_id, $upcoming, self::SCREENINGS_LIMIT, $offset)
+			'screenings'		=> $this->model->get_screenings($movie_id, $theater_id, $upcoming, self::SCREENINGS_LIMIT, $offset)
 		)));
 	}
 
@@ -94,11 +95,11 @@ class movies_screenings_controller extends web_controller
 		if ($movie_id < 1)
 			return web_response::redirect($request, '/movies/admin', 302);
 
-		$offset = $response->paginate(self::SCREENINGS_LIMIT, $this->model->count_screenings($movie_id, $upcoming), 'screenings');
+		$offset = $response->paginate(self::SCREENINGS_LIMIT, $this->model->count_screenings($movie_id,0 , $upcoming), 'screenings');
 
 		return $response->body('screenings_admin', $this->user->pack(array(
 			'movie'				=> $this->movie->get_movie($movie_id, false),
-			'screenings'		=> $this->model->get_screenings($movie_id, $upcoming, self::SCREENINGS_LIMIT, $offset)
+			'screenings'		=> $this->model->get_screenings($movie_id,0 , $upcoming, self::SCREENINGS_LIMIT, $offset)
 		)));
 	}
 

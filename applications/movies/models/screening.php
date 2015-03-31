@@ -72,10 +72,11 @@ class movies_screening_model extends web_model
 		return ($this->database->update($this->database->build_delete('movie_screenings', $conds)) == 1);
 	}
 
-	public function count_screenings($movie_id, $only_upcoming = true)
+	public function count_screenings($movie_id, $theater_id = 0, $only_upcoming = true)
 	{
 		$conds = array();
 		$conds[] = 'ms.movie_id = ' .  (int) $movie_id;
+		$conds[] = (($theater_id != 0) ? 'ms.theater_id = ' .  (int) $theater_id : false);
 		$conds[] = ($only_upcoming ? 'ms.screening_start < ' . (int) time() : false);
 
 		$this->database->query('SELECT COUNT(ms.screening_id) AS screenings FROM movie_screenings AS ms ' . $this->database->build_where($conds));
@@ -85,16 +86,17 @@ class movies_screening_model extends web_model
 		return $row['screenings'];
 	}
 
-	public function get_screenings($movie_id, $only_upcoming = true, $limit = 15, $offset = 0)
+	public function get_screenings($movie_id, $theater_id = 0, $only_upcoming = true, $limit = 15, $offset = 0)
 	{
 		$time = (int) time();
 		$this->database->limitQuery("
 			SELECT			ms.screening_id, ms.screening_start AS start, ms.screening_end AS end, ms.movie_id, mr.theater_id, mt.theater_name, ms.room_id, mr.room_name,
-							(ms.screening_start >  $time) AS upcoming
+							(ms.screening_start >  $time) AS upcoming, mr.room_seats AS seats, mr.room_rows AS rows, COUNT(mre.reservation_id) AS reservedseats
 			FROM			movie_screenings AS ms 
 				LEFT JOIN		movie_rooms AS mr ON (ms.room_id = mr.room_id)
 				LEFT JOIN		movie_theaters AS mt ON (mr.theater_id = mt.theater_id)
-			WHERE			ms.movie_id = " . (int) $movie_id . ($only_upcoming ? " AND ms.screening_start > $time" : '') . "
+				LEFT JOIN		movie_reservations AS mre ON (ms.screening_id = mre.screening_id)
+			WHERE			ms.movie_id = " . (int) $movie_id . ($only_upcoming ? " AND ms.screening_start > $time" : '') . (($movie_id != 0) ? ' AND ms.theater_id = ' . (int) $theater_id : '') . "
 			ORDER BY		ms.screening_start ASC", $limit, $offset);
 
 		$screenings = array();
@@ -110,10 +112,11 @@ class movies_screening_model extends web_model
 		$time = (int) time();
 		$this->database->query("
 			SELECT			ms.screening_id, ms.screening_start AS start, ms.screening_end AS end, ms.movie_id, mr.theater_id, mt.theater_name, ms.room_id, mr.room_name,
-							(ms.screening_start > $time) AS upcoming
+							(ms.screening_start > $time) AS upcoming, mr.room_seats AS seats, mr.room_rows AS rows, COUNT(mre.reservation_id) AS reservedseats
 			FROM			movie_screenings AS ms 
 				LEFT JOIN		movie_rooms AS mr ON (ms.room_id = mr.room_id)
 				LEFT JOIN		movie_theaters AS mt ON (mr.theater_id = mt.theater_id)
+				LEFT JOIN		movie_reservations AS mre ON (ms.screening_id = mre.screening_id)
 			WHERE			ms.screening_id = " . (int) $screening_id);
 
 		$row = $this->database->fetchRow();
@@ -140,10 +143,11 @@ class movies_screening_model extends web_model
 		$time = (int) time();
 		$this->database->limitQuery("
 			SELECT			ms.screening_id, ms.screening_start AS start, ms.screening_end AS end, mr.theater_id, mi.movie_id, mi.movie_name, ms.room_id, mr.room_name,
-							(ms.screening_start > $time) AS upcoming
+							(ms.screening_start > $time) AS upcoming, mr.room_seats AS seats, mr.room_rows AS rows, COUNT(mre.reservation_id) AS reservedseats
 			FROM			movie_screenings AS ms 
 				LEFT JOIN		movie_rooms AS mr ON (ms.room_id = mr.room_id)
 				LEFT JOIN 		movie_info AS mi ON (ms.movie_id = mi.movie_id)
+				LEFT JOIN		movie_reservations as mre ON (ms.screening_id = mre.screening_id)
 			WHERE			mr.theater_id = " . (int) $theater_id . ($only_upcoming ? " AND ms.screening_start > $time" : '') . (($movie_id != 0) ? ' AND ms.movie_id = ' . (int) $movie_id : ''). "
 			ORDER BY		ms.screening_start ASC", $limit, $offset);
 
@@ -160,10 +164,11 @@ class movies_screening_model extends web_model
 		$time = (int) time();
 		$this->database->query("
 			SELECT			ms.screening_id, ms.screening_start AS start, ms.screening_end AS end, mr.theater_id, mi.movie_id, mi.movie_name, ms.room_id, mr.room_name,
-							(ms.screening_start > $time) AS upcoming
+							(ms.screening_start > $time) AS upcoming, mr.room_seats AS seats, mr.room_rows AS rows, COUNT(mre.reservation_id) AS reservedseats
 			FROM			movie_screenings AS ms
 				LEFT JOIN		movie_rooms AS mr ON (ms.room_id = mr.room_id)
 				LEFT JOIN 		movie_info AS mi ON (ms.movie_id = mi.movie_id)
+				LEFT JOIN		movie_reservations AS mre ON (ms.screening_id = mre.screening_id)
 			WHERE			ms.screening_id = " . (int) $screening_id);
 
 		$row = $this->database->fetchRow();
@@ -188,9 +193,9 @@ class movies_screening_model extends web_model
 	public function get_free_seats($screening_id)
 	{
 		$this->database->query("
-			SELECT		COUNT(mr.reservation_id) AS freeseats
-			FROM		movie_reservations AS mr 
-			WHERE		mr.screening_id = " . (int) $screening_id);
+			SELECT		COUNT(mre.reservation_id) AS freeseats
+			FROM		movie_reservations AS mre 
+			WHERE		mre.screening_id = " . (int) $screening_id);
 			
 		$row = $this->database->fetchRow();
 		$this->database->freeResult();
