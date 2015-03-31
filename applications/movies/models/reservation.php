@@ -3,7 +3,7 @@
 /**
 *
 * @package svntools
-* @version $Id: reservation.php 1218 2015-03-25 14:52:40Z crise $
+* @version $Id: reservation.php 1273 2015-03-31 12:35:07Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -21,11 +21,19 @@ use ApexNet\Database\DBConnection;
  */
 class movies_reservation_model extends web_model
 {
+	protected $screening;
+
+	const STATE_FREE = 0;
+	const STATE_PENDING = 1;
+	const STATE_CONFIRMED = 2;
+	const STATE_CANCELED = 3;
+
 	public static function create_schema(DBConnection $db)
 	{
 		$db->update("
 		CREATE TABLE IF NOT EXISTS movie_reservations (
 			reservation_id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+			reservation_modified int(11) unsigned NOT NULL DEFAULT 0,
 			cords_seat tinyint(3) unsigned NOT NULL DEFAULT 0,
 			cords_row tinyint(3) unsigned NOT NULL DEFAULT 0,
 			reservation_state tinyint(1) unsigned NOT NULL DEFAULT 0,
@@ -39,5 +47,91 @@ class movies_reservation_model extends web_model
 		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin");
 	}
 
+	protected function __construct(DBConnection $db)
+	{
+		parent::__construct($db);
 
+		$this->screening = web_model::create('screening', $db);
+	}
+
+	function add_reservation(array $meta_data)
+	{
+		return ($this->database->update($this->database->build_insert('movie_reservations', array(
+			'reservation_modified'	=> (int) time(),
+			'cords_seat'			=> (int) $meta_data['seat'],
+			'cords_row'				=> (int) $meta_data['row'],
+			'reservation_state'		=> self::STATE_PENDING,
+			'screening_id'			=> (int) $meta_data['screening_id'],
+			'user_id'				=> (int) $meta_data['user_id']
+		))) == 1);
+	}
+
+	function confirm_reservations($user_id, $screening_id)
+	{
+		$conds = array();
+		$conds[] = 'screening_id = '. (int) $screening_id;
+		$conds[] = 'user_id = '. (int) $user_id;
+
+		return ($this->database->update($this->database->build_update('movie_reservations', array('reservation_modified' => time(), 'reservation_state' => self::STATE_CONFIRMED), $conds)) == 1);
+	}
+
+	function cancel_reservations($user_id, $screening_id)
+	{
+		$conds = array();
+		$conds[] = 'screening_id = '. (int) $screening_id;
+		$conds[] = 'user_id = '. (int) $user_id;
+
+		return ($this->database->update($this->database->build_update('movie_reservations', array('reservation_modified' => time(), 'reservation_state' => self::STATE_CANCELED), $conds)) == 1);
+	}
+
+	function remove_reservations($user_id, $screening_id)
+	{
+		$conds = array();
+		$conds[] = 'screening_id = '. (int) $screening_id;
+		$conds[] = 'user_id = '. (int) $user_id;
+
+		return ($this->database->update($this->database->build_delete('movie_reservations', $conds)) == 1);
+	}
+
+	function remove_reservation($screening_id, $seat, $row)
+	{
+		$conds = array();
+		$conds[] = 'screening_id = '. (int) $screening_id;
+		$conds[] = 'cords_seat = '. (int) $seat;
+		$conds[] = 'cords_row = '. (int) $row;
+
+		return ($this->database->update($this->database->build_delete('movie_reservations', $conds)) == 1);
+	}
+
+	function get_reservation_table($screening_id)
+	{
+		$size = $this->screening->get_size($screening_id);
+		$table = array(0 => null);
+
+		for ($i = 1; $i <= $size['rows']; ++$i)
+		{
+			$table[$i] = array_pad(array(null), (int) $size['seats'], array(
+				'state'		=> self::STATE_FREE,
+				'user_id'	=> 0,
+			));
+		}
+
+		$this->database->query("
+			SELECT		mr.cords_seat AS seat, mr.cords_row AS row, reservation_state AS mr.state, mr.user_id
+
+			FROM		movie_reservations AS mr 
+			WHERE		mr.screening_id = " . (int) $screening_id . "
+			ORDER BY	mr.reservation_id DESC");
+
+		while (($row = $this->database->fetchRow()) !== false)
+		{
+			$table[(int)$row['row']][(int)$row['seat']] =  array(
+				'state'		=> (int) $row['state'],
+				'user_id'	=> (int) $row['user_id'],
+			);
+		}
+
+		$this->database->freeResult();
+		return $table;
+	}
 }

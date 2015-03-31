@@ -3,7 +3,7 @@
 /**
 *
 * @package svntools
-* @version $Id: screening.php 1269 2015-03-28 21:12:10Z crise $
+* @version $Id: screening.php 1273 2015-03-31 12:35:07Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -171,7 +171,7 @@ class movies_screening_model extends web_model
 		return $row;
 	}
 	
-	public function count_seats($screening_id)
+	public function get_size($screening_id)
 	{
 		$this->database->query("
 			SELECT			mr.room_seats AS seats, mr.room_rows AS rows
@@ -181,10 +181,11 @@ class movies_screening_model extends web_model
 			
 		$row = $this->database->fetchRow();
 		$this->database->freeResult();
-		return ($row['seats']*$row['rows']);
+
+		return $row;
 	}
 	
-	public function count_free_seats($screening_id)
+	public function get_free_seats($screening_id)
 	{
 		$this->database->query("
 			SELECT		COUNT(mr.reservation_id) AS freeseats
@@ -195,6 +196,4 @@ class movies_screening_model extends web_model
 		$this->database->freeResult();
 		return ($this->count_seats($screening_id)-$row['freeseats']);
 	}
-
-
 }
