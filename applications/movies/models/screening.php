@@ -3,7 +3,7 @@
 /**
 *
 * @package svntools
-* @version $Id: screening.php 1280 2015-03-31 20:38:37Z crise $
+* @version $Id: screening.php 1281 2015-03-31 20:50:31Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -95,7 +95,7 @@ class movies_screening_model extends web_model
 		$time = (int) time();
 		$this->database->limitQuery("
 			SELECT			ms.screening_id, ms.screening_start AS start, ms.screening_end AS end, ms.movie_id, mr.theater_id, mt.theater_name, ms.room_id, mr.room_name,
-							(ms.screening_start >  $time) AS upcoming, mr.room_seats AS seats, mr.room_rows AS rows, COUNT(mre.reservation_id) AS reserved_seats
+							(ms.screening_start > $time) AS upcoming, mr.room_seats AS seats, mr.room_rows AS rows, COUNT(mre.reservation_id) AS reserved_seats
 			FROM			movie_screenings AS ms 
 				LEFT JOIN		movie_rooms AS mr ON (ms.room_id = mr.room_id)
 				LEFT JOIN		movie_theaters AS mt ON (mr.theater_id = mt.theater_id)
@@ -132,8 +132,8 @@ class movies_screening_model extends web_model
 	{
 		$conds = array();
 		$conds[] = 'mr.theater_id = ' . (int) $theater_id;
-		$conds[] = (($movie_id != 0) ? ' AND ms.movie_id = ' . (int) $movie_id : false);
-		$conds[] = ($only_upcoming ? ' AND ms.screening_start > ' . time() : false);
+		$conds[] = (($movie_id != 0) ? 'ms.movie_id = ' . (int) $movie_id : false);
+		$conds[] = ($only_upcoming ? ' ms.screening_start > ' . (int) time() : false);
 
 		$this->database->query('
 			SELECT			COUNT(ms.screening_id) AS screenings
