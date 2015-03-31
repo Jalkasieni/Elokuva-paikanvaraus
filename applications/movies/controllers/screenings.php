@@ -2,7 +2,7 @@
 /**
 *
 * @package svntools
-* @version $Id: screenings.php 1269 2015-03-28 21:12:10Z crise $
+* @version $Id: screenings.php 1280 2015-03-31 20:38:37Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -71,8 +71,8 @@ class movies_screenings_controller extends web_controller
 	public function do_movie(web_request $request)
 	{
 		$response = web_response::create($request);
-		$movie_id = $request->variable('movie_id', 0 , web_request::REQUEST);
-		$upcoming = $request->variable('upcoming', true , web_request::REQUEST);
+		$movie_id = $request->variable('movie_id', 0, web_request::REQUEST);
+		$upcoming = $request->variable('upcoming', true, web_request::REQUEST);
 		$theater_id = $request->variable('theater_id', 0, web_request::REQUEST);
 
 		if ($movie_id < 1)
@@ -89,17 +89,17 @@ class movies_screenings_controller extends web_controller
 	public function do_admin(web_request $request)
 	{
 		$response = web_response::create($request);
-		$movie_id = $request->variable('movie_id', 0 , web_request::REQUEST);
-		$upcoming = $request->variable('upcoming', true , web_request::REQUEST);
+		$movie_id = $request->variable('movie_id', 0, web_request::REQUEST);
+		$upcoming = $request->variable('upcoming', true, web_request::REQUEST);
 
 		if ($movie_id < 1)
 			return web_response::redirect($request, '/movies/admin', 302);
 
-		$offset = $response->paginate(self::SCREENINGS_LIMIT, $this->model->count_screenings($movie_id,0 , $upcoming), 'screenings');
+		$offset = $response->paginate(self::SCREENINGS_LIMIT, $this->model->count_screenings($movie_id, 0, $upcoming), 'screenings');
 
 		return $response->body('screenings_admin', $this->user->pack(array(
 			'movie'				=> $this->movie->get_movie($movie_id, false),
-			'screenings'		=> $this->model->get_screenings($movie_id,0 , $upcoming, self::SCREENINGS_LIMIT, $offset)
+			'screenings'		=> $this->model->get_screenings($movie_id, 0, $upcoming, self::SCREENINGS_LIMIT, $offset)
 		)));
 	}
 
