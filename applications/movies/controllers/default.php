@@ -2,7 +2,7 @@
 /**
 *
 * @package svntools
-* @version $Id: default.php 1215 2015-03-25 11:06:39Z crise $
+* @version $Id: default.php 1275 2015-03-31 15:32:30Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -21,7 +21,7 @@ class movies_default_controller extends web_controller
 	const FEATURED_LIMIT = 5;
 
 	protected $model;
-	protected $movies;
+	protected $movie;
 
 	public function prepare(web_request $request)
 	{
