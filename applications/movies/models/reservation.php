@@ -3,7 +3,7 @@
 /**
 *
 * @package svntools
-* @version $Id: reservation.php 1275 2015-03-31 15:32:30Z crise $
+* @version $Id: reservation.php 1277 2015-03-31 15:49:33Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -163,8 +163,8 @@ class movies_reservation_model extends web_model
 			FROM		movie_reservations AS mr
 				LEFT JOIN 		movie_screenings AS ms ON (mr.screening_id = ms.screening_id)
 				LEFT JOIN 		movie_info AS mi ON (ms.movie_id = mi.movie_id)
-				LEFT JOIN		movie_rooms AS mro (ms.room_id = mro.room_id)
-				LEFT JOIN 		movie_theater AS mt ON (mt.theater_id = mro.theater_id)
+				LEFT JOIN		movie_rooms AS mro ON (ms.room_id = mro.room_id)
+				LEFT JOIN 		movie_theaters AS mt ON (mt.theater_id = mro.theater_id)
 			' . $this->database->build_where($conds));
 
 		$reservations = array();
