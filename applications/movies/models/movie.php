@@ -3,7 +3,7 @@
 /**
 *
 * @package svntools
-* @version $Id: movie.php 1272 2015-03-28 22:14:37Z crise $
+* @version $Id: movie.php 1274 2015-03-31 13:40:17Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -117,7 +117,8 @@ class movies_movie_model extends web_model
 
 		$this->database->limitQuery("
 			SELECT		mi.movie_id, mi.movie_name AS name, mi.movie_poster AS poster_url, mi.movie_description AS description,
-						mi.movie_updated AS modified_date, mi.movie_options AS options
+						mi.movie_updated AS modified_date, mi.movie_options AS options,
+						NOT EXISTS (SELECT * FROM movie_screenings WHERE movie_id = mi.movie_id) AS fresh
 
 			FROM		movie_info AS mi " . $this->database->build_where($conds) . "
 			ORDER BY	mi.movie_id DESC", $limit, $offset);
@@ -150,7 +151,8 @@ class movies_movie_model extends web_model
 	{
 		$this->database->limitQuery("
 			SELECT		mi.movie_id, mi.movie_name AS name, mi.movie_poster AS poster_url, mi.movie_description AS description,
-						mi.movie_updated AS modified_date, mi.movie_options AS options
+						mi.movie_updated AS modified_date, mi.movie_options AS options,
+						NOT EXISTS (SELECT * FROM movie_screenings WHERE movie_id = mi.movie_id) AS fresh
 
 			FROM		movie_info AS mi
 			WHERE		mi.movie_id = " . (int) $movie_id, 1);
@@ -178,7 +180,8 @@ class movies_movie_model extends web_model
 
 		$this->database->limitQuery("
 			SELECT		mi.movie_id, mi.movie_name AS name, mi.movie_poster AS poster_url, mi.movie_description AS description,
-						mi.movie_updated AS modified_date, mi.movie_options AS options
+						mi.movie_updated AS modified_date, mi.movie_options AS options,
+						NOT EXISTS (SELECT * FROM movie_screenings WHERE movie_id = mi.movie_id) AS fresh
 
 			FROM		movie_info AS mi " . $this->database->build_where($conds) . "
 			ORDER BY	mi.movie_id DESC", $limit, $offset);

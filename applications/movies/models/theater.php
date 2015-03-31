@@ -3,7 +3,7 @@
 /**
 *
 * @package svntools
-* @version $Id: theater.php 1272 2015-03-28 22:14:37Z crise $
+* @version $Id: theater.php 1274 2015-03-31 13:40:17Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -88,7 +88,8 @@ class movies_theater_model extends web_model
 	public function get_theaters($parse_bbc = true, $limit = 15, $offset = 0)
 	{
 		$this->database->limitQuery("
-			SELECT		mt.theater_id, mt.theater_name AS name, mt.theater_description AS description
+			SELECT		mt.theater_id, mt.theater_name AS name, mt.theater_description AS description,
+						NOT EXISTS (SELECT * FROM movie_rooms WHERE theater_id = mt.theater_id) AS fresh
 
 			FROM		movie_theaters AS mt 
 			ORDER BY	mt.theater_id DESC", $limit, $offset);
@@ -109,7 +110,8 @@ class movies_theater_model extends web_model
 	public function get_theater($theater_id, $parse_bbc = true)
 	{
 		$this->database->limitQuery("
-			SELECT		mt.theater_id, mt.theater_name AS name, mt.theater_description AS description
+			SELECT		mt.theater_id, mt.theater_name AS name, mt.theater_description AS description,
+						NOT EXISTS (SELECT * FROM movie_rooms WHERE theater_id = mt.theater_id) AS fresh
 
 			FROM		movie_theaters AS mt 
 			WHERE		mt.theater_id = ". (int) $theater_id, 1);

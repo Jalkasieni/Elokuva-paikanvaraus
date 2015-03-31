@@ -1,7 +1,7 @@
 {#
 *
 * @package apexnet
-* @version $Id: movies_admin.twig.html 1259 2015-03-28 12:04:01Z crise $
+* @version $Id: movies_admin.twig.html 1274 2015-03-31 13:40:17Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -76,9 +76,13 @@
 							<a class="edit-link" title="Edit" href="{{ append_sid('/movies/update_movie', 'movie_id=' ~ movie.movie_id) }}" rel="nofollow">
 								<span class="glyphicon glyphicon-pencil text-info"></span>
 							</a>
+							{% if not movie.fresh -%}
+							<span class="glyphicon glyphicon-remove text-muted"></span>
+							{%- else -%}
 							<a class="remove-link" title="Remove" href="{{ append_sid('/movies/remove_movie', 'movie_id=' ~ movie.movie_id) }}" rel="nofollow">
 								<span class="glyphicon glyphicon-remove text-danger"></span>
 							</a>
+							{% endif -%}
 						</span>
 					</div>
 				</div>
