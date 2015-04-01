@@ -1,7 +1,7 @@
 {#
 *
 * @package svntools
-* @version $Id: user_editor.twig.html 1307 2015-04-01 19:01:21Z crise $
+* @version $Id: user_editor.twig.html 1310 2015-04-01 20:29:34Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -49,7 +49,8 @@
 						{% if editor_action == 'register' -%}
 							<label for="username" class="col-sm-2 control-label">Username:</label>
 							<div class="col-sm-10">
-								<input class="form-control" type="text" size="30" name="username" id="username" value="{{ form.username }}" data-ajaxvalidate="{{ append_sid('/auth/check_user.json') }}" required>
+								<input class="form-control" type="text" size="30" name="username" id="username" value="{{ form.username }}" data-ajaxvalidate="{{ append_sid('/auth/check_user.js') }}">
+								<div class="ws-errorbox" hidden></div>
 							</div>
 						{% else -%}
 							<label class="col-sm-2 control-label">Username:</label>
@@ -64,12 +65,14 @@
 							<label for="display_name" class="col-sm-2 control-label">Display Name:</label>
 							<div class="col-sm-10">
 								<input class="form-control" type="text" size="30" name="display_name" id="display_name" placeholder="Publicly visible name (optional)" value="{{form.display_name}}">
+								<div class="ws-errorbox" hidden></div>
 							</div>
 						</div>
 						<div class="form-group form-group-sm">
 							<label for="email" class="col-sm-2 control-label">E-mail address:</label>
 							<div class="col-sm-10">
 								<input class="form-control" type="email" size="30" name="email" id="email" placeholder="Enter a valid email address" value="{{form.email}}" required>
+								<div class="ws-errorbox" hidden></div>
 							</div>
 						</div>
 						{% if editor_action == 'update' and not session.admin -%}
@@ -77,21 +80,22 @@
 							<label class="col-sm-2 control-label" for="password_old">Old Password:</label>
 							<div class="col-sm-10">
 								<input class="form-control" type="password" size="30" name="password_old" id="password_old" placeholder="You may leave these blank, the password will not be changed" value="">
+								<div class="ws-errorbox" hidden></div>
 							</div>
 						</div>
 						{% endif -%}
 						<div class="form-group form-group-sm">
 							<label class="col-sm-2 control-label" for="password">Password:</label>
 							<div class="col-sm-10">
-								<input class="form-control" type="password" size="30" name="password" id="password" placeholder="Passwords must be 8 characters or longer, choose a strong unique password" value=""
-								{%- if editor_action == 'register' %} required{% endif %}>
+								<input class="form-control" type="password" size="30" name="password" id="password" placeholder="Passwords must be 8 characters or longer, choose a strong unique password" value="" {%- if editor_action == 'register' %} required{% endif %}>
+								<div class="ws-errorbox" hidden></div>
 							</div>
 						</div>
 						<div class="form-group form-group-sm">
 							<label class="col-sm-2 control-label" for="password_confirm">Re-enter password:</label>
 							<div class="col-sm-10">
-								<input class="form-control" type="password" size="30" name="password_confirm" id="password_confirm" placeholder="Re-enter the password exactly as above, passwords are case-sensitive" value=""
-								{%- if editor_action == 'register' %} required{% endif %}>
+								<input class="form-control" type="password" size="30" name="password_confirm" id="password_confirm" placeholder="Re-enter the password exactly as above, passwords are case-sensitive" value="" {%- if editor_action == 'register' %} required{% endif %}>
+								<div class="ws-errorbox" hidden></div>
 							</div>
 						</div>
 						{% if user.admin and session.admin -%}
@@ -104,6 +108,7 @@
 									{%- if permission in form.permissions %} checked{% endif %}> {{ permission | capitalize }}
 								</label>
 								{% endfor -%}
+								<div class="ws-errorbox" hidden></div>
 							</div>
 						</div>
 						{% endif -%}

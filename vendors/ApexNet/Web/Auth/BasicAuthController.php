@@ -2,7 +2,7 @@
 /**
 *
 * @package apexnet
-* @version $Id: BasicAuthController.php 1307 2015-04-01 19:01:21Z crise $
+* @version $Id: BasicAuthController.php 1310 2015-04-01 20:29:34Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -228,7 +228,7 @@ class BasicAuthController extends web_controller
 
 		$username = $request->variable('username', '', web_request::REQUEST);
 		if (empty($username))
-			return web_response::error($request, 400);
+			web_response::json($request, json_encode(array('valid' => false, 'message' => 'Please fill out this field.')));
 
 		$result = !$this->user->checkUser($username);
 		$json_data = array();

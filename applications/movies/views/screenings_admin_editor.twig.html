@@ -1,7 +1,7 @@
 {#
 *
 * @package svntools
-* @version $Id: screenings_admin_editor.twig.html 1307 2015-04-01 19:01:21Z crise $
+* @version $Id: screenings_admin_editor.twig.html 1309 2015-04-01 20:19:10Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -67,6 +67,7 @@
 									<option value="{{id}}"{% if form.theater_id == id %} selected="selected"{% endif %}>{{name}}</option>
 									{% endfor -%}
 								</select>
+								<div class="ws-errorbox" hidden></div>
 							</div>
 						</div>
 						<div class="form-group form-group-sm">
@@ -78,20 +79,21 @@
 									<option value="{{id}}"{% if form.room_id == id %} selected="selected"{% endif %}>{{name}}</option>
 									{% endfor -%}
 								</select>
+								<div class="ws-errorbox" hidden></div>
 							</div>
 						</div>
 						<div class="form-group form-group-sm">
 							<label for="start" class="col-sm-2 control-label">Start Time:</label>
 							<div class="col-sm-10">
-								<input class="form-control" type="datetime-local" size="30" name="start" id="start" placeholder="yyyy-mm-ddTHH:MM" value="{{ form.start | date('Y-m-d\\TH:i') }}"
-								 pattern="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}" title="Enter HTML5 datetime as follows: yyyy-mm-ddTHH:MM" required>
+								<input class="form-control" type="datetime-local" size="30" name="start" id="start" value="{{ form.start | date('Y-m-d\\TH:i') }}" required>
+								<div class="ws-errorbox" hidden></div>
 							</div>
 						</div>
 						<div class="form-group form-group-sm">
 							<label for="end" class="col-sm-2 control-label">End Time:</label>
 							<div class="col-sm-10">
-								<input class="form-control" type="datetime-local" size="30" name="end" id="end" placeholder="yyyy-mm-ddTHH:MM" value="{{ form.end | date('Y-m-d\\TH:i') }}"
-								pattern="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}" title="Enter HTML5 datetime as follows: yyyy-mm-ddTHH:MM" required>
+								<input class="form-control" type="datetime-local" size="30" name="end" id="end" value="{{ form.end | date('Y-m-d\\TH:i') }}" required>
+								<div class="ws-errorbox" hidden></div>
 							</div>
 						</div>
 						<input type="hidden" name="screening_id" id="screening_id" value="{{ form.screening_id }}">
