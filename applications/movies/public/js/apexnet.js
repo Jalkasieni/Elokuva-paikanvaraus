@@ -1,6 +1,6 @@
 /**
 * @package apexnet
-* @version $Id: apexnet.js 1307 2015-04-01 19:01:21Z crise $
+* @version $Id: apexnet.js 1312 2015-04-01 21:27:52Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 */
@@ -159,7 +159,7 @@ ApexNet.prototype.load_editor = function ($container) {
 
 ApexNet.prototype.init_webshims = function () {
 	$.webshims.setOptions({
-		forms: {
+		'forms': {
 			lazyCustomMessages: true,
 			addValidators: true,
 			iVal: {
@@ -174,6 +174,9 @@ ApexNet.prototype.init_webshims = function () {
 				//add config to find right wrapper
 				fieldWrapper: '.form-group'
 			}
+		},
+		'forms-ext': {
+			widgets: { startView: 2, buttonOnly: true }
 		}
 	});
 }
