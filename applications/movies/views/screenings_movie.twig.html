@@ -56,22 +56,24 @@
 			<div class="list-group">
 				<div class="list-group-item">
 					<div class="row">
-						<span class="screening-theater col-md-3 col-sm-3 col-xs-4"> <strong>Theater</strong> </span>
+						<span class="screening-theater col-md-2 col-sm-2 col-xs-3"> <strong>Theater</strong> </span>
 						<span class="screening-start col-md-2 col-sm-2 col-xs-3"> <strong>Start Time</strong> </span>
 						<span class="screening-end col-md-2 col-sm-2 hidden-xs"> <strong>End Time</strong> </span>
-						<span class="screening-room col-md-3 col-sm-3 col-xs-4"> <strong>Room</strong> </span>
+						<span class="screening-room col-md-2 col-sm-2 col-xs-2"> <strong>Room</strong> </span>
+						<span class="screening-seats col-md-2 col-sm-2 col-xs-3"> <strong>Free Seats</strong> </span>
 						<span class="screening-reserve col-md-2 col-sm-2 col-xs-1 text-center"> <strong>Reserve</strong> </span>
 					</div>
 				</div>
 {% for screening in screenings %}
 				<div class="screening-row list-group-item">
 					<div class="row">
-						<span class="screening-theater col-md-3 col-sm-3 col-xs-4">
+						<span class="screening-theater col-md-2 col-sm-2 col-xs-3">
 							<span class=" glyphicon glyphicon-facetime-video"></span> <a>{{ screening.theater_name }}</a>
 						</span>
 						<span class="movie-start col-md-2 col-sm-2 col-xs-3">{{ screening.start | date('Y-m-d H:i') }}</span>
 						<span class="movie-end col-md-2 col-sm-2 hidden-xs">{{ screening.end | date('Y-m-d H:i') }}</span>
-						<span class="screening-room col-md-3 col-sm-3 col-xs-4">{{ screening.room_name }}</span>
+						<span class="screening-room col-md-2 col-sm-2 col-xs-2">{{ screening.room_name }}</span>
+						<span class="screening-seats col-md-2 col-sm-2 col-xs-3">{{ screening.free_seats ~'/'~ screening.total_seats }}</span>
 						<span class="screening-reserve col-md-2 col-sm-2 col-xs-1 text-center">
 							{% if not screening.upcoming -%}
 							<a class="reserve-link btn btn-default btn-xs disabled" href="#" role="button" rel="nofollow">Reserve</a>
