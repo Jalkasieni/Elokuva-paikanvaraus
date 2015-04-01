@@ -1,8 +1,9 @@
 /**
 * @package svntools
-* @version $Id: movies.css 1231 2015-03-27 12:44:15Z crise $
+* @version $Id: movies.css 1305 2015-04-01 16:50:57Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 */
 
 .poster_img { max-height: 146px; max-width: 97px; }
+#reservation_table a, #reservation_table span { font-family: "Lucida Console", Monaco, monospace; }
