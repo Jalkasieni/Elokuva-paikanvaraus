@@ -95,7 +95,7 @@ class movies_screening_model extends web_model
 		$time = (int) time();
 		$this->database->limitQuery("
 			SELECT			ms.screening_id, ms.screening_start AS start, ms.screening_end AS end, ms.movie_id, mr.theater_id, mt.theater_name, ms.room_id, mr.room_name,
-							(ms.screening_start > $time) AS upcoming, mr.room_seats AS seats, mr.room_rows AS rows, (mr.room_seats*mr.room_rows) AS total_seats, cr.reservations, (total_seats-cr.reservations) AS free_seats
+							(ms.screening_start > $time) AS upcoming, mr.room_seats AS seats, mr.room_rows AS rows, (mr.room_seats*mr.room_rows) AS total_seats, cr.reservations, ((mr.room_seats*mr.room_rows)-cr.reservations) AS free_seats
 			FROM			movie_screenings AS ms 
 				LEFT JOIN		movie_rooms AS mr ON (ms.room_id = mr.room_id)
 				LEFT JOIN		movie_theaters AS mt ON (mr.theater_id = mt.theater_id)
@@ -116,7 +116,7 @@ class movies_screening_model extends web_model
 		$time = (int) time();
 		$this->database->query("
 			SELECT			ms.screening_id, ms.screening_start AS start, ms.screening_end AS end, ms.movie_id, mr.theater_id, mt.theater_name, ms.room_id, mr.room_name,
-							(ms.screening_start > $time) AS upcoming, mr.room_seats AS seats, mr.room_rows AS rows, (mr.room_seats*mr.room_rows) AS total_seats, cr.reservations, (total_seats-cr.reservations) AS free_seats
+							(ms.screening_start > $time) AS upcoming, mr.room_seats AS seats, mr.room_rows AS rows, (mr.room_seats*mr.room_rows) AS total_seats, cr.reservations, ((mr.room_seats*mr.room_rows)-cr.reservations) AS free_seats
 			FROM			movie_screenings AS ms 
 				LEFT JOIN		movie_rooms AS mr ON (ms.room_id = mr.room_id)
 				LEFT JOIN		movie_theaters AS mt ON (mr.theater_id = mt.theater_id)
@@ -151,7 +151,7 @@ class movies_screening_model extends web_model
 		$time = (int) time();
 		$this->database->limitQuery("
 			SELECT			ms.screening_id, ms.screening_start AS start, ms.screening_end AS end, mr.theater_id, mi.movie_id, mi.movie_name, ms.room_id, mr.room_name,
-							(ms.screening_start > $time) AS upcoming, mr.room_seats AS seats, mr.room_rows AS rows, (mr.room_seats*mr.room_rows) AS total_seats, cr.reservations, (total_seats-cr.reservations) AS free_seats
+							(ms.screening_start > $time) AS upcoming, mr.room_seats AS seats, mr.room_rows AS rows, (mr.room_seats*mr.room_rows) AS total_seats, cr.reservations, ((mr.room_seats*mr.room_rows)-cr.reservations) AS free_seats
 			FROM			movie_screenings AS ms 
 				LEFT JOIN		movie_rooms AS mr ON (ms.room_id = mr.room_id)
 				LEFT JOIN 		movie_info AS mi ON (ms.movie_id = mi.movie_id)
@@ -172,7 +172,7 @@ class movies_screening_model extends web_model
 		$time = (int) time();
 		$this->database->query("
 			SELECT			ms.screening_id, ms.screening_start AS start, ms.screening_end AS end, mr.theater_id, mi.movie_id, mi.movie_name, ms.room_id, mr.room_name,
-							(ms.screening_start > $time) AS upcoming, mr.room_seats AS seats, mr.room_rows AS rows, (mr.room_seats*mr.room_rows) AS total_seats, cr.reservations, (total_seats-cr.reservations) AS free_seats
+							(ms.screening_start > $time) AS upcoming, mr.room_seats AS seats, mr.room_rows AS rows, (mr.room_seats*mr.room_rows) AS total_seats, cr.reservations, ((mr.room_seats*mr.room_rows)-cr.reservations) AS free_seats
 			FROM			movie_screenings AS ms
 				LEFT JOIN		movie_rooms AS mr ON (ms.room_id = mr.room_id)
 				LEFT JOIN 		movie_info AS mi ON (ms.movie_id = mi.movie_id)
