@@ -1,6 +1,6 @@
 /**
 * @package apexnet
-* @version $Id: apexnet.js 1288 2015-04-01 12:09:45Z crise $
+* @version $Id: apexnet.js 1289 2015-04-01 12:18:58Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 */
@@ -158,19 +158,21 @@ ApexNet.prototype.load_editor = function ($container) {
 }
 
 ApexNet.prototype.init_webshims = function () {
-	webshims.setOptions('forms', {
-		lazyCustomMessages: true,
-		iVal: {
-			sel: '.ws-validate',
-			handleBubble: 'hide', // hide error bubble
+	webshims.setOptions({
+		forms: {
+			lazyCustomMessages: true,
+			iVal: {
+				sel: '.ws-validate',
+				handleBubble: 'hide', // hide error bubble
 
-			//add bootstrap specific classes
-			errorMessageClass: 'help-block',
-			successWrapperClass: 'has-success',
-			errorWrapperClass: 'has-error',
+				//add bootstrap specific classes
+				errorMessageClass: 'help-block',
+				successWrapperClass: 'has-success',
+				errorWrapperClass: 'has-error',
 
-			//add config to find right wrapper
-			fieldWrapper: '.form-group'
+				//add config to find right wrapper
+				fieldWrapper: '.form-group'
+			}
 		}
 	});
 }
