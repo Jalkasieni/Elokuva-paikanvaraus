@@ -1,6 +1,6 @@
 /**
 * @package apexnet
-* @version $Id: apexnet.js 1289 2015-04-01 12:18:58Z crise $
+* @version $Id: apexnet.js 1290 2015-04-01 12:27:56Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 */
@@ -158,7 +158,7 @@ ApexNet.prototype.load_editor = function ($container) {
 }
 
 ApexNet.prototype.init_webshims = function () {
-	webshims.setOptions({
+	$.webshims.setOptions({
 		forms: {
 			lazyCustomMessages: true,
 			iVal: {
@@ -178,5 +178,5 @@ ApexNet.prototype.init_webshims = function () {
 }
 
 ApexNet.prototype.load_webshims = function (shims) {
-	webshims.polyfill(shims);
+	$.webshims.polyfill(shims);
 }
