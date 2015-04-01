@@ -1,6 +1,6 @@
 /**
 * @package apexnet
-* @version $Id: apexnet.js 1178 2015-03-20 17:41:15Z crise $
+* @version $Id: apexnet.js 1286 2015-04-01 10:13:37Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 */
@@ -155,4 +155,26 @@ ApexNet.prototype.load_editor = function ($container) {
 		autoExpand: true,
 		parserOptions: { quoteType: $.sceditor.BBCodeParser.QuoteType.never }
 	});
+}
+
+ApexNet.prototype.init_webshims = function () {
+	webshim.setOptions('forms', {
+		lazyCustomMessages: true,
+		iVal: {
+			sel: '.ws-validate',
+			handleBubble: 'hide', // hide error bubble
+
+			//add bootstrap specific classes
+			errorMessageClass: 'help-block',
+			successWrapperClass: 'has-success',
+			errorWrapperClass: 'has-error',
+
+			//add config to find right wrapper
+			fieldWrapper: '.form-group'
+		}
+	});
+}
+
+ApexNet.prototype.load_webshims = function (shims) {
+	webshim.polyfill(shims);
 }

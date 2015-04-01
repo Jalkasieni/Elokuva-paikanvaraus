@@ -1,7 +1,7 @@
 {#
 *
 * @package svntools
-* @version $Id: screenings_movie.twig.html 1271 2015-03-28 21:42:43Z crise $
+* @version $Id: screenings_movie.twig.html 1286 2015-04-01 10:13:37Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -23,9 +23,8 @@
 	{{ parent() }}
 
 	<script>
-		$(function() {
-			var app = new ApexNet('{{base_url}}');
-		});
+		var app = new ApexNet('{{base_url}}');
+		$(function() {	});
 	</script>
 {% endblock %}
 
