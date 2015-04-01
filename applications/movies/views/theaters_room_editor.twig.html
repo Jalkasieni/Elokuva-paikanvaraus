@@ -21,6 +21,15 @@
 
 {% block scripts -%}
 	{{ parent() }}
+
+	<script>
+		var app = new ApexNet('{{base_url}}');
+		app.init_webshims();
+
+		$(function() {
+			app.load_webshims('forms');
+		});
+	</script>
 {% endblock %}
 
 {% block title %}{{ parent() }} - {{ util.default_title(request) }}{% endblock %}

@@ -1,7 +1,7 @@
 {#
 *
 * @package svntools
-* @version $Id: screenings_admin_editor.twig.html 1266 2015-03-28 16:38:01Z crise $
+* @version $Id: screenings_admin_editor.twig.html 1287 2015-04-01 11:44:46Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -23,6 +23,9 @@
 	{{ parent() }}
 
 	<script>
+		var app = new ApexNet('{{base_url}}');
+		app.init_webshims();
+
 		$(function() {
 			$('#theater_id').on('change', function () {
 				$.get("{{ append_sid('/screenings/load_rooms.json') | e('js') }}", {theater_id: $(this).val()})
@@ -34,6 +37,8 @@
 						});
 					});
 			});
+
+			app.load_webshims('forms');
 		});
 	</script>
 {% endblock %}
