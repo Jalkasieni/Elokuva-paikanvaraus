@@ -2,7 +2,7 @@
 /**
 *
 * @package apexnet
-* @version $Id: BasicAuthController.php 1191 2015-03-20 22:52:19Z crise $
+* @version $Id: BasicAuthController.php 1307 2015-04-01 19:01:21Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -226,16 +226,15 @@ class BasicAuthController extends web_controller
 		if (!$this->user->local())
 			return web_response::error($request, 403);
 
-		$username = $request->variable('username', '', web_request::GET);
+		$username = $request->variable('username', '', web_request::REQUEST);
 		if (empty($username))
 			return web_response::error($request, 400);
 
 		$result = !$this->user->checkUser($username);
 		$json_data = array();
 
-		$json_data['result']		= $result;
-		$json_data['short_text']	= $result ? 'available' : 'unavailable';
-		$json_data['long_text']		= "The user name $username is {$json_data['short_text']}";
+		$json_data['valid']			= $result;
+		$json_data['message']		= "The user name $username is " . ($result ? 'available' : 'unavailable') . '.';
 
 		return web_response::json($request, json_encode($json_data));
 	}

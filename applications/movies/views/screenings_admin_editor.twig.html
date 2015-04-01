@@ -1,7 +1,7 @@
 {#
 *
 * @package svntools
-* @version $Id: screenings_admin_editor.twig.html 1287 2015-04-01 11:44:46Z crise $
+* @version $Id: screenings_admin_editor.twig.html 1307 2015-04-01 19:01:21Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -55,7 +55,7 @@
 {% block content -%}
 		<div class="panel panel-default">
   			<div class="panel-body">
-				<form class="form-horizontal" id="{{ editor_action }}" action="{{ append_sid('/screenings/'~ editor_action ~ '_screening') }}" method="post">
+				<form class="form-horizontal ws-validate" id="{{ editor_action }}" action="{{ append_sid('/screenings/'~ editor_action ~ '_screening') }}" method="post">
 					<fieldset>
 						<legend class="text-center">{{ editor_action | capitalize }} Screening</legend>
 						<div class="form-group form-group-sm">

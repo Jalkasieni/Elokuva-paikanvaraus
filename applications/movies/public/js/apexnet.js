@@ -1,6 +1,6 @@
 /**
 * @package apexnet
-* @version $Id: apexnet.js 1290 2015-04-01 12:27:56Z crise $
+* @version $Id: apexnet.js 1307 2015-04-01 19:01:21Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 */
@@ -161,6 +161,7 @@ ApexNet.prototype.init_webshims = function () {
 	$.webshims.setOptions({
 		forms: {
 			lazyCustomMessages: true,
+			addValidators: true,
 			iVal: {
 				sel: '.ws-validate',
 				handleBubble: 'hide', // hide error bubble

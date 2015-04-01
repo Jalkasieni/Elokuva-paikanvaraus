@@ -1,7 +1,7 @@
 {#
 *
 * @package svntools
-* @version $Id: user_login.twig.html 1287 2015-04-01 11:44:46Z crise $
+* @version $Id: user_login.twig.html 1307 2015-04-01 19:01:21Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -35,7 +35,7 @@
 {% block content -%}
 		<div class="panel panel-default">
   			<div class="panel-body">
-				<form class="form-horizontal" id="login" action="{{ append_sid(login_action, false, true) }}" method="post">
+				<form class="form-horizontal ws-validate" id="login" action="{{ append_sid(login_action, false, true) }}" method="post">
 					<fieldset>
 						<legend class="text-center">{{ login_realm | capitalize }} Log-In</legend>
 						<div class="form-group form-group-sm">

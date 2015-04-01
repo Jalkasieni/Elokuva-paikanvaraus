@@ -44,7 +44,7 @@
 {% block content -%}
 		<div class="panel panel-default">
   			<div class="panel-body">
-				<form class="form-horizontal" id="{{ editor_action }}" action="{{ append_sid('/theaters/manage_rooms', 'action=' ~ editor_action) }}" method="post">
+				<form class="form-horizontal ws-validate" id="{{ editor_action }}" action="{{ append_sid('/theaters/manage_rooms', 'action=' ~ editor_action) }}" method="post">
 					<fieldset>
 						<legend class="text-center">{{ editor_action | capitalize }} Room</legend>
 						<div class="form-group form-group-sm">

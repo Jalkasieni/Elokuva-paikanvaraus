@@ -1,7 +1,7 @@
 {#
 *
 * @package svntools
-* @version $Id: theaters_admin_editor.twig.html 1292 2015-04-01 12:49:43Z crise $
+* @version $Id: theaters_admin_editor.twig.html 1307 2015-04-01 19:01:21Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -24,12 +24,12 @@
 
 	<script>
 		var app = new ApexNet('{{base_url}}');
+		app.init_webshims();
 		app.init_editor();
 
 		$(function() {
 			app.load_editor($('textarea.sceditor'));
 
-			app.init_webshims();
 			app.load_webshims('forms');
 		});
 	</script>
@@ -47,7 +47,7 @@
 {% block content -%}
 		<div class="panel panel-default">
   			<div class="panel-body">
-				<form class="form-horizontal" id="{{ editor_action }}" action="{{ append_sid('/theaters/' ~ editor_action ~ '_theater') }}" method="post">
+				<form class="form-horizontal ws-validate" id="{{ editor_action }}" action="{{ append_sid('/theaters/' ~ editor_action ~ '_theater') }}" method="post">
 					<fieldset>
 						<legend class="text-center">{{ editor_action | capitalize }} Theater</legend>
 						<div class="form-group form-group-sm">
