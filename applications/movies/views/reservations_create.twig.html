@@ -1,0 +1,62 @@
+{#
+*
+* @package svntools
+* @version $Id: reservations_create.twig.html 1300 2015-04-01 16:21:55Z crise $
+* @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+*
+#}
+
+{% extends "bootstrap_base.twig.html" %}
+
+{% block head -%}
+	{{ parent() }}
+
+	<link rel="stylesheet" href="{{base_url}}/css/movies.css">
+{% endblock %}
+
+{% block meta -%}
+	{{ parent() }}
+{% endblock %}
+
+{% block scripts -%}
+	{{ parent() }}
+
+	<script>
+		var app = new ApexNet('{{base_url}}');
+		$(function() {	});
+	</script>
+{% endblock %}
+
+{% block title %}{{ parent() }} - {{ util.default_title(request) }}{% endblock %}
+
+{% block header -%}
+		{% set page_subtitle = 'Make Reservation' %}
+		{{ parent() }}
+{% endblock %}
+
+{% block content -%}
+
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<div id="reservation-table">
+					{% for i, row in reservation_table %}
+						<div>
+						{% for j, seat in row %}
+							{% if seat.user_id is 0 %}
+							<a class="reserve-link label label-default" data-row="{{i}}" data-seat="{{j}}">{{seat.label}}</a>
+							{% elseif seat.state = 2 %}
+							<span class="label label-danger">{{seat.label}}</span>
+							{% elseif seat.state = 1 && seat.user_id = user.user_id %}
+							<a class="reserve-link label label-info" data-row="{{i}}" data-seat="{{j}}">{{seat.label}}>{{seat.label}}</a>
+							{% elseif seat.state = 1 %}
+							<span class="label label-warning">{{seat.label}}</span>
+							{% endif %}
+						{% endfor %}
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+
+{% endblock %}
