@@ -2,7 +2,7 @@
 /**
 *
 * @package svntools
-* @version $Id: reservations.php 1275 2015-03-31 15:32:30Z crise $
+* @version $Id: reservations.php 1293 2015-04-01 13:07:15Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -61,6 +61,15 @@ class movies_reservations_controller extends web_controller
 	function do_create(web_request $request)
 	{
 		return web_response::error($request, 400);
+	}
+
+	function do_update_table(web_request $request)
+	{
+		$screening_id = $request->variable('screening_id', 0, web_request::REQUEST);
+		if ($screening_id < 1)
+			return web_response::error($request, 400);
+
+		return web_response::json($request, json_encode($this->model->get_reservation_table($screening_id)));
 	}
 
 	function do_remove(web_request $request)

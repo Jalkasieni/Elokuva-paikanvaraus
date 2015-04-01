@@ -3,7 +3,7 @@
 /**
 *
 * @package svntools
-* @version $Id: reservation.php 1279 2015-03-31 16:53:28Z crise $
+* @version $Id: reservation.php 1293 2015-04-01 13:07:15Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -106,7 +106,7 @@ class movies_reservation_model extends web_model
 	function get_reservation_table($screening_id)
 	{
 		$size = $this->screening->get_size($screening_id);
-		$table = array(0 => null);
+		$table = array();
 
 		for ($i = 1; $i <= $size['rows']; ++$i)
 		{
@@ -114,6 +114,7 @@ class movies_reservation_model extends web_model
 				'state'		=> self::STATE_FREE,
 				'user_id'	=> 0,
 			));
+			array_shift($table[$i]);
 		}
 
 		$this->database->query("
