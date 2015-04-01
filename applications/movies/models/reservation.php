@@ -3,7 +3,7 @@
 /**
 *
 * @package svntools
-* @version $Id: reservation.php 1294 2015-04-01 13:26:50Z crise $
+* @version $Id: reservation.php 1295 2015-04-01 13:36:43Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -110,11 +110,8 @@ class movies_reservation_model extends web_model
 
 		for ($i = 1; $i <= $size['rows']; ++$i)
 		{
-			$table[$i] = array_pad(array(0 => null), ($size['seats'] + 1), array(
-				'state'		=> self::STATE_FREE,
-				'user_id'	=> 0,
-			));
-			array_slice($table[$i], 1, null, true);
+			for ($j = 1; $j <= $size['seats']; ++$j)
+				$table[$i] = array('state' => self::STATE_FREE, 'user_id' => 0);
 		}
 
 		$this->database->query("
