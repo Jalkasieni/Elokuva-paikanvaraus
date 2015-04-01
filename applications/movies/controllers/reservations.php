@@ -2,7 +2,7 @@
 /**
 *
 * @package svntools
-* @version $Id: reservations.php 1298 2015-04-01 15:25:01Z crise $
+* @version $Id: reservations.php 1301 2015-04-01 16:25:47Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -21,14 +21,14 @@ class movies_reservations_controller extends web_controller
 	const RESERVATIONS_LIMIT = 15;
 
 	protected $model;
-	protected $movie;
+	protected $screening;
 
 	public function prepare(web_request $request)
 	{
 		// Begin session if any
 		$this->user->load($request);
 		$this->model = $this->model('reservation');
-		$this->movie = $this->model('movie');
+		$this->screening = $this->model('screening');
 
 		// access restrictions
 		$this->acl->assign(array(
