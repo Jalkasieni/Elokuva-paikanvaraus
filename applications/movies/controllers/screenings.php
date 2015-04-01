@@ -2,7 +2,7 @@
 /**
 *
 * @package svntools
-* @version $Id: screenings.php 1280 2015-03-31 20:38:37Z crise $
+* @version $Id: screenings.php 1313 2015-04-01 21:45:25Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -112,8 +112,8 @@ class movies_screenings_controller extends web_controller
 		$form_data = array(
 			'movie_id'		=> (int) $movie_id,
 			'theater_id'	=> $request->variable('theater_id', 0, web_request::POST),
-			'start'			=> strtotime($request->variable('start', date('Y-m-d\TH:i:s', time() + 60*60), web_request::POST)),
-			'end'			=> strtotime($request->variable('end', date('Y-m-d\TH:i:s', time() + 180*60), web_request::POST)),
+			'start'			=> strtotime($request->variable('start', date('Y-m-d\TH:i:s', ceil((time() + 60 * 60) / 300) * 300), web_request::POST)),
+			'end'			=> strtotime($request->variable('end', date('Y-m-d\TH:i:s', ceil((time() + 180 * 60) / 300) * 300), web_request::POST)),
 			'room_id'		=> $request->variable('room_id', 0, web_request::POST),
 		);
 
@@ -143,7 +143,7 @@ class movies_screenings_controller extends web_controller
 		if ($screening_id < 1)
 			return web_response::redirect($request, "/screenings/admin?movie_id=$movie_id", 302);
 
-		$current = array('start' => time() + 60 * 60, 'end' => time() + 180*60, 'movie_id' => 0, 'theater_id' => 0, 'room_id' => 0);
+		$current = array('start' => ceil((time() + 60 * 60) / 300) * 300, 'end' => ceil((time() + 180 * 60) / 300) * 300, 'movie_id' => 0, 'theater_id' => 0, 'room_id' => 0);
 		if (!$request->is_set('submit'))
 		{
 			$screening = $this->model->get_screening($screening_id);
