@@ -3,7 +3,7 @@
 /**
 *
 * @package svntools
-* @version $Id: reservation.php 1296 2015-04-01 13:42:02Z crise $
+* @version $Id: reservation.php 1297 2015-04-01 14:37:42Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -27,6 +27,8 @@ class movies_reservation_model extends web_model
 	const STATE_PENDING = 1;
 	const STATE_CONFIRMED = 2;
 	const STATE_CANCELED = 3;
+
+	protected $letters = " ABCDEFGHIJKLMNOPQRSTUVwXYZ";
 
 	public static function create_schema(DBConnection $db)
 	{
@@ -93,12 +95,11 @@ class movies_reservation_model extends web_model
 		return ($this->database->update($this->database->build_delete('movie_reservations', $conds)) == 1);
 	}
 
-	function remove_reservation($screening_id, $seat, $row)
+	function remove_reservation($reservation_id, $user_id)
 	{
 		$conds = array();
-		$conds[] = 'screening_id = '. (int) $screening_id;
-		$conds[] = 'cords_seat = '. (int) $seat;
-		$conds[] = 'cords_row = '. (int) $row;
+		$conds[] = 'reservation_id = '. (int) $reservation_id;
+		$conds[] = 'user_id = '. (int) $user_id;
 
 		return ($this->database->update($this->database->build_delete('movie_reservations', $conds)) == 1);
 	}
@@ -111,11 +112,11 @@ class movies_reservation_model extends web_model
 		for ($i = 1; $i <= $size['rows']; ++$i)
 		{
 			for ($j = 1; $j <= $size['seats']; ++$j)
-				$table[$i][$j] = array('state' => self::STATE_FREE, 'user_id' => 0);
+				$table[$i][$j] = array('state' => self::STATE_FREE, 'reservation_id' => 0, 'user_id' => 0, 'label' => "{$this->letters[$i]}$j");
 		}
 
 		$this->database->query("
-			SELECT		mr.cords_seat AS seat, mr.cords_row AS row, reservation_state AS state, mr.user_id
+			SELECT		mr.reservation_id, mr.cords_seat AS seat, mr.cords_row AS row, reservation_state AS state, mr.user_id
 
 			FROM		movie_reservations AS mr 
 			WHERE		mr.screening_id = " . (int) $screening_id . "
@@ -123,10 +124,13 @@ class movies_reservation_model extends web_model
 
 		while (($row = $this->database->fetchRow()) !== false)
 		{
-			$table[(int)$row['row']][(int)$row['seat']] =  array(
-				'state'		=> (int) $row['state'],
-				'user_id'	=> (int) $row['user_id'],
-			);
+			$record = $table[(int)$row['row']][(int)$row['seat']];
+
+			$record['state'] = (int) $row['state'];
+			$record['reservation_id'] = (int) $row['reservation_id'];
+			$record['user_id'] = (int) $row['user_id'];
+
+			$table[(int)$row['row']][(int)$row['seat']] = $record;
 		}
 
 		$this->database->freeResult();
