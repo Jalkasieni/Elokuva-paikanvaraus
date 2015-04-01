@@ -1,7 +1,7 @@
 {#
 *
 * @package svntools
-* @version $Id: user_editor.twig.html 1311 2015-04-01 20:46:28Z crise $
+* @version $Id: user_editor.twig.html 1314 2015-04-01 23:09:31Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -71,7 +71,7 @@
 						<div class="form-group form-group-sm">
 							<label for="email" class="col-sm-2 control-label">E-mail address:</label>
 							<div class="col-sm-10">
-								<input class="form-control" type="email" size="30" name="email" id="email" placeholder="Enter a valid email address" value="{{form.email}}" required>
+								<input class="form-control" type="email" size="30" name="email" id="email" placeholder="Enter a valid email address" value="{{form.email}}" autocomplete="off" required>
 								<div class="ws-errorbox" hidden></div>
 							</div>
 						</div>
@@ -87,14 +87,14 @@
 						<div class="form-group form-group-sm">
 							<label class="col-sm-2 control-label" for="password">Password:</label>
 							<div class="col-sm-10">
-								<input class="form-control" type="password" size="30" name="password" id="password" placeholder="Passwords must be 8 characters or longer, choose a strong unique password" value="" {%- if editor_action == 'register' %} required{% endif %}>
+								<input class="form-control" type="password" size="30" name="password" id="password" placeholder="Passwords must be 8 characters or longer, choose a strong unique password" value="" autocomplete="off" minlength="8" {%- if editor_action == 'register' %} required{% endif %}>
 								<div class="ws-errorbox" hidden></div>
 							</div>
 						</div>
 						<div class="form-group form-group-sm">
 							<label class="col-sm-2 control-label" for="password_confirm">Re-enter password:</label>
 							<div class="col-sm-10">
-								<input class="form-control" type="password" size="30" name="password_confirm" id="password_confirm" placeholder="Re-enter the password exactly as above, passwords are case-sensitive" value="" {%- if editor_action == 'register' %} required{% endif %}>
+								<input class="form-control" type="password" size="30" name="password_confirm" id="password_confirm" placeholder="Repeat the above password, passwords are case-sensitive" value="" autocomplete="off" data-dependent-validation="password" data-errormessage="The passwords do not match" {%- if editor_action == 'register' %} required{% endif %}>
 								<div class="ws-errorbox" hidden></div>
 							</div>
 						</div>
