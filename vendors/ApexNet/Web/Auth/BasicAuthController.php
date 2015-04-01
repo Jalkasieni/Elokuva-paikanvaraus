@@ -2,7 +2,7 @@
 /**
 *
 * @package apexnet
-* @version $Id: BasicAuthController.php 1310 2015-04-01 20:29:34Z crise $
+* @version $Id: BasicAuthController.php 1311 2015-04-01 20:46:28Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -94,7 +94,7 @@ class BasicAuthController extends web_controller
 			return web_response::redirect($request, '/', 200, 'You are already logged in as a registered user.');
 
 		$form_data = array(
-			'username'			=> $request->variable('username', '', web_request::POST),
+			'username'			=> trim($request->variable('username', '', web_request::POST)),
 			'password'			=> $request->variable('password', '', web_request::POST),
 
 			'display_name'		=> $request->variable('display_name', '', web_request::POST),
@@ -226,15 +226,12 @@ class BasicAuthController extends web_controller
 		if (!$this->user->local())
 			return web_response::error($request, 403);
 
-		$username = $request->variable('username', '', web_request::REQUEST);
+		$username = trim($request->variable('username', '', web_request::REQUEST));
 		if (empty($username))
-			web_response::json($request, json_encode(array('valid' => false, 'message' => 'Please fill out this field.')));
+			web_response::json($request, json_encode(array('message' => 'Please fill out this field.')));
 
 		$result = !$this->user->checkUser($username);
-		$json_data = array();
-
-		$json_data['valid']			= $result;
-		$json_data['message']		= "The user name $username is " . ($result ? 'available' : 'unavailable') . '.';
+		$json_data = array('message' => ($result ? '' : "The user name $username is " . ($result ? 'available' : 'unavailable') . '.'));
 
 		return web_response::json($request, json_encode($json_data));
 	}

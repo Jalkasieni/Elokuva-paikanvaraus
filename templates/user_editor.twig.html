@@ -1,7 +1,7 @@
 {#
 *
 * @package svntools
-* @version $Id: user_editor.twig.html 1310 2015-04-01 20:29:34Z crise $
+* @version $Id: user_editor.twig.html 1311 2015-04-01 20:46:28Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -49,7 +49,7 @@
 						{% if editor_action == 'register' -%}
 							<label for="username" class="col-sm-2 control-label">Username:</label>
 							<div class="col-sm-10">
-								<input class="form-control" type="text" size="30" name="username" id="username" value="{{ form.username }}" data-ajaxvalidate="{{ append_sid('/auth/check_user.js') }}">
+								<input class="form-control" type="text" size="30" name="username" id="username" value="{{ form.username }}" data-ajaxvalidate="{{ append_sid('/auth/check_user.js') }}" required>
 								<div class="ws-errorbox" hidden></div>
 							</div>
 						{% else -%}
