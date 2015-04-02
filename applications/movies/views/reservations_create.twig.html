@@ -1,7 +1,7 @@
 {#
 *
 * @package svntools
-* @version $Id: reservations_create.twig.html 1318 2015-04-02 20:15:12Z crise $
+* @version $Id: reservations_create.twig.html 1319 2015-04-02 21:48:58Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -24,6 +24,7 @@
 
 	<script>
 		var app = new ApexNet('{{base_url}}');
+		var poll_timer = null;
 
 		var updateTable = function (data) {
 			$.each(data, function (row, seats) {
@@ -45,9 +46,20 @@
 					}
 				});
 			});
+
+			return true;
+		};
+
+		var pollTableUpdates = function() {
+				$.get("{{ append_sid('/reservations/update_table.json') | e('js') }}", { screening_id: {{ screening.screening_id }} })
+					.done(function (response) {
+						if (updateTable(response))
+							poll_timer = setTimeout(pollTableUpdates, 3000);
+					});
 		};
 
 		$(function() {
+
 			$('div.rtable-row > a.reserve-link').on('click', function(e) {
 				e.preventDefault('');
 
@@ -60,9 +72,16 @@
 					if (!response.success)
 						console.log("Slow and steady doesn't win the race.");
 
-					updateTable(response.reservation_table);
+					if (updateTable(response.reservation_table)) {
+						// delay currently queued table update
+						if (poll_timer !== null)
+							clearTimeout(poll_timer);
+						poll_timer = setTimeout(pollTableUpdates, 3000);
+					}
 				});
 			});
+
+			pollTableUpdates();
 		});
 	</script>
 {% endblock %}
@@ -78,7 +97,8 @@
 
 		<div class="panel panel-default">
 			<div class="panel-body text-center">
-				<h4>{{ screening.movie_name }}</h4>
+				<h2>{{ screening.movie_name }} <small>starting {{ screening.start | date('Y-m-d H:i') }} at {{ screening.theater_name }}, room {{ screening.room_name }}</h2>
+				<hr>
 				<div id="reservation-table">
 					{% for i, row in reservation_table -%}
 					<div class="rtable-row">
@@ -96,10 +116,10 @@
 					</div>
 					{% endfor -%}
 				</div>
-				<div id="reservation-controls">
-					<a class="confirm-link btn btn-primary" href="#" role="button" rel="nofollow">Confirm Reservation</a>
-					<a class="cancel-link btn btn-default" href="#" role="button" rel="nofollow">Cancel Reservation</a>
-				</div>
+				<p id="reservation-controls">
+					<a class="confirm-link btn btn-primary" href="{{ append_sid('/reservations/confirm', 'screening_id=' ~ screening.screening_id) }}" role="button" rel="nofollow">Confirm Reservation</a>
+					<a class="cancel-link btn btn-default" href="{{ append_sid('/reservations/remove', 'screening_id=' ~ screening.screening_id) }}" role="button" rel="nofollow">Cancel Reservation</a>
+				</p>
 			</div>
 		</div>
 

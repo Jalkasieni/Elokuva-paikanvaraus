@@ -3,7 +3,7 @@
 /**
 *
 * @package svntools
-* @version $Id: reservation.php 1316 2015-04-02 19:25:56Z crise $
+* @version $Id: reservation.php 1319 2015-04-02 21:48:58Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -26,7 +26,6 @@ class movies_reservation_model extends web_model
 	const STATE_FREE = 0;
 	const STATE_PENDING = 1;
 	const STATE_CONFIRMED = 2;
-	const STATE_CANCELED = 3;
 
 	protected $letters = " ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -78,24 +77,17 @@ class movies_reservation_model extends web_model
 		$conds = array();
 		$conds[] = 'screening_id = '. (int) $screening_id;
 		$conds[] = 'user_id = '. (int) $user_id;
+		$conds[] = 'state = ' .  self::STATE_PENDING;
 
 		return ($this->database->update($this->database->build_update('movie_reservations', array('reservation_modified' => time(), 'reservation_state' => self::STATE_CONFIRMED), $conds)) == 1);
 	}
 
-	function cancel_reservations($user_id, $screening_id)
+	function remove_reservations($user_id, $screening_id, $only_pending = true)
 	{
 		$conds = array();
 		$conds[] = 'screening_id = '. (int) $screening_id;
 		$conds[] = 'user_id = '. (int) $user_id;
-
-		return ($this->database->update($this->database->build_update('movie_reservations', array('reservation_modified' => time(), 'reservation_state' => self::STATE_CANCELED), $conds)) == 1);
-	}
-
-	function remove_reservations($user_id, $screening_id)
-	{
-		$conds = array();
-		$conds[] = 'screening_id = '. (int) $screening_id;
-		$conds[] = 'user_id = '. (int) $user_id;
+		$conds[] = ($only_pending ? 'state = ' .  self::STATE_PENDING : false);
 
 		return ($this->database->update($this->database->build_delete('movie_reservations', $conds)) == 1);
 	}
@@ -149,7 +141,7 @@ class movies_reservation_model extends web_model
 	{
 		$conds = array();
 		$conds[] = 'mr.user_id = ' .  (int) $user_id;
-		$conds[] = ($only_upcoming ? 'ms.screening_start < ' . (int) time() : false);
+		$conds[] = ($only_upcoming ? 'ms.screening_start > ' . (int) time() : false);
 
 		$this->database->query('
 			SELECT		COUNT(mr.reservation_id) AS reservations
@@ -168,7 +160,7 @@ class movies_reservation_model extends web_model
 
 		$conds = array();
 		$conds[] = 'mr.user_id = ' .  (int) $user_id;
-		$conds[] = ($only_upcoming ? "ms.screening_start < $time" : false);
+		$conds[] = ($only_upcoming ? "ms.screening_start > $time" : false);
 
 		$this->database->query("
 			SELECT		mi.movie_name, mro.room_name, mt.theater_name, ms.screening_start, mr.cords_seat AS seat, mr.cords_row AS row, reservation_state AS state, mr.user_id,

@@ -2,7 +2,7 @@
 /**
 *
 * @package svntools
-* @version $Id: reservations.php 1317 2015-04-02 19:52:36Z crise $
+* @version $Id: reservations.php 1319 2015-04-02 21:48:58Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -41,12 +41,18 @@ class movies_reservations_controller extends web_controller
 			'create' => array(
 				'permissions'	=> 'registered'
 			),
+			'remove' => array(
+				'permissions'	=> 'registered'
+			),
+			'confirm' => array(
+				'permissions'	=> 'registered'
+			),
 			'toggle_seat' => array(
 				'permissions'	=> 'registered'
 			),
-			'remove' => array(
+			'update_table' => array(
 				'permissions'	=> 'registered'
-			)
+			),
 		));
 	}
 
@@ -63,7 +69,7 @@ class movies_reservations_controller extends web_controller
 
 	function do_create(web_request $request)
 	{
-		$screening_id = $request->variable('screening_id', 0, web_request::REQUEST);
+		$screening_id = $request->variable('screening_id', 0, web_request::GET);
 		if ($screening_id < 1)
 			return web_response::redirect($request, '/movies/', 302);
 
@@ -73,7 +79,47 @@ class movies_reservations_controller extends web_controller
 		)));
 	}
 
-	function do_toggle_seat(web_request $request)
+	function do_remove(web_request $request)
+	{
+		$reservation_id = $request->variable('reservation_id', 0, web_request::GET);
+		$screening_id = $request->variable('screening_id', 0, web_request::GET);
+
+		$user_id = $request->variable('user_id', (int) $this->user['user_id'], web_request::GET);
+		$redirect = (($this->user->admin() && $this->user['user_id'] != $user_id) ? "/reservations/?user_id=$user_id" : '/reservations/');
+
+		if (($reservation_id < 1 && $screening_id < 1) || $user_id < 1 || (!$this->user->admin() && $this->user['user_id'] != $user_id))
+			return web_response::redirect($request, $redirect, 302);
+
+		if ($reservation_id != 0)
+		{
+			if ($this->model->remove_reservation($reservation_id, $user_id))
+				return web_response::redirect($request, $redirect, 200, 'Reservation removed successfully.');
+		}
+		else if ($screening_id != 0)
+		{
+			if ($this->model->remove_reservations($user_id, $screening_id))
+				return web_response::redirect($request, $redirect, 200, 'Reservation cancelled successfully.');	
+		}
+
+		return web_response::redirect($request, $redirect, 302);
+	}
+
+	function do_confirm(web_request $request)
+	{
+		$screening_id = $request->variable('screening_id', 0, web_request::GET);
+		$user_id = $request->variable('user_id', (int) $this->user['user_id'], web_request::GET);
+		$redirect = (($this->user->admin() && $this->user['user_id'] != $user_id) ? "/reservations/?user_id=$user_id" : '/reservations/');
+
+		if ($screening_id < 1 || $user_id < 1 || (!$this->user->admin() && $this->user['user_id'] != $user_id))
+			return web_response::redirect($request, $redirect, 302);
+
+		if ($this->model->confirm_reservations($user_id, $screening_id))
+			return web_response::redirect($request, $redirect, 200, 'Reservation confirmed successfully.');	
+
+		return web_response::redirect($request, $redirect, 302);
+	}
+
+	function ajax_toggle_seat(web_request $request)
 	{
 		$screening_id = $request->variable('screening_id', 0, web_request::REQUEST);
 		$reservation_id = $request->variable('reservation_id', 0, web_request::REQUEST);
@@ -107,31 +153,16 @@ class movies_reservations_controller extends web_controller
 
 		return web_response::json($request, json_encode(array(
 			'success'			=> $result,
-			'reservation_table'	=> $this->model->get_reservation_table($meta_data['screening_id'])
+			'reservation_table'	=> $this->model->get_reservation_table($screening_id)
 		)));
 	}
 
-	function do_update_table(web_request $request)
+	function ajax_update_table(web_request $request)
 	{
 		$screening_id = $request->variable('screening_id', 0, web_request::REQUEST);
 		if ($screening_id < 1)
 			return web_response::error($request, 400);
 
 		return web_response::json($request, json_encode($this->model->get_reservation_table($screening_id)));
-	}
-
-	function do_remove(web_request $request)
-	{
-		$reservation_id = $request->variable('reservation_id', 0, web_request::REQUEST);
-		$user_id = $request->variable('user_id', (int) $this->user['user_id'], web_request::REQUEST);
-		$redirect = (($this->user->admin() && $this->user['user_id'] != $user_id) ? "/reservations/?user_id=$user_id" : '/reservations/');
-
-		if ($reservation_id < 1 || $user_id < 1 || (!$this->user->admin() && $this->user['user_id'] != $user_id))
-			return web_response::redirect($request, $redirect, 302);
-
-		if ($this->model->remove_reservation($reservation_id, $user_id))
-			return web_response::redirect($request, $redirect, 200, 'Reservation removed successfully.');
-
-		return web_response::redirect($request, $redirect, 302);
 	}
 }
