@@ -3,7 +3,7 @@
 /**
 *
 * @package svntools
-* @version $Id: screening.php 1299 2015-04-01 15:50:33Z crise $
+* @version $Id: screening.php 1317 2015-04-02 19:52:36Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -95,7 +95,7 @@ class movies_screening_model extends web_model
 		$time = (int) time();
 		$this->database->limitQuery("
 			SELECT			ms.screening_id, ms.screening_start AS start, ms.screening_end AS end, ms.movie_id, mr.theater_id, mt.theater_name, ms.room_id, mr.room_name,
-							(ms.screening_start > $time) AS upcoming, mr.room_seats AS seats, mr.room_rows AS rows, (mr.room_seats*mr.room_rows) AS total_seats, cr.reservations, ((mr.room_seats*mr.room_rows)-cr.reservations) AS free_seats
+							(ms.screening_start > $time) AS upcoming, mr.room_seats AS seats, mr.room_rows AS rows, COALESCE(cr.reservations, 0) AS reserved_seats
 			FROM			movie_screenings AS ms 
 				LEFT JOIN		movie_rooms AS mr ON (ms.room_id = mr.room_id)
 				LEFT JOIN		movie_theaters AS mt ON (mr.theater_id = mt.theater_id)
@@ -105,7 +105,12 @@ class movies_screening_model extends web_model
 
 		$screenings = array();
 		while (($row = $this->database->fetchRow()) !== false)
+		{
+			$row['total_seats'] = $row['seats'] * $row['rows'];
+			$row['free_seats'] = $row['total_seats'] - $row['reserved_seats'];
+
 			$screenings[] = $row;
+		}
 
 		$this->database->freeResult();
 		return $screenings;
@@ -115,15 +120,22 @@ class movies_screening_model extends web_model
 	{
 		$time = (int) time();
 		$this->database->query("
-			SELECT			ms.screening_id, ms.screening_start AS start, ms.screening_end AS end, ms.movie_id, mr.theater_id, mt.theater_name, ms.room_id, mr.room_name,
-							(ms.screening_start > $time) AS upcoming, mr.room_seats AS seats, mr.room_rows AS rows, (mr.room_seats*mr.room_rows) AS total_seats, cr.reservations, ((mr.room_seats*mr.room_rows)-cr.reservations) AS free_seats
+			SELECT			ms.screening_id, ms.screening_start AS start, ms.screening_end AS end, ms.movie_id, mi.movie_name, mr.theater_id, mt.theater_name, ms.room_id, mr.room_name,
+							(ms.screening_start > $time) AS upcoming, mr.room_seats AS seats, mr.room_rows AS rows, COALESCE(cr.reservations, 0) AS reserved_seats
 			FROM			movie_screenings AS ms 
 				LEFT JOIN		movie_rooms AS mr ON (ms.room_id = mr.room_id)
 				LEFT JOIN		movie_theaters AS mt ON (mr.theater_id = mt.theater_id)
+				LEFT JOIN 		movie_info AS mi ON (ms.movie_id = mi.movie_id)
 				LEFT JOIN		(SELECT mre.screening_id, COUNT(mre.reservation_id) AS reservations FROM movie_reservations AS mre GROUP BY mre.screening_id) AS cr ON (cr.screening_id = ms.screening_id)
 			WHERE			ms.screening_id = " . (int) $screening_id);
 
 		$row = $this->database->fetchRow();
+		if ($row !== false)
+		{
+			$row['total_seats'] = $row['seats'] * $row['rows'];
+			$row['free_seats'] = $row['total_seats'] - $row['reserved_seats'];
+		}
+
 		$this->database->freeResult();
 		return $row;
 	}
@@ -151,7 +163,7 @@ class movies_screening_model extends web_model
 		$time = (int) time();
 		$this->database->limitQuery("
 			SELECT			ms.screening_id, ms.screening_start AS start, ms.screening_end AS end, mr.theater_id, mi.movie_id, mi.movie_name, ms.room_id, mr.room_name,
-							(ms.screening_start > $time) AS upcoming, mr.room_seats AS seats, mr.room_rows AS rows, (mr.room_seats*mr.room_rows) AS total_seats, cr.reservations, ((mr.room_seats*mr.room_rows)-cr.reservations) AS free_seats
+							(ms.screening_start > $time) AS upcoming, mr.room_seats AS seats, mr.room_rows AS rows, COALESCE(cr.reservations, 0) AS reserved_seats
 			FROM			movie_screenings AS ms 
 				LEFT JOIN		movie_rooms AS mr ON (ms.room_id = mr.room_id)
 				LEFT JOIN 		movie_info AS mi ON (ms.movie_id = mi.movie_id)
@@ -161,27 +173,15 @@ class movies_screening_model extends web_model
 
 		$screenings = array();
 		while (($row = $this->database->fetchRow()) !== false)
+		{
+			$row['total_seats'] = $row['seats'] * $row['rows'];
+			$row['free_seats'] = $row['total_seats'] - $row['reserved_seats'];
+
 			$screenings[] = $row;
+		}
 
 		$this->database->freeResult();
 		return $screenings;
-	}
-
-	public function get_screening_theater($screening_id)
-	{
-		$time = (int) time();
-		$this->database->query("
-			SELECT			ms.screening_id, ms.screening_start AS start, ms.screening_end AS end, mr.theater_id, mi.movie_id, mi.movie_name, ms.room_id, mr.room_name,
-							(ms.screening_start > $time) AS upcoming, mr.room_seats AS seats, mr.room_rows AS rows, (mr.room_seats*mr.room_rows) AS total_seats, cr.reservations, ((mr.room_seats*mr.room_rows)-cr.reservations) AS free_seats
-			FROM			movie_screenings AS ms
-				LEFT JOIN		movie_rooms AS mr ON (ms.room_id = mr.room_id)
-				LEFT JOIN 		movie_info AS mi ON (ms.movie_id = mi.movie_id)
-				LEFT JOIN		(SELECT mre.screening_id, COUNT(mre.reservation_id) AS reservations FROM movie_reservations AS mre GROUP BY mre.screening_id) AS cr ON (cr.screening_id = ms.screening_id)
-			WHERE			ms.screening_id = " . (int) $screening_id);
-
-		$row = $this->database->fetchRow();
-		$this->database->freeResult();
-		return $row;
 	}
 	
 	public function get_size($screening_id)

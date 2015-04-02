@@ -2,7 +2,7 @@
 /**
 *
 * @package svntools
-* @version $Id: reservations.php 1301 2015-04-01 16:25:47Z crise $
+* @version $Id: reservations.php 1317 2015-04-02 19:52:36Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -41,7 +41,7 @@ class movies_reservations_controller extends web_controller
 			'create' => array(
 				'permissions'	=> 'registered'
 			),
-			'reserve_seat' => array(
+			'toggle_seat' => array(
 				'permissions'	=> 'registered'
 			),
 			'remove' => array(
@@ -68,30 +68,47 @@ class movies_reservations_controller extends web_controller
 			return web_response::redirect($request, '/movies/', 302);
 
 		return web_response::page($request, 'reservations_create', $this->user->pack(array(
-			'screening'					=> $this->screening->get_screening_theater($screening_id),
+			'screening'					=> $this->screening->get_screening($screening_id),
 			'reservation_table'			=> $this->model->get_reservation_table($screening_id)
 		)));
 	}
 
-	function do_reserve_seat(web_request $request)
+	function do_toggle_seat(web_request $request)
 	{
-		$meta_data = array(
-			'screening_id'		=> $request->variable('screening_id', 0, web_request::REQUEST),
-			'user_id'			=> $request->variable('user_id', (int) $this->user['user_id'], web_request::POST),
-			'seat'				=> $request->variable('seat', 0, web_request::POST),
-			'row'				=> $request->variable('row', 0, web_request::POST)
-		);
+		$screening_id = $request->variable('screening_id', 0, web_request::REQUEST);
+		$reservation_id = $request->variable('reservation_id', 0, web_request::REQUEST);
+		$user_id = $request->variable('user_id', (int) $this->user['user_id'], web_request::REQUEST);
 
-		if ($meta_data['screening_id'] < 1 || $meta_data['seat'] < 1 || $meta_data['row'] < 1)
+		if ($screening_id < 1 || $user_id < 1 || (!$this->user->admin() && $this->user['user_id'] != $user_id))
 			return web_response::error($request, 400);
 
-		if ($meta_data['user_id'] < 1 || (!$this->user->admin() && $this->user['user_id'] != $meta_data['user_id']))
-			return web_response::error($request, 400);
+		$result = false;
+		if ($reservation_id == 0)
+		{
+			$meta_data = array(
+				'screening_id'		=> $screening_id,
+				'user_id'			=> $user_id,
+				'seat'				=> $request->variable('seat', 0, web_request::POST),
+				'row'				=> $request->variable('row', 0, web_request::POST)
+			);
 
-		if ($this->model->add_reservation($meta_data))
-			return web_response::json($request, json_encode($this->model->get_reservation_table($meta_data['screening_id'])));
+			if ($meta_data['seat'] < 1 || $meta_data['row'] < 1)
+				return web_response::error($request, 400);
 
-		return web_response::error($request, 400);
+			$result = $this->model->add_reservation($meta_data);
+		}
+		else
+		{
+			if ($reservation_id < 1)
+				return web_response::error($request, 400);
+
+			$result = $this->model->remove_reservation($reservation_id, $user_id);
+		}
+
+		return web_response::json($request, json_encode(array(
+			'success'			=> $result,
+			'reservation_table'	=> $this->model->get_reservation_table($meta_data['screening_id'])
+		)));
 	}
 
 	function do_update_table(web_request $request)

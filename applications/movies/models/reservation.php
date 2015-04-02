@@ -3,7 +3,7 @@
 /**
 *
 * @package svntools
-* @version $Id: reservation.php 1304 2015-04-01 16:41:49Z crise $
+* @version $Id: reservation.php 1316 2015-04-02 19:25:56Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -28,13 +28,13 @@ class movies_reservation_model extends web_model
 	const STATE_CONFIRMED = 2;
 	const STATE_CANCELED = 3;
 
-	protected $letters = " ABCDEFGHIJKLMNOPQRSTUVwXYZ";
+	protected $letters = " ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 	public static function create_schema(DBConnection $db)
 	{
 		$db->update("
 		CREATE TABLE IF NOT EXISTS movie_reservations (
-			reservation_id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+			reservation_id mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT 'This is used as pseudo primary key while the actual primary key is used just to prevent duplicates',
 			reservation_modified int(11) unsigned NOT NULL DEFAULT 0,
 			cords_seat tinyint(3) unsigned NOT NULL DEFAULT 0,
 			cords_row tinyint(3) unsigned NOT NULL DEFAULT 0,
@@ -43,7 +43,8 @@ class movies_reservation_model extends web_model
 			screening_id mediumint(8) unsigned NOT NULL,
 			user_id mediumint(8) unsigned NOT NULL,
 
-			PRIMARY KEY (reservation_id),
+			PRIMARY KEY screening_seat (screening_id, cords_seat, cords_row),
+			KEY (reservation_id),
 			KEY (screening_id),
 			KEY (user_id)
 		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin");
@@ -58,6 +59,10 @@ class movies_reservation_model extends web_model
 
 	function add_reservation(array $meta_data)
 	{
+		$size = $this->screening->get_size($meta_data['screening_id']);
+		if ($meta_data['row'] > $size['rows'] || $meta_data['seat'] > $size['seats'])
+			return false;
+
 		return ($this->database->update($this->database->build_insert('movie_reservations', array(
 			'reservation_modified'	=> (int) time(),
 			'cords_seat'			=> (int) $meta_data['seat'],
@@ -109,7 +114,7 @@ class movies_reservation_model extends web_model
 		$size = $this->screening->get_size($screening_id);
 		$table = array();
 
-		for ($i = 1; $i <= $size['rows']; ++$i)
+		for ($i = $size['rows']; $i > 0; --$i)
 		{
 			for ($j = 1; $j <= $size['seats']; ++$j)
 			{

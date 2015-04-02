@@ -1,7 +1,7 @@
 {#
 *
 * @package svntools
-* @version $Id: reservations_create.twig.html 1302 2015-04-01 16:30:06Z crise $
+* @version $Id: reservations_create.twig.html 1316 2015-04-02 19:25:56Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -24,7 +24,46 @@
 
 	<script>
 		var app = new ApexNet('{{base_url}}');
-		$(function() {	});
+
+		var updateTable = function (data) {
+			$.each(response, function (row, seats) {
+				$.each(seats, function (seat, data) {
+					$seat = $('div.rtable-row > a.seat-' + data.label);
+					$seat.removeClass('reserve-link label-default label-info label-warning label-danger disabled');
+					$seat.removeData('row seat reservation');
+
+					if (data.user_id == 0) {
+						$seat.addClass('reserve-link label-default');
+						$seat.data({'row': row, 'seat': seat});
+					} else if (data.state == 2) {
+						$seat.addClass('label-danger disabled');
+					} else if (data.state == 1 && data.user_id == {{ user.user_id }}) {
+						$seat.addClass('reserve-link label-info');
+						$seat.data('reservation', data.reservation_id);
+					} else if (data.state == 1) {
+						$seat.addClass('label-warning disabled');
+					}
+				});
+			});
+		};
+
+		$(function() {
+			$('div.rtable-row > a.reserve-link').on('click', function(e) {
+				e.preventDefault('');
+
+				$.post("{{ append_sid('/reservations/toggle_seat.json', 'screening_id=' ~ screening.screening_id) | e('js') }}", {
+					reservation_id: $(this).data('reservation'),
+					user_id: {{ user.user_id }},
+					seat: $(this).data('seat'),
+					row: $(this).data('row')
+				}).done(function (response) {
+					if (!response.success)
+						console.log("Slow and steady doesn't win the race.");
+
+					updateTable(response.reservation_table);
+				});
+			});
+		});
 	</script>
 {% endblock %}
 
@@ -38,23 +77,28 @@
 {% block content -%}
 
 		<div class="panel panel-default">
-			<div class="panel-body">
+			<div class="panel-body text-center">
+				<h4>{{ screening.movie_name }}</h4>
 				<div id="reservation-table">
-					{% for i, row in reservation_table %}
-						<div>
-						{% for j, seat in row %}
-							{% if seat.user_id == 0 %}
-							<a class="reserve-link label label-default" data-row="{{i}}" data-seat="{{j}}">{{seat.label}}</a>
-							{% elseif seat.state == 2 %}
-							<span class="label label-danger">{{seat.label}}</span>
-							{% elseif seat.state == 1 and seat.user_id == user.user_id %}
-							<a class="reserve-link label label-info" data-row="{{i}}" data-seat="{{j}}">{{seat.label}}>{{seat.label}}</a>
-							{% elseif seat.state == 1 %}
-							<span class="label label-warning">{{seat.label}}</span>
-							{% endif %}
-						{% endfor %}
-						</div>
+					{% for i, row in reservation_table -%}
+					<div class="rtable-row">
+					{% for j, seat in row %}
+						{% if seat.user_id == 0 -%}
+						<a href="#" class="reserve-link seat-{{seat.label}} label label-default" data-row="{{i}}" data-seat="{{j}}">{{seat.label}}</a>
+						{%- elseif seat.state == 2 -%}
+						<a href="#" class="seat-{{seat.label}} label label-danger disabled">{{seat.label}}</a>
+						{%- elseif seat.state == 1 and seat.user_id == user.user_id -%}
+						<a href="#" class="reserve-link seat-{{seat.label}} label label-info" data-reservation="{{seat.reservation_id}}">{{seat.label}}</a>
+						{%- elseif seat.state == 1 -%}
+						<a href="#" class="seat-{{seat.label}} label label-warning disabled">{{seat.label}}</a>
+						{% endif -%}
 					{% endfor %}
+					</div>
+					{% endfor -%}
+				</div>
+				<div id="reservation-controls">
+					<a class="confirm-link btn btn-primary" href="#" role="button" rel="nofollow">Confirm Reservation</a>
+					<a class="cancel-link btn btn-default" href="#" role="button" rel="nofollow">Cancel Reservation</a>
 				</div>
 			</div>
 		</div>
