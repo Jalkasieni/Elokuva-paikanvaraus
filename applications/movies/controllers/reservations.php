@@ -2,7 +2,7 @@
 /**
 *
 * @package svntools
-* @version $Id: reservations.php 1319 2015-04-02 21:48:58Z crise $
+* @version $Id: reservations.php 1320 2015-04-02 23:06:15Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -97,7 +97,7 @@ class movies_reservations_controller extends web_controller
 		}
 		else if ($screening_id != 0)
 		{
-			if ($this->model->remove_reservations($user_id, $screening_id))
+			if ($this->model->remove_reservations($user_id, $screening_id, true))
 				return web_response::redirect($request, $redirect, 200, 'Reservation cancelled successfully.');	
 		}
 

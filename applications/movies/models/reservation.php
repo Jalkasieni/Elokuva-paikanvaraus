@@ -3,7 +3,7 @@
 /**
 *
 * @package svntools
-* @version $Id: reservation.php 1319 2015-04-02 21:48:58Z crise $
+* @version $Id: reservation.php 1320 2015-04-02 23:06:15Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -77,7 +77,7 @@ class movies_reservation_model extends web_model
 		$conds = array();
 		$conds[] = 'screening_id = '. (int) $screening_id;
 		$conds[] = 'user_id = '. (int) $user_id;
-		$conds[] = 'state = ' .  self::STATE_PENDING;
+		$conds[] = 'reservation_state = ' .  self::STATE_PENDING;
 
 		return ($this->database->update($this->database->build_update('movie_reservations', array('reservation_modified' => time(), 'reservation_state' => self::STATE_CONFIRMED), $conds)) == 1);
 	}
@@ -87,7 +87,7 @@ class movies_reservation_model extends web_model
 		$conds = array();
 		$conds[] = 'screening_id = '. (int) $screening_id;
 		$conds[] = 'user_id = '. (int) $user_id;
-		$conds[] = ($only_pending ? 'state = ' .  self::STATE_PENDING : false);
+		$conds[] = ($only_pending ? 'reservation_state = ' .  self::STATE_PENDING : false);
 
 		return ($this->database->update($this->database->build_delete('movie_reservations', $conds)) == 1);
 	}
@@ -162,7 +162,7 @@ class movies_reservation_model extends web_model
 		$conds[] = 'mr.user_id = ' .  (int) $user_id;
 		$conds[] = ($only_upcoming ? "ms.screening_start > $time" : false);
 
-		$this->database->query("
+		$this->database->limitQuery("
 			SELECT		mi.movie_name, mro.room_name, mt.theater_name, ms.screening_start, mr.cords_seat AS seat, mr.cords_row AS row, reservation_state AS state, mr.user_id,
 						(ms.screening_start > $time) AS upcoming
 
@@ -171,7 +171,7 @@ class movies_reservation_model extends web_model
 				LEFT JOIN 		movie_info AS mi ON (ms.movie_id = mi.movie_id)
 				LEFT JOIN		movie_rooms AS mro ON (ms.room_id = mro.room_id)
 				LEFT JOIN 		movie_theaters AS mt ON (mt.theater_id = mro.theater_id)
-			" . $this->database->build_where($conds));
+			" . $this->database->build_where($conds), $limit, $offset);
 
 		$reservations = array();
 		while (($row = $this->database->fetchRow()) !== false)
