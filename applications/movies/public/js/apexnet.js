@@ -1,6 +1,6 @@
 /**
 * @package apexnet
-* @version $Id: apexnet.js 1312 2015-04-01 21:27:52Z crise $
+* @version $Id: apexnet.js 1324 2015-04-03 04:02:36Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 */
@@ -179,6 +179,8 @@ ApexNet.prototype.init_webshims = function () {
 			widgets: { startView: 2, buttonOnly: true }
 		}
 	});
+
+	$.webshims.formcfg.en.meridian = null;
 }
 
 ApexNet.prototype.load_webshims = function (shims) {
