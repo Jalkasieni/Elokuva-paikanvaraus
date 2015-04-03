@@ -1,6 +1,6 @@
 /**
 * @package apexnet
-* @version $Id: apexnet.js 1324 2015-04-03 04:02:36Z crise $
+* @version $Id: apexnet.js 1326 2015-04-03 14:18:07Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 */
@@ -157,7 +157,7 @@ ApexNet.prototype.load_editor = function ($container) {
 	});
 }
 
-ApexNet.prototype.init_webshims = function () {
+ApexNet.prototype.init_webshims = function (lang) {
 	$.webshims.setOptions({
 		'forms': {
 			lazyCustomMessages: true,
@@ -180,7 +180,10 @@ ApexNet.prototype.init_webshims = function () {
 		}
 	});
 
-	$.webshims.formcfg.en.meridian = null;
+	if (!lang) lang = 'en';
+
+	$.webshims.activeLang(lang);
+	$.webshims.formcfg[lang].meridian = null;
 }
 
 ApexNet.prototype.load_webshims = function (shims) {
