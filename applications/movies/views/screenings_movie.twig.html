@@ -1,7 +1,7 @@
 {#
 *
 * @package svntools
-* @version $Id: screenings_movie.twig.html 1315 2015-04-02 16:35:44Z crise $
+* @version $Id: screenings_movie.twig.html 1323 2015-04-03 02:56:19Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -42,9 +42,9 @@
 				<div class="media">
 					<div class="media-left">
 						{% if movie.poster_url is not empty -%}
-						<img class="media-object img-thumbnail poster_img" src="{{movie.poster_url}}" alt="Poster for {{movie.name}}">
+						<img class="media-object img-thumbnail poster-img" src="{{movie.poster_url}}" alt="Poster for {{movie.name}}">
 						{%- else -%}
-						<img class="media-object img-thumbnail poster_img" src="http://placehold.it/97x146" alt="Placeholder">
+						<img class="media-object img-thumbnail poster-img" src="http://placehold.it/97x146" alt="Placeholder">
 						{%- endif %}
 					</div>
 					<div class="media-body">
@@ -56,24 +56,26 @@
 			<div class="list-group">
 				<div class="list-group-item">
 					<div class="row">
-						<span class="screening-theater col-md-2 col-sm-2 col-xs-3"> <strong>Theater</strong> </span>
-						<span class="screening-start col-md-2 col-sm-2 col-xs-3"> <strong>Start Time</strong> </span>
-						<span class="screening-end col-md-2 col-sm-2 hidden-xs"> <strong>End Time</strong> </span>
-						<span class="screening-room col-md-2 col-sm-2 col-xs-2"> <strong>Room</strong> </span>
-						<span class="screening-seats col-md-2 col-sm-2 col-xs-3"> <strong>Free Seats</strong> </span>
-						<span class="screening-reserve col-md-2 col-sm-2 col-xs-1 text-center"> <strong>Reserve</strong> </span>
+						<span class="screening-theater col-md-3 col-sm-3 col-xs-4"><strong>Theater</strong></span>
+						<span class="screening-start col-md-2 col-sm-2 col-xs-3"><strong>Start Time</strong></span>
+						<span class="screening-end col-md-2 col-sm-2 hidden-xs"><strong>End Time</strong></span>
+						<span class="screening-room col-md-2 col-sm-2 col-xs-3"><strong>Room</strong></span>
+						<span class="screening-seats col-md-1 col-sm-1 col-xs-1 text-center"><strong>Available</strong></span>
+						<span class="screening-reserve col-md-2 col-sm-2 col-xs-1 text-center"><strong>Reserve</strong></span>
 					</div>
 				</div>
 {% for screening in screenings %}
 				<div class="screening-row list-group-item">
 					<div class="row">
-						<span class="screening-theater col-md-2 col-sm-2 col-xs-3">
+						<span class="screening-theater col-md-3 col-sm-3 col-xs-4">
 							<span class=" glyphicon glyphicon-facetime-video"></span> <a>{{ screening.theater_name }}</a>
 						</span>
-						<span class="movie-start col-md-2 col-sm-2 col-xs-3">{{ screening.start | date('Y-m-d H:i') }}</span>
-						<span class="movie-end col-md-2 col-sm-2 hidden-xs">{{ screening.end | date('Y-m-d H:i') }}</span>
-						<span class="screening-room col-md-2 col-sm-2 col-xs-2">{{ screening.room_name }}</span>
-						<span class="screening-seats col-md-2 col-sm-2 col-xs-3">{{ screening.free_seats ~ '/' ~ screening.total_seats }}</span>
+						<span class="screening-start col-md-2 col-sm-2 col-xs-3">{{ screening.start | date('Y-m-d H:i') }}</span>
+						<span class="screening-end col-md-2 col-sm-2 hidden-xs">{{ screening.end | date('Y-m-d H:i') }}</span>
+						<span class="screening-room col-md-2 col-sm-2 col-xs-3">{{ screening.room_name }}</span>
+						<span class="screening-seats col-md-1 col-sm-1 col-xs-1 text-center">
+							{% if not screening.free_seats == 0 %}{{ screening.free_seats ~ '/' ~ screening.total_seats }}{% else %}<strong class="text-danger">FULL</strong>{% endif %}
+						</span>
 						<span class="screening-reserve col-md-2 col-sm-2 col-xs-1 text-center">
 							{% if not screening.upcoming or screening.free_seats == 0 -%}
 							<a class="reserve-link btn btn-default btn-xs disabled" href="#" role="button" rel="nofollow">Reserve</a>

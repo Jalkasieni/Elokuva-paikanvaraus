@@ -1,10 +1,11 @@
 /**
 * @package svntools
-* @version $Id: movies.css 1316 2015-04-02 19:25:56Z crise $
+* @version $Id: movies.css 1323 2015-04-03 02:56:19Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 */
 
-.poster_img { max-height: 146px; max-width: 97px; }
+.poster-img { max-height: 146px; max-width: 97px; }
 
 #reservation-table .rtable-row a { font-size: 1.2em; font-family: "Lucida Console",Monaco,monospace; letter-spacing: 2px; margin: 2px; line-height: 2; }
+#reservation-legend span { font-family: "Lucida Console",Monaco,monospace; letter-spacing: 2px; margin: 2px; line-height: 2; }

@@ -3,7 +3,7 @@
 /**
 *
 * @package svntools
-* @version $Id: reservation.php 1320 2015-04-02 23:06:15Z crise $
+* @version $Id: reservation.php 1322 2015-04-03 01:52:48Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -79,7 +79,7 @@ class movies_reservation_model extends web_model
 		$conds[] = 'user_id = '. (int) $user_id;
 		$conds[] = 'reservation_state = ' .  self::STATE_PENDING;
 
-		return ($this->database->update($this->database->build_update('movie_reservations', array('reservation_modified' => time(), 'reservation_state' => self::STATE_CONFIRMED), $conds)) == 1);
+		return ($this->database->update($this->database->build_update('movie_reservations', array('reservation_modified' => time(), 'reservation_state' => self::STATE_CONFIRMED), $conds)) >= 1);
 	}
 
 	function remove_reservations($user_id, $screening_id, $only_pending = true)
@@ -89,7 +89,7 @@ class movies_reservation_model extends web_model
 		$conds[] = 'user_id = '. (int) $user_id;
 		$conds[] = ($only_pending ? 'reservation_state = ' .  self::STATE_PENDING : false);
 
-		return ($this->database->update($this->database->build_delete('movie_reservations', $conds)) == 1);
+		return ($this->database->update($this->database->build_delete('movie_reservations', $conds)) >= 1);
 	}
 
 	function remove_reservation($reservation_id, $user_id)

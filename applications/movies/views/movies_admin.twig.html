@@ -1,7 +1,7 @@
 {#
 *
 * @package apexnet
-* @version $Id: movies_admin.twig.html 1274 2015-03-31 13:40:17Z crise $
+* @version $Id: movies_admin.twig.html 1323 2015-04-03 02:56:19Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -106,9 +106,9 @@
 						<div class="media">
 							<div class="media-left">
 								{% if movie.poster_url is not empty -%}
-								<img class="media-object img-thumbnail poster_img" src="{{movie.poster_url}}" alt="Poster for {{movie.name}}">
+								<img class="media-object img-thumbnail poster-img" src="{{movie.poster_url}}" alt="Poster for {{movie.name}}">
 								{%- else -%}
-								<img class="media-object img-thumbnail poster_img" src="http://placehold.it/97x146" alt="Placeholder">
+								<img class="media-object img-thumbnail poster-img" src="http://placehold.it/97x146" alt="Placeholder">
 								{%- endif %}
 							</div>
 							<div class="media-body">
