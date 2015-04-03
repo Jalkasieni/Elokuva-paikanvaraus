@@ -2,7 +2,7 @@
 /**
 *
 * @package svntools
-* @version $Id: theaters.php 1272 2015-03-28 22:14:37Z crise $
+* @version $Id: theaters.php 1325 2015-04-03 05:02:19Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -157,8 +157,17 @@ class movies_theaters_controller extends web_controller
 
 			if ($request->is_set('submit') && !empty($form_data['name']))
 			{
-				if ($this->model->add_room($theater_id, $form_data))
+				$errors = array();
+				if ($form_data['seats'] < 1 || $form_data['seats'] > 15)
+					$errors[] = 'Number of seats out of allowed bounds';
+
+				if ($form_data['rows'] < 1 || $form_data['rows'] > 26)
+					$errors[] = 'Number of rows out of allowed bounds';
+
+				if (empty($errors) && $this->model->add_room($theater_id, $form_data))
 					return web_response::redirect($request, "/theaters/manage_rooms?theater_id=$theater_id", 200, 'Room added succesfully');
+
+				$form_data['errors'] = $errors;
 			}
 
 			return $response->body('theaters_room_editor', $this->user->pack(array(
@@ -186,8 +195,17 @@ class movies_theaters_controller extends web_controller
 
 			if ($request->is_set('submit') && !empty($form_data['name']))
 			{
-				if ($this->model->update_room($theater_id, $room_id, $form_data))
+				$errors = array();
+				if ($form_data['seats'] < 1 || $form_data['seats'] > 15)
+					$errors[] = 'Number of seats out of allowed bounds';
+
+				if ($form_data['rows'] < 1 || $form_data['rows'] > 26)
+					$errors[] = 'Number of rows out of allowed bounds';
+
+				if (empty($errors) && $this->model->update_room($theater_id, $room_id, $form_data))
 					return web_response::redirect($request, "/theaters/manage_rooms?theater_id=$theater_id", 200, 'Room updated successfully.');
+
+				$form_data['errors'] = $errors;
 			}
 
 			return $response->body('theaters_room_editor', $this->user->pack(array(

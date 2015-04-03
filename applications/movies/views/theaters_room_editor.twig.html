@@ -57,14 +57,14 @@
 						<div class="form-group form-group-sm">
 							<div class="col-sm-offset-2 col-sm-10">
 								<div class="form-group form-group-sm row">
-									<label for="seats" class="col-sm-1 control-label">Seats:</label>
-									<div class="col-sm-2">
-										<input class="form-control" type="number" size="4" name="seats" id="seats" placeholder="Seats" value="{{form.seats}}">
-										<div class="ws-errorbox" hidden></div>
-									</div>
 									<label for="rows" class="col-sm-1 control-label">Rows:</label>
 									<div class="col-sm-2">
-										<input class="form-control" type="number" size="4" name="rows" id="rows" placeholder="Rows" value="{{form.rows}}">
+										<input class="form-control" type="number" size="4" name="rows" id="rows" placeholder="Rows" min="1" max="26" value="{{form.rows}}">
+										<div class="ws-errorbox" hidden></div>
+									</div>
+									<label for="seats" class="col-sm-1 control-label">Seats:</label>
+									<div class="col-sm-2">
+										<input class="form-control" type="number" size="4" name="seats" id="seats" placeholder="Seats" min="1" max="15" value="{{form.seats}}">
 										<div class="ws-errorbox" hidden></div>
 									</div>
 								</div>

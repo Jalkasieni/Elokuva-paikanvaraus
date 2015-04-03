@@ -2,7 +2,7 @@
 /**
 *
 * @package svntools
-* @version $Id: movies.php 1238 2015-03-27 15:04:48Z crise $
+* @version $Id: movies.php 1325 2015-04-03 05:02:19Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -97,6 +97,8 @@ class movies_movies_controller extends web_controller
 
 			if (empty($errors) && $this->model->add_movie($form_data))
 				return web_response::redirect($request, '/movies/admin', 200, 'Movie added successfully.');
+
+			$form_data['errors'] = $errors;
 		}
 
 		return web_response::page($request, 'movies_admin_editor', $this->user->pack(array(
@@ -137,6 +139,8 @@ class movies_movies_controller extends web_controller
 
 			if (empty($errors) && $this->model->update_movie($movie_id, $form_data))
 				return web_response::redirect($request, '/movies/admin', 200, 'Movie updated successfully.');
+
+			$form_data['errors'] = $errors;
 		}
 
 		return web_response::page($request, 'movies_admin_editor', $this->user->pack(array(
