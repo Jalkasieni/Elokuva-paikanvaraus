@@ -1,7 +1,7 @@
 {#
 *
 * @package svntools
-* @version $Id: reservations_create.twig.html 1320 2015-04-02 23:06:15Z crise $
+* @version $Id: reservations_create.twig.html 1321 2015-04-03 00:21:57Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -26,6 +26,7 @@
 		var app = new ApexNet('{{base_url}}');
 		var poll_timer = null;
 		var in_update = false;
+		var idle_updates = 0;
 
 		var updateTable = function (data) {
 			$.each(data, function (row, seats) {
@@ -53,7 +54,10 @@
 		};
 
 		var pollTableUpdates = function() {
-				if (in_update)
+				if (idle_updates >= 100)
+					$('span.updates-inactive').removeClass('hidden');
+
+				if (in_update || idle_updates >= 100)
 					return false;
 
 				in_update = true;
@@ -61,7 +65,7 @@
 					.done(function (response) {
 						if (updateTable(response))
 							poll_timer = setTimeout(pollTableUpdates, 3000);
-					}).always(function () { in_update = false; });
+					}).always(function () { in_update = false; ++idle_updates; });
 
 			return true;
 		};
@@ -71,10 +75,10 @@
 			$('div.rtable-row > a.reserve-link').on('click', function(e) {
 				e.preventDefault('');
 
-				if (in_update)
+				if (in_update || idle_updates >= 100)
 					return false;
 
-				in_update true;
+				in_update = true;
 				$.post("{{ append_sid('/reservations/toggle_seat.json', 'screening_id=' ~ screening.screening_id) | e('js') }}", {
 					reservation_id: $(this).data('reservation'),
 					user_id: {{ user.user_id }},
@@ -90,7 +94,7 @@
 							clearTimeout(poll_timer);
 						poll_timer = setTimeout(pollTableUpdates, 3000);
 					}
-				}).always(function () { in_update = false; });
+				}).always(function () { in_update = false; idle_updates = 0; });
 			});
 
 			pollTableUpdates();
@@ -111,6 +115,9 @@
 			<div class="panel-body text-center">
 				<h4>{{ screening.movie_name }} <small>starting {{ screening.start | date('Y-m-d H:i') }} at {{ screening.theater_name }} / {{ screening.room_name }}</h4>
 				<hr>
+				<span class="updates-inactive text-warning hidden">
+					Updates to seating graph have been disabled due to inactivity, please <a href="{{ append_sid('/reservations/create', 'screening_id=' ~ screening.screening_id) }}">reload</a> the page.
+				</span>
 				<div id="reservation-table">
 					{% for i, row in reservation_table -%}
 					<div class="rtable-row">
