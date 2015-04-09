@@ -54,12 +54,14 @@
 						<span class="movie-start col-md-2 col-sm-2 col-xs-3"><span class=" glyphicon glyphicon-facetime-video"></span> {{ reservation.screening_start | date('Y-m-d H:i') }}</span>
 						<span class="movie-name col-md-3 col-sm-3 col-xs-3">{{ reservation.movie_name }}</span>
 						<span class="theater-name col-md-3 col-sm-3 col-xs-3">{{ reservation.theater_name }} / {{ reservation.room_name }}</span>
-						<span class="reservation-seat col-md-2 col-sm-2 col-xs-2">{{ reservation.row }}, {{ reservation.seat }}</span>
+						<span class="reservation-seat col-md-2 col-sm-2 col-xs-2">{{ reservation.seat_label }}</span>
 						<span class="reservation-cancel col-md-2 col-sm-2 col-xs-1 text-center">
 							{% if not reservation.upcoming -%}
 							<a class="cancel-link btn btn-default btn-xs disabled" href="#" role="button" rel="nofollow">Cancel</a>
 							{%- else -%}
-							<a class="cancel-link btn btn-danger btn-xs" href="#" role="button" rel="nofollow">Cancel</a>
+							<a class="cancel-link btn btn-danger btn-xs" href="{{ append_sid('/reservations/remove', 'reservation_id=' ~ reservation.reservation_id) }}" role="button" rel="nofollow">
+								Cancel
+							</a>
 							{% endif -%}
 						</span>
 					</div>

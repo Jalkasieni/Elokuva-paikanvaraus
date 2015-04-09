@@ -3,7 +3,7 @@
 /**
 *
 * @package svntools
-* @version $Id: reservation.php 1322 2015-04-03 01:52:48Z crise $
+* @version $Id: reservation.php 1328 2015-04-09 10:11:56Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -110,7 +110,7 @@ class movies_reservation_model extends web_model
 		{
 			for ($j = 1; $j <= $size['seats']; ++$j)
 			{
-				$label = $this->letters[$i] . (($j < 10) ? "0$j" : "$j");
+				$label = $this->make_label($i, $j);
 				$table[$i][$j] = array('state' => self::STATE_FREE, 'reservation_id' => 0, 'user_id' => 0, 'label' => $label);
 			}
 		}
@@ -175,9 +175,17 @@ class movies_reservation_model extends web_model
 
 		$reservations = array();
 		while (($row = $this->database->fetchRow()) !== false)
+		{
+			$row['seat_label'] = $this->make_label($row['row'], $row['seat']);
 			$reservations[] = $row;
+		}
 
 		$this->database->freeResult();
 		return $reservations;
+	}
+
+	protected function make_label($row, $seat)
+	{
+		return $this->letters[(int) $row] . (($seat < 10) ? "0$seat" : $seat);
 	}
 }
