@@ -1,7 +1,7 @@
 {#
 *
 * @package svntools
-* @version $Id: bootstrap_base.twig.html 1329 2015-04-09 10:54:24Z crise $
+* @version $Id: bootstrap_base.twig.html 1330 2015-04-09 11:09:46Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -73,7 +73,7 @@
 						<li class="navbar-text">Welcome back, {{user.display_name|raw}} (<em>{{user.group_title}}</em>)</li>
 						<li>
 							<div class="btn-group btn-group-sm navbar-btn" role="group">
-								<a class="btn btn-success" href="{{ append_sid('/auth/update/') }}">My Account</button>
+								<a class="btn btn-success" href="{{ append_sid('/auth/update/') }}">My Account</a>
 								<button data-toggle="dropdown" class="btn btn-success dropdown-toggle"><span class="caret"></span></button>
 								<ul class="dropdown-menu">
 									<li><a href="{{ append_sid('/auth/update/') }}" rel="nofollow">Manage Account</a></li>
@@ -94,9 +94,9 @@
 							<input type="password" class="form-control" name="password" id="nav-password" placeholder="Password" value="" required>
 						</div>
 						<input type="hidden" name="redirect" value="{{page_url}}">
-						<button class="btn btn-primary btn-sm navbar-btn" type="submit" name="login" value="1">Log In</button>
+						<button class="btn btn-primary btn-sm" type="submit" name="login" value="1">Log In</button>
 
-						<a class="btn btn-success btn-sm navbar-btn" href="{{ append_sid('/auth/register') }}" rel="nofollow">Sign Up</a>
+						<a class="btn btn-success btn-sm" href="{{ append_sid('/auth/register') }}" rel="nofollow">Sign Up</a>
 					</form>
 					{%- endif %}
 				</div>
