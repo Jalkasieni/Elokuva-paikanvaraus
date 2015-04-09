@@ -1,7 +1,7 @@
 {#
 *
 * @package svntools
-* @version $Id: bootstrap_base.twig.html 1330 2015-04-09 11:09:46Z crise $
+* @version $Id: bootstrap_base.twig.html 1332 2015-04-09 12:23:37Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -32,8 +32,8 @@
 	{% endif -%}
 
 	<!-- CSS Files -->
-	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 	<link rel="stylesheet" href="{{base_url}}/components/sceditor/themes/default.min.css">
 	<link rel="stylesheet" href="{{base_url}}/css/sceditor.custom.css">
@@ -69,18 +69,20 @@
 				{% if user is defined and (request.controller != 'auth' or (request.action not in ['login', 'logout', 'login_admin'])) -%}
 				<div class="navbar-right">
 					{% if user.registered -%}
-					<ul class="nav navbar-nav navbar-right">
+					<ul class="nav navbar-nav">
 						<li class="navbar-text">Welcome back, {{user.display_name|raw}} (<em>{{user.group_title}}</em>)</li>
 						<li>
-							<div class="btn-group btn-group-sm navbar-btn" role="group">
-								<a class="btn btn-success" href="{{ append_sid('/auth/update/') }}">My Account</a>
-								<button data-toggle="dropdown" class="btn btn-success dropdown-toggle"><span class="caret"></span></button>
-								<ul class="dropdown-menu">
-									<li><a href="{{ append_sid('/auth/update/') }}" rel="nofollow">Manage Account</a></li>
-									<li class="divider"></li>
-									<li><a href="{{ append_sid(login_link, 'redirect=' ~ page_url|e('url'), true) }}" rel="nofollow">Log Out</a></li>
-								</ul>
-							</div>
+							<form action="{{ append_sid('/auth/update/') }}" method="get">
+								<div class="btn-group btn-group-sm navbar-btn" role="group">
+									<button type="submit">My Account</button>
+									<button data-toggle="dropdown" class="btn btn-success dropdown-toggle"><span class="caret"></span></button>
+									<ul class="dropdown-menu">
+										<li><a href="{{ append_sid('/auth/update/') }}" rel="nofollow"><strong>Manage Account</strong></a></li>
+										<li class="divider"></li>
+										<li><a href="{{ append_sid(login_link, 'redirect=' ~ page_url|e('url'), true) }}" rel="nofollow">Log Out</a></li>
+									</ul>
+								</div>
+							</form>
 						</li>
 					</ul>
 					{%- else -%}
@@ -96,7 +98,7 @@
 						<input type="hidden" name="redirect" value="{{page_url}}">
 						<button class="btn btn-primary btn-sm" type="submit" name="login" value="1">Log In</button>
 
-						<a class="btn btn-success btn-sm" href="{{ append_sid('/auth/register') }}" rel="nofollow">Sign Up</a>
+						<a class="btn btn-success btn-sm" href="{{ append_sid('/auth/register') }}" role="button" rel="nofollow">Sign Up</a>
 					</form>
 					{%- endif %}
 				</div>
@@ -174,7 +176,7 @@
 	{% block scripts -%}
 	<!-- JavaScript dependancies -->
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/webshim/1.15.7/minified/polyfiller.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/webshim/1.15.7/minified/shims/i18n/formcfg-en.js"></script>
 	<script src="{{base_url}}/components/sceditor/jquery.sceditor.bbcode.min.js"></script>
