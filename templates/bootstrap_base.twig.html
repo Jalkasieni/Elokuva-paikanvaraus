@@ -1,7 +1,7 @@
 {#
 *
 * @package svntools
-* @version $Id: bootstrap_base.twig.html 1333 2015-04-09 12:44:36Z crise $
+* @version $Id: bootstrap_base.twig.html 1334 2015-04-09 20:28:47Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -70,10 +70,10 @@
 				<div class="navbar-right">
 					{% if user.registered -%}
 					<p class="navbar-text">Welcome back, {{user.display_name|raw}} (<em>{{user.group_title}}</em>)</p>
-					<form class="navbar-form" action="{{ append_sid('/auth/update/') }}" method="get">
-						<div class="btn-group btn-group-sm navbar-btn" role="group">
+					<form class="navbar-form navbar-right" action="{{ append_sid('/auth/update/') }}" method="get">
+						<div class="btn-group btn-group-sm" role="group">
 							<button type="submit" class="btn btn-success">My Account</button>
-							<button data-toggle="dropdown" class="btn btn-success dropdown-toggle"><span class="caret"></span></button>
+							<button type="button" data-toggle="dropdown" class="btn btn-success dropdown-toggle"><span class="caret"></span></button>
 							<ul class="dropdown-menu">
 								<li><a href="{{ append_sid('/auth/update/') }}" rel="nofollow"><strong>Manage Account</strong></a></li>
 								<li class="divider"></li>
