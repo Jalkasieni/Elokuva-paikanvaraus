@@ -1,7 +1,7 @@
 {#
 *
 * @package svntools
-* @version $Id: bootstrap_base.twig.html 1334 2015-04-09 20:28:47Z crise $
+* @version $Id: bootstrap_base.twig.html 1335 2015-04-09 23:51:37Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -67,37 +67,7 @@
 				<div class="navbar-right"> <!-- Twitter Bootstrap Bug --> </div>
 
 				{% if user is defined and (request.controller != 'auth' or (request.action not in ['login', 'logout', 'login_admin'])) -%}
-				<div class="navbar-right">
-					{% if user.registered -%}
-					<p class="navbar-text">Welcome back, {{user.display_name|raw}} (<em>{{user.group_title}}</em>)</p>
-					<form class="navbar-form navbar-right" action="{{ append_sid('/auth/update/') }}" method="get">
-						<div class="btn-group btn-group-sm" role="group">
-							<button type="submit" class="btn btn-success">My Account</button>
-							<button type="button" data-toggle="dropdown" class="btn btn-success dropdown-toggle"><span class="caret"></span></button>
-							<ul class="dropdown-menu">
-								<li><a href="{{ append_sid('/auth/update/') }}" rel="nofollow"><strong>Manage Account</strong></a></li>
-								<li class="divider"></li>
-								<li><a href="{{ append_sid(login_link, 'redirect=' ~ page_url|e('url'), true) }}" rel="nofollow">Log Out</a></li>
-							</ul>
-						</div>
-					</form>
-					{%- else -%}
-					<form class="navbar-form" action="{{ append_sid(login_link, '', true) }}" method="post">
-						<div class="form-group form-group-sm">
-							 <label class="sr-only" for="nav-username">Username:</label>
-							<input type="text" class="form-control" name="username" id="nav-username" placeholder="Username" value="" required>
-						</div>
-						<div class="form-group form-group-sm">
-							<label class="sr-only" for="nav-password">Password:</label>
-							<input type="password" class="form-control" name="password" id="nav-password" placeholder="Password" value="" autocomplete="off" required>
-						</div>
-						<input type="hidden" name="redirect" value="{{page_url}}">
-						<button class="btn btn-primary btn-sm" type="submit" name="login" value="1">Log In</button>
-
-						<a class="btn btn-success btn-sm" href="{{ append_sid('/auth/register') }}" role="button" rel="nofollow">Sign Up</a>
-					</form>
-					{%- endif %}
-				</div>
+					{% include 'bootstrap_login_fragment.twig.html' %}
 				{%- endif %}
 
 				<div class="container">

@@ -1,7 +1,7 @@
 {#
 *
 * @package svntools
-* @version $Id: bootstrap_menu_fragment.twig.html 1230 2015-03-27 03:14:44Z crise $
+* @version $Id: bootstrap_menu_fragment.twig.html 1335 2015-04-09 23:51:37Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -13,19 +13,4 @@
 						<li{% if page_subtitle == 'Home' %} class="active" {% endif %}>
 							<a href="{{ base_url }}"><span class="glyphicon glyphicon-home"></span> <span class="visible-xs-inline">Home</span></a>
 						</li>
-
-						{% if user is defined and user.admin and (request.controller != 'auth' or (request.action not in ['login', 'logout', 'login_admin'])) -%}
-						{% if session.admin -%}
-						<li class="dropdown{% if admin_module %} active{% endif %}">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-								<strong class="text-danger">Admin <span class="caret"></span></strong>
-							</a>
-							<ul class="dropdown-menu" role="menu">
-								<li><a href="{{ append_sid('/auth/admin/') }}">Manage Users</a></li>
-							</ul>
-						</li>
-						{% else -%}
-						<li><a href="{{ append_sid(login_admin, 'redirect=' ~ page_url|e('url'), true) }}"><strong class="text-danger">Admin</strong></a></li>
-						{% endif -%}
-						{% endif -%}
 					</ul>
