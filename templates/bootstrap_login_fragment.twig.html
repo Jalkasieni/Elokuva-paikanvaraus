@@ -1,7 +1,7 @@
 {#
 *
 * @package svntools
-* @version $Id: bootstrap_login_fragment.twig.html 1335 2015-04-09 23:51:37Z crise $
+* @version $Id: bootstrap_login_fragment.twig.html 1337 2015-04-10 01:46:07Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -12,21 +12,21 @@
 				<div class="navbar-right">
 					{% if user.registered -%}
 					<p class="navbar-text">Welcome back, {{user.display_name|raw}} (<em>{{user.group_title}}</em>)</p>
-					<form class="navbar-form navbar-right" action="{{ append_sid('/auth/update/') }}" method="get">
+					<div class="btn-toolbar navbar-right" role="toolbar" aria-label="Account Controls">
 						{% if user.admin -%}
-						<div class="form-group form-group-sm">
+						<div class="btn-group btn-group-sm" role="group">
 							{% if session.admin -%}
 							<button type="button" data-toggle="dropdown" class="btn btn-danger dropdown-toggle" aria-expanded="false">Admin <span class="caret"></span></button>
 							<ul class="dropdown-menu" role="menu">
 								<li><a href="{{ append_sid('/auth/admin/') }}"><i class="fa fa-users"></i> Manage Users</a></li>
 							</ul>
 							{% else -%}
-							<button type="button" class="btn btn-danger">Admin</button>
+							<a class="btn btn-danger" href="{{ append_sid(login_admin, 'redirect=' ~ page_url|e('url'), true) }}" role="button" rel="nofollow">Admin</a>
 							{% endif -%}
 						</div>
 						{% endif -%}
 						<div class="btn-group btn-group-sm" role="group">
-							<button type="submit" class="btn btn-success">My Account</button>
+							<a class="btn btn-success" href="{{ append_sid('/auth/update/') }}" role="button" rel="nofollow">My Account</a>
 							<button type="button" data-toggle="dropdown" class="btn btn-success dropdown-toggle" aria-expanded="false"><span class="caret"></span></button>
 							<ul class="dropdown-menu" role="menu">
 								<li><a href="{{ append_sid('/auth/update/') }}" rel="nofollow"><span class="glyphicon glyphicon-user"></span> <strong>Manage Account</strong></a></li>
@@ -34,11 +34,11 @@
 								<li><a href="{{ append_sid(login_link, 'redirect=' ~ page_url|e('url'), true) }}" rel="nofollow"><i class="fa fa-power-off"></i> Log Out</a></li>
 							</ul>
 						</div>
-					</form>
+					</div>
 					{%- else -%}
 					<form class="navbar-form" action="{{ append_sid(login_link, '', true) }}" method="post">
 						<div class="form-group form-group-sm">
-							 <label class="sr-only" for="nav-username">Username:</label>
+							<label class="sr-only" for="nav-username">Username:</label>
 							<input type="text" class="form-control" name="username" id="nav-username" placeholder="Username" value="" required>
 						</div>
 						<div class="form-group form-group-sm">
