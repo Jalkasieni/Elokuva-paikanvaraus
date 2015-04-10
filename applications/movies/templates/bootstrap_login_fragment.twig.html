@@ -1,7 +1,7 @@
 {#
 *
 * @package svntools
-* @version $Id: bootstrap_login_fragment.twig.html 1337 2015-04-10 01:46:07Z crise $
+* @version $Id: bootstrap_login_fragment.twig.html 1338 2015-04-10 02:32:48Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -12,7 +12,10 @@
 				<div class="navbar-right">
 					{% if user.registered -%}
 					<p class="navbar-text">Welcome back, {{user.display_name|raw}} (<em>{{user.group_title}}</em>)</p>
-					<div class="btn-toolbar navbar-right" role="toolbar" aria-label="Account Controls">
+
+					<div class="navbar-right"> <!-- Twitter Bootstrap Bug --> </div>
+
+					<div class="navbar-btn btn-toolbar navbar-right" role="toolbar" aria-label="Account Controls">
 						{% if user.admin -%}
 						<div class="btn-group btn-group-sm" role="group">
 							{% if session.admin -%}
@@ -29,7 +32,7 @@
 						</div>
 						{% endif -%}
 						<div class="btn-group btn-group-sm" role="group">
-							<a class="btn btn-success" href="{{ append_sid('/auth/update/') }}" role="button" rel="nofollow">My Account</a>
+							<a class="btn btn-success" href="{{ append_sid('/reservations/') }}" role="button" rel="nofollow">My Account</a>
 							<button type="button" data-toggle="dropdown" class="btn btn-success dropdown-toggle" aria-expanded="false"><span class="caret"></span></button>
 							<ul class="dropdown-menu" role="menu">
 								<li><a href="{{ append_sid('/auth/update/') }}" rel="nofollow"><span class="glyphicon glyphicon-user"></span> Manage Account</a></li>
