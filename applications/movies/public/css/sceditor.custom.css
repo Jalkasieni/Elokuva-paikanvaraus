@@ -1,8 +1,3 @@
-/* Compatibility fixes */
-.sceditor-width-fix { width: 100% }
-.sceditor-container { font-weight: normal }
-.sceditor-button { box-sizing: content-box; -webkit-box-sizing: content-box; -moz-box-sizing: content-box }
-
 /* Headings */
 .sceditor-button-heading div { background: url('../img/heading-button.png') }
 .sceditor-heading-option { display: block; cursor: pointer; font-size: 14px; text-decoration: none; color: #222 }
