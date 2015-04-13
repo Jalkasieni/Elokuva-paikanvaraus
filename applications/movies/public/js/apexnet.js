@@ -1,6 +1,6 @@
 /**
 * @package apexnet
-* @version $Id: apexnet.js 1326 2015-04-03 14:18:07Z crise $
+* @version $Id: apexnet.js 1344 2015-04-12 19:14:48Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 */
@@ -146,7 +146,7 @@ ApexNet.prototype.init_editor = function () {
 }
 
 ApexNet.prototype.load_editor = function ($container) {
-	$container.addClass('sceditor-width-fix').sceditor({
+	$container.sceditor({
 		plugins: 'bbcode',
 		style: this.base_url + '/components/sceditor/jquery.sceditor.default.min.css',
 		emoticonsEnabled: false,
