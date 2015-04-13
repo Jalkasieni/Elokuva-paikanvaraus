@@ -41,21 +41,21 @@
 			<div class="list-group">
 				<div class="list-group-item">
 					<div class="row">
-						<span class="movie-start col-md-2 col-sm-2 col-xs-3"> <strong>Start Time</strong> </span>
-						<span class="movie-name col-md-3 col-sm-3 col-xs-3"> <strong>Movie Name</strong> </span>
-						<span class="theater-name col-md-3 col-sm-3 col-xs-3"> <strong>Theater / Room</strong> </span>
-						<span class="reservation-seat col-md-2 col-sm-2 col-xs-2"> <strong>Seat</strong> </span>
-						<span class="reservation-cancel col-md-2 col-sm-2 col-xs-1 text-center"> <strong>Cancel</strong> </span>
+						<span class="movie-start col-md-2 col-sm-2 col-xs-3"><strong>Start Time</strong></span>
+						<span class="movie-name col-md-4 col-sm-4 col-xs-3"><strong>Movie Name</strong></span>
+						<span class="theater-name col-md-3 col-sm-3 col-xs-3"><strong>Theater / Room</strong></span>
+						<span class="reservation-seat col-md-1 col-sm-1 col-xs-1"><strong>Seat</strong></span>
+						<span class="reservation-cancel col-md-2 col-sm-2 col-xs-2 text-center"><strong>Cancel</strong></span>
 					</div>
 				</div>
 {% for reservation in reservations %}
 				<div class="reservation-row list-group-item">
 					<div class="row">
 						<span class="movie-start col-md-2 col-sm-2 col-xs-3"><span class=" glyphicon glyphicon-facetime-video"></span> {{ reservation.screening_start | date('Y-m-d H:i') }}</span>
-						<span class="movie-name col-md-3 col-sm-3 col-xs-3">{{ reservation.movie_name }}</span>
+						<span class="movie-name col-md-4 col-sm-4 col-xs-3">{{ reservation.movie_name }}</span>
 						<span class="theater-name col-md-3 col-sm-3 col-xs-3">{{ reservation.theater_name }} / {{ reservation.room_name }}</span>
-						<span class="reservation-seat col-md-2 col-sm-2 col-xs-2">{{ reservation.seat_label }}</span>
-						<span class="reservation-cancel col-md-2 col-sm-2 col-xs-1 text-center">
+						<span class="reservation-seat col-md-1 col-sm-1 col-xs-1">{{ reservation.seat_label }}</span>
+						<span class="reservation-cancel col-md-2 col-sm-2 col-xs-2 text-center">
 							{% if not reservation.upcoming -%}
 							<a class="cancel-link btn btn-default btn-xs disabled" href="#" role="button" rel="nofollow">Cancel</a>
 							{%- else -%}
@@ -68,7 +68,7 @@
 				</div>
 {% else %}
 			<div class="reservation-row list-group-item">
-				<h4 class="text-center">No upcoming reservations, <a href="{{ append_sid('/reservations/', 'upcoming=0') }}" rel="nofollow">show past reservations</a>.</h4>
+				<span class="h4 text-center">No upcoming reservations, <a href="{{ append_sid('/reservations/', 'upcoming=0') }}" rel="nofollow">show past reservations</a>.</span>
 			</div>	
 {% endfor %}
 			</div>

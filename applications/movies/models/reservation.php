@@ -3,7 +3,7 @@
 /**
 *
 * @package svntools
-* @version $Id: reservation.php 1328 2015-04-09 10:11:56Z crise $
+* @version $Id: reservation.php 1346 2015-04-13 04:28:59Z crise $
 * @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -163,7 +163,7 @@ class movies_reservation_model extends web_model
 		$conds[] = ($only_upcoming ? "ms.screening_start > $time" : false);
 
 		$this->database->limitQuery("
-			SELECT		mi.movie_name, mro.room_name, mt.theater_name, ms.screening_start, mr.cords_seat AS seat, mr.cords_row AS row, reservation_state AS state, mr.user_id,
+			SELECT		mr.reservation_id, mi.movie_name, mro.room_name, mt.theater_name, ms.screening_start, mr.cords_seat AS seat, mr.cords_row AS row, reservation_state AS state, mr.user_id,
 						(ms.screening_start > $time) AS upcoming
 
 			FROM		movie_reservations AS mr

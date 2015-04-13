@@ -73,6 +73,8 @@
 					<a class="reserve-link btn btn-primary" href="{{ append_sid('/screenings/movie', 'movie_id=' ~ movie.movie_id) }}" role="button" rel="nofollow">Reserve</a>
 				</div>
 			</div>
+{% else %}
+				<span class="h4 text-center">Unfortunately we found now movie listings for you at this time, please check back later.</span>
 {% endfor %}
 		</div>
 
