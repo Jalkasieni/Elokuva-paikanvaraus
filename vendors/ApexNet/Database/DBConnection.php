@@ -2,8 +2,7 @@
 /**
 *
 * @package db
-* @version $Id: DBConnection.php 987 2015-01-10 17:15:58Z crise $
-* @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
+* @copyright (c) 2015 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */

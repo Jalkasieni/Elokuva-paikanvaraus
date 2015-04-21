@@ -2,8 +2,7 @@
 /**
 *
 * @package cli
-* @version $Id: script.php 802 2014-05-27 03:51:43Z crise $
-* @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
+* @copyright (c) 2015 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */

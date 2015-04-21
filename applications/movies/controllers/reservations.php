@@ -1,9 +1,8 @@
 <?php
 /**
 *
-* @package svntools
-* @version $Id: reservations.php 1320 2015-04-02 23:06:15Z crise $
-* @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
+* @package demo-movies
+* @copyright (c) 2015 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */

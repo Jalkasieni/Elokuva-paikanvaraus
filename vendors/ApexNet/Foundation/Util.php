@@ -2,8 +2,7 @@
 /**
 *
 * @package apexnet
-* @version $Id: Util.php 831 2014-05-29 05:40:14Z crise $
-* @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
+* @copyright (c) 2015 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */

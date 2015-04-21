@@ -1,10 +1,8 @@
-
 <?php
 /**
 *
-* @package svntools
-* @version $Id: movie.php 1274 2015-03-31 13:40:17Z crise $
-* @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
+* @package demo-movies
+* @copyright (c) 2015 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */

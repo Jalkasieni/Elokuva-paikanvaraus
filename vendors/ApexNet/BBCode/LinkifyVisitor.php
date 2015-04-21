@@ -2,7 +2,6 @@
 /**
 *
 * @package apexnet-bbclib
-* @version $Id: LinkifyVisitor.php 800 2014-05-27 03:43:58Z crise $
 * @copyright (c) 2010 phpBB Group
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *

@@ -2,8 +2,7 @@
 /**
 *
 * @package apexnet
-* @version $Id: SessionStoreCache.php 945 2014-10-21 20:46:13Z crise $
-* @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
+* @copyright (c) 2015 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */

@@ -2,7 +2,6 @@
 /**
 *
 * @package apexnet-bbclib
-* @version $Id: EmptyVisitor.php 800 2014-05-27 03:43:58Z crise $
 * @license http://opensource.org/licenses/mit-license.php The MIT License (MIT)
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *

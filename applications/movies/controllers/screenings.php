@@ -1,9 +1,8 @@
 <?php
 /**
 *
-* @package svntools
-* @version $Id: screenings.php 1313 2015-04-01 21:45:25Z crise $
-* @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
+* @package demo-movies
+* @copyright (c) 2015 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */

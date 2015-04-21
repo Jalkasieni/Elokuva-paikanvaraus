@@ -1,9 +1,8 @@
 <?php
 /**
 *
-* @package svntools
-* @version $Id: install.php 1218 2015-03-25 14:52:40Z crise $
-* @copyright (c) 2014 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
+* @package demo-movies
+* @copyright (c) 2015 Markus Willman, markuwil <at> gmail <dot> com / www.apexdc.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */

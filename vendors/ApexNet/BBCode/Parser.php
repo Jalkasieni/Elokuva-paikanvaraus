@@ -2,7 +2,6 @@
 /**
 *
 * @package apexnet-bbclib
-* @version $Id: Parser.php 980 2014-12-15 23:07:25Z crise $
 * @license http://opensource.org/licenses/mit-license.php The MIT License (MIT)
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *

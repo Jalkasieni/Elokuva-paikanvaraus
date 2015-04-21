@@ -2,7 +2,6 @@
 /**
 *
 * @package svn
-* @version $Id: SVNBase.php 947 2014-10-21 23:03:08Z crise $
 * @copyright (c) 2008 phpbbmodders
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
