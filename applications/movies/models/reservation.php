@@ -99,6 +99,16 @@ class movies_reservation_model extends web_model
 		return ($this->database->update($this->database->build_delete('movie_reservations', $conds)) == 1);
 	}
 
+	function clean_reservations($current_user)
+	{
+		$conds = array();
+		$conds[] = 'user_id <> '. (int) $current_user;
+		$conds[] = 'reservation_state = ' .  self::STATE_PENDING;
+		$conds[] = 'reservation_modified < ' . time() - 300;
+
+		return ($this->database->update($this->database->build_delete('movie_reservations', $conds)) >= 1);		
+	}
+
 	function get_reservation_table($screening_id)
 	{
 		$size = $this->screening->get_size($screening_id);

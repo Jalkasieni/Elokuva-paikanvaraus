@@ -336,6 +336,7 @@ class Parser
 
 		// Links
 		$this->addCode(new CodeDefinition("url", function ($name, $attribs, $content) {
+			$content = trim($content);
 			if (!$attribs || empty($attribs['default']))
 				$attribs['default'] = $content;
 
@@ -354,8 +355,12 @@ class Parser
 
 		// Image
 		$this->addCode(new CodeDefinition("img", function ($name, $attribs, $content) {
-			if (!$attribs || empty($attribs['default']))
-				$attribs['default'] = 'User posted image';
+			$content = trim($content);
+			if (!$attribs || empty($attribs['default']) || empty($attribs['alt']))
+			{
+				$attribs['default'] = '';
+				$attribs['alt'] = 'User Posted Image';
+			}
 
 			if (strncmp($content, 'http', 4) != 0 && strncmp($content, 'https', 5) != 0)
 				return false;
@@ -363,7 +368,20 @@ class Parser
 			if (filter_var($content, FILTER_VALIDATE_URL) === false)
 				return false;
 
-			return "<img src=\"{$content}\" alt=\"{$attribs['default']}\" />";
+			if (!empty($attribs['default']))
+			{
+				if (!preg_match("/^(\\d{1,4}x\\d{1,4})$/iuD", $attribs['default'])) {
+					$attribs['alt'] = $attribs['default'];
+					$attribs['default'] = '';
+				}
+				else
+				{
+					$dims = explode('x', $attribs['default'], 2);
+					$attribs['default']  = "width: $dims[0]px; height: $dims[1]px;";
+				}
+			}
+
+			return "<img src=\"{$content}\" style=\"{$attribs['default']}\" alt=\"{$attribs['alt']}\" />";
 		}));
 	}
 }

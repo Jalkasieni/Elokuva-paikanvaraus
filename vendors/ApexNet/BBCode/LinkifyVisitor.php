@@ -45,7 +45,9 @@ class LinkifyVisitor extends NullVisitor
 
 	public function visitText(TextNode $e)
 	{
-		$e->setText(preg_replace_callback(static::$magic_url_match, array($this, 'linkifyCallback'), $e->toText()));
+		$parent = $e->getParent();
+		if ($parent->getTagName() != 'img' && $parent->getTagName() != 'url')
+			$e->setText(preg_replace_callback(static::$magic_url_match, array($this, 'linkifyCallback'), $e->toText()));
 	}
 
 	protected function linkifyCallback($matches)
