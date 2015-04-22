@@ -287,7 +287,7 @@ class Parser
 
 		// Color
 		$this->addCode(new CodeDefinition("color", function ($name, $attribs, $content) {
-			if (!$attribs || empty($attribs['default']) || !preg_match("/^(#[a-fA-F0-9]{3,6}|[A-Za-z]+)$/", $attribs['default']))
+			if (!$attribs || empty($attribs['default']) || !preg_match("/^#[a-fA-F0-9]{3,6}|[A-Za-z]+$/uD", $attribs['default']))
 				return false;
 
 			return '<span style="color: '. $attribs['default'] ."\">$content</span>";
@@ -356,28 +356,28 @@ class Parser
 		// Image
 		$this->addCode(new CodeDefinition("img", function ($name, $attribs, $content) {
 			$content = trim($content);
-			if (!$attribs || empty($attribs['default']) || empty($attribs['alt']))
-			{
-				$attribs['default'] = '';
-				$attribs['alt'] = 'User Posted Image';
-			}
-
 			if (strncmp($content, 'http', 4) != 0 && strncmp($content, 'https', 5) != 0)
 				return false;
 
 			if (filter_var($content, FILTER_VALIDATE_URL) === false)
 				return false;
 
+			if (!$attribs || empty($attribs['default']))
+				$attribs['default'] = '';
+	
+			if (empty($attribs['alt']))
+				$attribs['alt'] = 'User Posted Image';
+
 			if (!empty($attribs['default']))
 			{
-				if (!preg_match("/^(\\d{1,4}x\\d{1,4})$/iuD", $attribs['default'])) {
+				if (!preg_match("/^\\d{1,4}x\\d{1,4}$/uiD", $attribs['default'])) {
 					$attribs['alt'] = $attribs['default'];
 					$attribs['default'] = '';
 				}
 				else
 				{
 					$dims = explode('x', $attribs['default'], 2);
-					$attribs['default']  = "width: $dims[0]px; height: $dims[1]px;";
+					$attribs['default']  = 'width: ' . (int) $dims[0] . 'px; height: ' . (int) $dims[1] . 'px;';
 				}
 			}
 
