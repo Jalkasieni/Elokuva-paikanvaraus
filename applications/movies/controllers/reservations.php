@@ -76,13 +76,13 @@ class movies_reservations_controller extends web_controller
 
 		$screening = $this->screening->get_screening($screening_id);
 		if (!$screening || time() > $screening['start'])
-			return web_response::error($request, 403, 'Invalid screening selected.');
+			return web_response::error($request, 403);
 
 		$this->model->clean_reservations($user_id, $screening_id);
 
 		return web_response::page($request, 'reservations_create', $this->user->pack(array(
 			'current_user'				=> $user_id,
-			'screening'					=> screening,
+			'screening'					=> $screening,
 			'reservation_table'			=> $this->model->get_reservation_table($screening_id)
 		)));
 	}
