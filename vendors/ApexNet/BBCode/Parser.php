@@ -325,13 +325,13 @@ class Parser
 
 		// Text alignment
 		$this->addCode(new CodeDefinition("left", function ($name, $attribs, $content) {
-			return "</p><p style=\"display: block; text-align: left\">$content</p><p>";
+			return "</p><div style=\"text-align: left\"><p>$content</p></div><p>";
 		}));
 		$this->addCode(new CodeDefinition("center", function ($name, $attribs, $content) {
-			return "</p><p style=\"display: block; text-align: center\">$content</p><p>";
+			return "</p><div style=\"text-align: center\"><p>$content</p></div><p>";
 		}));
 		$this->addCode(new CodeDefinition("right", function ($name, $attribs, $content) {
-			return "</p><p style=\"display: block; text-align: right\">$content</p><p>";
+			return "</p><div style=\"text-align: right\"><p>$content</p></div><p>";
 		}));
 
 		// Links
@@ -376,12 +376,12 @@ class Parser
 				}
 				else
 				{
-					$dims = explode('x', $attribs['default'], 2);
-					$attribs['default']  = 'width: ' . (int) $dims[0] . 'px; height: ' . (int) $dims[1] . 'px;';
+					$dims = explode('x', strtolower($attribs['default']), 2);
+					$attribs['default']  = 'width: ' . (int) $dims[0] . 'px; height: ' . (int) $dims[1] . 'px';
 				}
 			}
 
-			return "<img src=\"{$content}\" style=\"{$attribs['default']}\" alt=\"{$attribs['alt']}\" />";
+			return "</p><img src=\"{$content}\" style=\"{$attribs['default']}\" alt=\"{$attribs['alt']}\"><p>";
 		}));
 	}
 }

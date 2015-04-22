@@ -104,9 +104,9 @@ class DocumentElement extends ElementNode
 	 */
 	protected static function nl2br($text)
 	{
-		$html = '<p>'. nl2br($text) .'</p>';
-		$html = str_replace(array("<br />\n<br />\n<br />", "<br />\n<br />"), "</p>\n<p>", $html);
-		$html = str_replace(array("<br />\n<li>", "</li><br />\n"), array("\n<li>", "</li>\n"), $html);
+		$html = '<p>'. nl2br($text, false) .'</p>';
+		$html = str_replace(array("<br>\n<br>\n<br>", "<br>\n<br>"), "</p>\n<p>", $html);
+		$html = str_replace(array("<br>\n<li>", "</li><br>\n", "</ul><br>\n", "</ol><br>\n"), array("\n<li>", "</li>\n", "</ul>\n", "</ol>\n"), $html);
 		$html = str_replace('<p></p>', '', $html);
 		return $html;
 	}
