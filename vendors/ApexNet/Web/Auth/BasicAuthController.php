@@ -108,10 +108,10 @@ class BasicAuthController extends web_controller
 			{
 				// iff all open permissions are removed the default value gets used (registered bit is set below)
 				$form_data['permissions'] = $request->variable('permissions', array(), web_request::POST);
-
-				// browsers do not send the value of disabled checkboxes
-				$form_data['permissions'][] = 'registered';
 			}
+
+			// make sure the registered bit is always set (browsers do not send the value of disabled checkboxes)
+			$form_data['permissions'][] = 'registered';
 
 			$errors = array();
 			if ($this->validate('register', $form_data, $errors) && $this->user->createUser($form_data['username'], $form_data['password'], $form_data))
@@ -119,10 +119,6 @@ class BasicAuthController extends web_controller
 
 			$form_data['errors'] = $errors;
 		}
-
-		// if we don't have any permission data yet, the form is fresh or user doesn't have the rights to change their permissions
-		if (!isset($form_data['permissions']))
-			$form_data['permissions'] = array('registered');
 
 		return web_response::page($request, 'user_editor', $this->user->pack(array(
 			'editor_action'		=> 'register',
