@@ -77,7 +77,7 @@ class movies_reservation_model extends web_model
 		$conds[] = 'user_id = '. (int) $user_id;
 		$conds[] = 'reservation_state = ' .  self::STATE_PENDING;
 
-		return ($this->database->update($this->database->build_update('movie_reservations', array('reservation_modified' => time(), 'reservation_state' => self::STATE_CONFIRMED), $conds)) >= 1);
+		return ($this->database->update($this->database->build_update('movie_reservations', array('reservation_modified' => (int) time(), 'reservation_state' => self::STATE_CONFIRMED), $conds)) >= 1);
 	}
 
 	function refresh_reservations($user_id, $screening_id)
@@ -87,7 +87,7 @@ class movies_reservation_model extends web_model
 		$conds[] = 'user_id = '. (int) $user_id;
 		$conds[] = 'reservation_state = ' .  self::STATE_PENDING;
 
-		return ($this->database->update($this->database->build_update('movie_reservations', array('reservation_modified' => time()), $conds)) >= 1);		
+		return ($this->database->update($this->database->build_update('movie_reservations', array('reservation_modified' => (int) time()), $conds)) >= 1);		
 	}
 
 	function remove_reservations($user_id, $screening_id, $only_pending = true)
@@ -115,7 +115,7 @@ class movies_reservation_model extends web_model
 		$conds[] = 'user_id <> '. (int) $current_user;
 		$conds[] = 'screening_id = '. (int) $screening_id;
 		$conds[] = 'reservation_state = ' .  self::STATE_PENDING;
-		$conds[] = 'reservation_modified < ' . time() - 600;
+		$conds[] = 'reservation_modified < ' . ((int) time() - 600);
 
 		return ($this->database->update($this->database->build_delete('movie_reservations', $conds)) >= 1);		
 	}
