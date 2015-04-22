@@ -115,7 +115,7 @@ class movies_reservation_model extends web_model
 		$conds[] = 'user_id <> '. (int) $current_user;
 		$conds[] = 'screening_id = '. (int) $screening_id;
 		$conds[] = 'reservation_state = ' .  self::STATE_PENDING;
-		$conds[] = 'reservation_modified < ' . time() - 301;
+		$conds[] = 'reservation_modified < ' . time() - 600;
 
 		return ($this->database->update($this->database->build_delete('movie_reservations', $conds)) >= 1);		
 	}
