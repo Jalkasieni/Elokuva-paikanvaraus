@@ -69,11 +69,20 @@ class movies_reservations_controller extends web_controller
 	function do_create(web_request $request)
 	{
 		$screening_id = $request->variable('screening_id', 0, web_request::GET);
-		if ($screening_id < 1)
+		$user_id = $request->variable('user_id', (int) $this->user['user_id'], web_request::GET);
+
+		if ($screening_id < 1 ||  $user_id < 1 || (!$this->user->admin() && $this->user['user_id'] != $user_id))
 			return web_response::redirect($request, '/movies/', 302);
 
+		$screening = $this->screening->get_screening($screening_id);
+		if (!$screening || time() > $screening['start'])
+			return web_response::error($request, 403, 'Invalid screening selected.');
+
+		$this->model->clean_reservations($user_id, $screening_id);
+
 		return web_response::page($request, 'reservations_create', $this->user->pack(array(
-			'screening'					=> $this->screening->get_screening($screening_id),
+			'current_user'				=> $user_id,
+			'screening'					=> screening,
 			'reservation_table'			=> $this->model->get_reservation_table($screening_id)
 		)));
 	}
@@ -149,6 +158,8 @@ class movies_reservations_controller extends web_controller
 
 			$result = $this->model->remove_reservation($reservation_id, $user_id);
 		}
+
+		$this->model->refresh_reservations($user_id, $screening_id);
 
 		return web_response::json($request, json_encode(array(
 			'success'			=> $result,

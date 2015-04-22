@@ -86,9 +86,9 @@
 				</div>
 {% else %}
 			<div class="screening-row list-group-item">
-				<span class="h4 text-center">
+				<div class="h4 text-center">
 					No upcoming screenings, <a href="{{ append_sid('/screenings/movie', 'movie_id=' ~ movie.movie_id ~ '&upcoming=0') }}" rel="nofollow">show past screenings</a>.
-				</span>
+				</div>
 			</div>	
 {% endfor %}
 			</div>

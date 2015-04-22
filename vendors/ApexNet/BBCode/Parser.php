@@ -295,10 +295,10 @@ class Parser
 
 		// Lists
 		$this->addCode(new CodeDefinition("ul", function ($name, $attribs, $content) {
-			return "<ul>$content</ul>";
+			return "</p><ul>$content</ul><p>";
 		}));
 		$this->addCode(new CodeDefinition("ol", function ($name, $attribs, $content) {
-			return "<ul>$content</ul>";
+			return "</p><ol>$content</ol><p>";
 		}));
 		$this->addCode(new CodeDefinition("li", function ($name, $attribs, $content) {
 			return "<li>$content</li>";
@@ -325,13 +325,13 @@ class Parser
 
 		// Text alignment
 		$this->addCode(new CodeDefinition("left", function ($name, $attribs, $content) {
-			return "</p><div style=\"text-align: left\"><p>$content</p></div><p>";
+			return "<span style=\"display: block; text-align: left\">$content</span>";
 		}));
 		$this->addCode(new CodeDefinition("center", function ($name, $attribs, $content) {
-			return "</p><div style=\"text-align: center\"><p>$content</p></div><p>";
+			return "<span style=\"display: block; text-align: center\">$content</span>";
 		}));
 		$this->addCode(new CodeDefinition("right", function ($name, $attribs, $content) {
-			return "</p><div style=\"text-align: right\"><p>$content</p></div><p>";
+			return "<span style=\"display: block; text-align: right\">$content</span>";
 		}));
 
 		// Links
@@ -370,7 +370,8 @@ class Parser
 
 			if (!empty($attribs['default']))
 			{
-				if (!preg_match("/^\\d{1,4}x\\d{1,4}$/uiD", $attribs['default'])) {
+				if (!preg_match("/^\\d{1,4}x\\d{1,4}$/uiD", $attribs['default']))
+				{
 					$attribs['alt'] = $attribs['default'];
 					$attribs['default'] = '';
 				}
@@ -381,7 +382,7 @@ class Parser
 				}
 			}
 
-			return "</p><img src=\"{$content}\" style=\"{$attribs['default']}\" alt=\"{$attribs['alt']}\"><p>";
+			return "<img src=\"{$content}\" style=\"{$attribs['default']}\" alt=\"{$attribs['alt']}\">";
 		}));
 	}
 }

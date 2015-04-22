@@ -42,7 +42,7 @@
 					} else if (data.state == 2) {
 						$seat.attr('title', 'Reserved seat');
 						$seat.addClass('label-danger disabled');
-					} else if (data.state == 1 && data.user_id == {{ user.user_id }}) {
+					} else if (data.state == 1 && data.user_id == {{ current_user }}) {
 						$seat.attr('title', 'Your pending reservation');
 						$seat.addClass('reserve-link label-info');
 						$seat.data('reservation', data.reservation_id);
@@ -84,7 +84,7 @@
 				in_update = true;
 				$.post("{{ append_sid('/reservations/toggle_seat.json', 'screening_id=' ~ screening.screening_id) | e('js') }}", {
 					reservation_id: $(this).data('reservation'),
-					user_id: {{ user.user_id }},
+					user_id: {{ current_user }},
 					seat: $(this).data('seat'),
 					row: $(this).data('row')
 				}).done(function (response) {
@@ -129,7 +129,7 @@
 						<a href="#" title="Free seat" class="reserve-link seat-{{seat.label}} label label-default" data-row="{{i}}" data-seat="{{j}}">{{seat.label}}</a>
 						{%- elseif seat.state == 2 -%}
 						<a href="#" title="Reserved seat" class="seat-{{seat.label}} label label-danger disabled">{{seat.label}}</a>
-						{%- elseif seat.state == 1 and seat.user_id == user.user_id -%}
+						{%- elseif seat.state == 1 and seat.user_id == current_user -%}
 						<a href="#" title="Your pending reservation" class="reserve-link seat-{{seat.label}} label label-info" data-reservation="{{seat.reservation_id}}">{{seat.label}}</a>
 						{%- elseif seat.state == 1 -%}
 						<a href="#" title="Reserved seat (unconfirmed)" class="seat-{{seat.label}} label label-warning disabled">{{seat.label}}</a>
